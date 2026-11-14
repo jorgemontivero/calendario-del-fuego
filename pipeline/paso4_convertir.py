@@ -28,7 +28,7 @@ import pandas as pd
 sys.path.insert(0, str(Path(__file__).resolve().parent))
 import modelo as M  # noqa: E402
 
-MODELO = "M2"  # provisional until step 5 decides
+MODELO = "M2"  # chosen by step 5 (reportes/validacion.md): out-of-sample bias -1.6 %, 90 % coverage 86.5 %, beats M0
 K = 1000
 RAIZ = Path(__file__).resolve().parents[1]
 DERIV = RAIZ / "data" / "derivados"
@@ -215,7 +215,7 @@ anual = pais_s[pais_s.mes_completo.astype(bool) | (pais_s.anio < 2026)].groupby(
 ingenuo = conteo.groupby(["plataforma", "anio"]).celdas_dia.sum().unstack(0)
 L = ["# Paso 4: convertir", "",
      f"Generado por `pipeline/paso4_convertir.py` el {datetime.now():%d/%m/%Y %H:%M}. Modelo: **{MODELO}** "
-     "(provisorio hasta la validación del paso 5). Ajuste: Aqua contra Suomi NPP, 2012-2022, meses completos.", "",
+     "(elegido en el paso 5, ver `validacion.md`). Ajuste: Aqua contra Suomi NPP, 2012-2022, meses completos.", "",
      f"- Inflación de la varianza de muestreo `c` = {fact['c']:.2f}; varianza real entre provincias "
      f"τ² = {fact['tau2']['dia']:.3f} (día) y {fact['tau2']['noche']:.3f} (noche).",
      f"- Dispersión de la binomial negativa, creciente con el tamaño del mes: φ = {curva_phi['dia'][0]:.2f}·μ^{curva_phi['dia'][1]:.2f} (día), "

@@ -1,6 +1,6 @@
 # Paso 4: convertir
 
-Generado por `pipeline/paso4_convertir.py` el 14/11/2026 10:20. Modelo: **M2** (provisorio hasta la validación del paso 5). Ajuste: Aqua contra Suomi NPP, 2012-2022, meses completos.
+Generado por `pipeline/paso4_convertir.py` el 14/11/2026 10:31. Modelo: **M2** (elegido en el paso 5, ver `validacion.md`). Ajuste: Aqua contra Suomi NPP, 2012-2022, meses completos.
 
 - Inflación de la varianza de muestreo `c` = 5.82; varianza real entre provincias τ² = 0.017 (día) y 0.068 (noche).
 - Dispersión de la binomial negativa, creciente con el tamaño del mes: φ = 1.32·μ^0.56 (día), 2.68·μ^0.28 (noche).

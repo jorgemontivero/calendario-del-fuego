@@ -18,7 +18,7 @@ shows it as a fire calendar (year × month) for any province or department since
 | 2. Clean | `pipeline/paso2_limpiar.py` | `data/derivados/focos_limpios.parquet`, `fuentes_fijas.parquet`, `reportes/paso2_limpiar.md` |
 | 3. Count evenly | `pipeline/paso3_contar.py` | `data/derivados/conteo_{provincia,pais,departamento}.parquet`, `servicio_satelites.csv`, `reportes/paso3_contar.md` |
 | 4. Convert | `pipeline/paso4_convertir.py`, `pipeline/modelo.py` | `data/derivados/serie_armonizada_{provincia,pais,departamento}.parquet`, `factores.parquet`, `reportes/paso4_convertir.md` |
-| 5. Validate | *to do* | out-of-sample test and comparison with official statistics |
+| 5. Validate | `pipeline/paso5_comprobar.py` | `reportes/validacion.md` |
 | App | *to do* | Streamlit app |
 
 Step 2 keeps vegetation fires only: FIRMS type 0, enough confidence (MODIS ≥ 30, VIIRS nominal/high), and no
@@ -38,6 +38,14 @@ their INDEC region (empirical Bayes, DerSimonian–Laird). Each converted month 
 factor uncertainty + negative binomial noise whose dispersion grows with month size) and a probability of being
 unusual (above the 2003–2022 90th percentile for that month).
 
+Step 5 tests the conversion with criteria fixed beforehand (results in `reportes/validacion.md`):
+(a) learn on 2012–2018, predict 2019–2022: the chosen model (M2) has −1.6 % total bias, 86.5 % coverage of the
+90 % interval and beats the single national factor (M0, +221 % bias at night); (b) no steps when Suomi NPP (2012)
+or NOAA-20 (2018) arrive, and the same downward trend as Aqua (−35 % vs −34 %; the naive sum gives +305 %);
+(c) against official burned area (Ministerio de Ambiente, 2003–2023), the harmonized series ranks years as well as
+Aqua and far better than the naive sum; the official national total has no trend, but in the 5 provinces with a
+clear official trend (all downward) the harmonized series agrees in 4 and the naive sum in none.
+
 ## Data
 
 The data files are not in git (too large). Put them in `data/`:
@@ -49,6 +57,7 @@ The data files are not in git (too large). Put them in `data/`:
 | `clima_provincia_mes.parquet`, `clima_grilla_mes.parquet` | NASA POWER (MERRA-2), monthly rainfall, maximum temperature and relative humidity |
 | `estimaciones_agricolas.parquet` | Ministerio de Agricultura, Ganadería y Pesca, Estimaciones Agrícolas |
 | `cobertura_provincia_anio.parquet` | MapBiomas Argentina, Collection 3 (CC BY 4.0) |
+| `oficial/ciam_dt510.csv`, `ciam_dt427.csv`, `ciam_dt416.csv` | Ministerio de Ambiente (CIAM): burned area by province and year, fires reported by month |
 
 ## Run
 
@@ -58,6 +67,7 @@ uv pip install -r requirements.txt
 .venv/Scripts/python pipeline/paso2_limpiar.py
 .venv/Scripts/python pipeline/paso3_contar.py
 .venv/Scripts/python pipeline/paso4_convertir.py
+.venv/Scripts/python pipeline/paso5_comprobar.py   # needs R + glmmTMB for M3
 ```
 
 ## License
