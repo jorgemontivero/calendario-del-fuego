@@ -17,7 +17,7 @@ shows it as a fire calendar (year × month) for any province or department since
 | 1. Gather | (data prepared before the event, see *Data*) | `data/focos.parquet` |
 | 2. Clean | `pipeline/paso2_limpiar.py` | `data/derivados/focos_limpios.parquet`, `fuentes_fijas.parquet`, `reportes/paso2_limpiar.md` |
 | 3. Count evenly | `pipeline/paso3_contar.py` | `data/derivados/conteo_{provincia,pais,departamento}.parquet`, `servicio_satelites.csv`, `reportes/paso3_contar.md` |
-| 4. Convert | *to do* | VIIRS → MODIS-equivalent, hierarchical model |
+| 4. Convert | `pipeline/paso4_convertir.py`, `pipeline/modelo.py` | `data/derivados/serie_armonizada_{provincia,pais,departamento}.parquet`, `factores.parquet`, `reportes/paso4_convertir.md` |
 | 5. Validate | *to do* | out-of-sample test and comparison with official statistics |
 | App | *to do* | Streamlit app |
 
@@ -30,6 +30,13 @@ Step 3 counts **cell-days**: a ~1 km cell (0.01°) with at least one hot spot on
 separately for day and night. Satellites are never added together. Months a satellite was flying with no fire are 0;
 months outside its service period are absent (no data). This removes the pixel-size effect (VIIRS sees ~1.6 hot
 spots per cell-day, MODIS ~1.0) and repeated detections, leaving a stable VIIRS/MODIS ratio (~3) to convert in step 4.
+
+Step 4 expresses everything in **Aqua cell-days**: Aqua observed for 2003–2022; Suomi NPP converted for 2023–2025
+(Aqua's overpass drifted later from 2023); NOAA-20 converted for 2026. The conversion is learned on 2012–2022, when
+Aqua and Suomi NPP flew at the same hour, per province × season × day/night, with small provinces shrunk toward
+their INDEC region (empirical Bayes, DerSimonian–Laird). Each converted month has a 90 % interval (1,000 simulations:
+factor uncertainty + negative binomial noise whose dispersion grows with month size) and a probability of being
+unusual (above the 2003–2022 90th percentile for that month).
 
 ## Data
 
@@ -50,6 +57,7 @@ uv venv .venv
 uv pip install -r requirements.txt
 .venv/Scripts/python pipeline/paso2_limpiar.py
 .venv/Scripts/python pipeline/paso3_contar.py
+.venv/Scripts/python pipeline/paso4_convertir.py
 ```
 
 ## License
