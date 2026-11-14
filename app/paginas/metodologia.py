@@ -4,7 +4,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-from comun import AZUL, NARANJA, anual_pais, cabecera, meta, num, pie, t, tr
+from comun import CONFIG_GRAFICO, AZUL, NARANJA, anual_pais, cabecera, meta, num, pie, t, tr
 
 cabecera()
 st.title(tr("Metodología", "Methods"))
@@ -37,9 +37,9 @@ fig.add_trace(go.Scatter(x=aq.anio, y=100 * aq.aqua / base.aqua, name=tr("Aqua s
                          line=dict(color="#9CA3AF", width=2, dash="dot")))
 for a, n in [(2012, "Suomi NPP"), (2018, "NOAA-20"), (2023, "NOAA-21")]:
     fig.add_vline(x=a - 0.5, line=dict(color="gray", width=1, dash="dash"), annotation_text=n, annotation_position="top left")
-fig.update_layout(height=380, margin=dict(l=10, r=10, t=30, b=10), legend=dict(orientation="h", y=-0.15),
+fig.update_layout(dragmode=False, height=380, margin=dict(l=10, r=10, t=30, b=10), legend=dict(orientation="h", y=-0.15),
                   yaxis_title=tr("Índice (promedio 2003–2011 = 100)", "Index (2003–2011 average = 100)"))
-st.plotly_chart(fig, width="stretch", theme="streamlit")
+st.plotly_chart(fig, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
 v = meta()["validacion"]["tendencia"]
 st.caption(tr(
     f"Cambio de nivel (prueba de Pettitt): todos los focos sumados {'+' + num(100 * v['Ingenua: todos los focos sumados (2003-2025)']['cambio_pct'])} %; "

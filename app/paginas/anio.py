@@ -5,7 +5,7 @@ import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
 
-from comun import NARANJA, cabecera, mes, num, serie, t
+from comun import CONFIG_GRAFICO, NARANJA, cabecera, mes, num, serie, t
 from mapas import ranking
 from tablero import alto_graficos, barra_lateral_final, encabezado, filtros
 
@@ -77,10 +77,10 @@ with izq.container(border=True):
         f2.add_trace(go.Scatter(x=xa, y=ac.min90, mode="lines", fill="tonexty", line=dict(width=0),
                                 fillcolor="rgba(194,65,12,0.2)", showlegend=False, hoverinfo="skip"))
     f2.add_trace(go.Scatter(x=xa, y=ac.valor, line=dict(color=NARANJA, width=3), mode="lines+markers", name=str(anio_sel)))
-    f2.update_layout(height=ALTO, margin=dict(l=0, r=0, t=5, b=0),
+    f2.update_layout(dragmode=False, height=ALTO, margin=dict(l=0, r=0, t=5, b=0),
                      legend=dict(orientation="h", y=1.02, yanchor="bottom", font=dict(size=10)),
                      yaxis_title=t("cal.leyenda.focos"))
-    st.plotly_chart(f2, width="stretch", theme="streamlit", config={"displayModeBar": False})
+    st.plotly_chart(f2, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
 
 with der.container(border=True):
     # Where fire concentrated in the chosen year: the areas with most hot spots, each colored by how far it was from
@@ -99,9 +99,9 @@ with der.container(border=True):
         customdata=np.stack([r.normal.round(0)], axis=1),
         hovertemplate="<b>%{y}</b><br>%{x:,.0f} " + t("cal.hover.valor") + "<br>" + t("cal.hover.normal") +
                       ": %{customdata[0]:,.0f}<extra></extra>"))
-    f4.update_layout(height=ALTO, margin=dict(l=0, r=10, t=5, b=0), xaxis_title=t("cal.leyenda.focos"),
+    f4.update_layout(dragmode=False, height=ALTO, margin=dict(l=0, r=10, t=5, b=0), xaxis_title=t("cal.leyenda.focos"),
                      xaxis=dict(range=[0, float(r.valor.max()) * 1.45]),
                      separators=",." if st.query_params.get("lang") != "en" else ".,")
-    st.plotly_chart(f4, width="stretch", theme="streamlit", config={"displayModeBar": False})
+    st.plotly_chart(f4, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
 
 barra_lateral_final(d, nombre)

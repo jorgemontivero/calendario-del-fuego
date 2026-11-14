@@ -6,7 +6,7 @@ import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
 
-from comun import NARANJA, cabecera, fecha_datos, mes, num, serie, t
+from comun import CONFIG_GRAFICO, NARANJA, cabecera, fecha_datos, mes, num, serie, t
 from tablero import alto_graficos, barra_lateral_final, encabezado, filtros
 
 RESTO = 300  # everything on this view that is not a chart (measured on screen)
@@ -63,9 +63,9 @@ with izq.container(border=True):
                                     ticktext=["≤⅛", "¼", "½", "1", "2", "4", "≥8"], thickness=10))
     fig = go.Figure(go.Heatmap(z=Z, x=[mes(m).capitalize() for m in range(1, 13)], y=[str(a) for a in anios],
                                text=H, hoverinfo="text", xgap=1.5, ygap=1.5, **escala))
-    fig.update_layout(height=ALTO, margin=dict(l=0, r=0, t=5, b=0),
+    fig.update_layout(dragmode=False, height=ALTO, margin=dict(l=0, r=0, t=5, b=0),
                       yaxis=dict(type="category", autorange="reversed", tickfont=dict(size=10)), xaxis=dict(side="top"))
-    st.plotly_chart(fig, width="stretch", theme="streamlit")
+    st.plotly_chart(fig, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
 
 with der.container(border=True):
     anual_s = d[d.anio.between(2003, 2025)].groupby("anio").valor.sum().to_numpy()
@@ -83,8 +83,8 @@ with der.container(border=True):
     f3 = go.Figure(go.Bar(x=an.anio, y=an.v, marker_color=colores, hovertemplate="%{x}: %{y:,.0f}<extra></extra>",
                           error_y=dict(type="data", symmetric=False, array=np.where(conv, an.hi - an.v, 0),
                                        arrayminus=np.where(conv, an.v - an.lo, 0), thickness=1.2, width=0)))
-    f3.update_layout(height=ALTO, margin=dict(l=0, r=0, t=5, b=0), yaxis_title=t("cal.leyenda.focos"),
+    f3.update_layout(dragmode=False, height=ALTO, margin=dict(l=0, r=0, t=5, b=0), yaxis_title=t("cal.leyenda.focos"),
                      separators=",." if st.query_params.get("lang") != "en" else ".,")
-    st.plotly_chart(f3, width="stretch", theme="streamlit")
+    st.plotly_chart(f3, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
 
 barra_lateral_final(d, nombre)

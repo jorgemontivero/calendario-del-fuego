@@ -12,6 +12,12 @@ DATOS = Path(__file__).resolve().parent / "datos"
 NARANJA, AZUL = "#C2410C", "#1D4ED8"
 
 
+# Plotly's toolbar: only "download as image" (the charts are meant to end up in reports). Zoom, pan, select and
+# reset only got in the way on a dashboard. Maps have no toolbar and zoom with the mouse wheel (mapas.CONFIG).
+CONFIG_GRAFICO = {"displaylogo": False, "modeBarButtons": [["toImage"]],
+                  "toImageButtonOptions": {"format": "png", "scale": 2, "filename": "calendario_del_fuego"}}
+
+
 def idioma() -> str:
     """The URL (?lang=en) wins; the session remembers it, because the top menu drops query parameters."""
     if "lang" in st.query_params:
