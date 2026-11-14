@@ -16,7 +16,7 @@ shows it as a fire calendar (year × month) for any province or department since
 |---|---|---|
 | 1. Gather | (data prepared before the event, see *Data*) | `data/focos.parquet` |
 | 2. Clean | `pipeline/paso2_limpiar.py` | `data/derivados/focos_limpios.parquet`, `fuentes_fijas.parquet`, `reportes/paso2_limpiar.md` |
-| 3. Count evenly | *to do* | 1 km cell-days by province and month |
+| 3. Count evenly | `pipeline/paso3_contar.py` | `data/derivados/conteo_{provincia,pais,departamento}.parquet`, `servicio_satelites.csv`, `reportes/paso3_contar.md` |
 | 4. Convert | *to do* | VIIRS → MODIS-equivalent, hierarchical model |
 | 5. Validate | *to do* | out-of-sample test and comparison with official statistics |
 | App | *to do* | Streamlit app |
@@ -25,6 +25,11 @@ Step 2 keeps vegetation fires only: FIRMS type 0, enough confidence (MODIS ≥ 3
 persistent heat sources (≈1 km cells where VIIRS saw heat on 30 or more distinct days: gas flares, industry).
 The day count uses a fixed pair of satellites (Suomi NPP and NOAA-20), so the rule does not change when a new
 satellite is added.
+
+Step 3 counts **cell-days**: a ~1 km cell (0.01°) with at least one hot spot on a (local) date, per satellite and
+separately for day and night. Satellites are never added together. Months a satellite was flying with no fire are 0;
+months outside its service period are absent (no data). This removes the pixel-size effect (VIIRS sees ~1.6 hot
+spots per cell-day, MODIS ~1.0) and repeated detections, leaving a stable VIIRS/MODIS ratio (~3) to convert in step 4.
 
 ## Data
 
@@ -44,6 +49,7 @@ The data files are not in git (too large). Put them in `data/`:
 uv venv .venv
 uv pip install -r requirements.txt
 .venv/Scripts/python pipeline/paso2_limpiar.py
+.venv/Scripts/python pipeline/paso3_contar.py
 ```
 
 ## License
