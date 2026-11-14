@@ -120,6 +120,29 @@ T = {
              "NASA Space Apps Challenge, Catamarca."),
     # dashboard
     "tab.filtros": ("Filtros", "Filters"),
+    "nav.geo": ("Análisis geográfico", "Geographic analysis"),
+    "rank.titulo": ("¿Dónde se concentró el fuego en {anio}?", "Where did fire concentrate in {anio}?"),
+    "rank.provincias": ("provincias", "provinces"),
+    "rank.mas": ("más que lo normal", "above normal"), "rank.menos": ("menos", "below"),
+    "rank.departamentos": ("departamentos de {prov}", "departments of {prov}"),
+    "rank.ayuda": ("Las zonas con más focos en el año (equivalente MODIS). El color compara cada una con su propio "
+                   "normal (mediana de sus totales 2003–2022 en los mismos meses): rojo, más fuego que lo habitual; "
+                   "azul, menos. El mapa está en Análisis geográfico.",
+                   "The areas with the most hot spots in the year (MODIS equivalent). Color compares each with its own "
+                   "normal (median of its 2003–2022 totals for the same months): red, more fire than usual; blue, "
+                   "less. The map is in Geographic analysis."),
+    "geo.titulo": ("Análisis geográfico", "Geographic analysis"),
+    "geo.modo": ("Comparar", "Compare"),
+    "geo.modo.anios": ("Una zona en dos años", "One area, two years"),
+    "geo.modo.zonas": ("Dos zonas en un año", "Two areas, one year"),
+    "geo.zona": ("Zona", "Area"), "geo.anio": ("Año", "Year"),
+    "geo.resumen": ("{v} focos · {d} por 1.000 km²", "{v} hot spots · {d} per 1,000 km²"),
+    "geo.ayuda": ("Focos por cada 1.000 km² con la serie armonizada: toda la Argentina por provincia, una provincia "
+                  "por departamento. Los dos mapas usan la misma escala de colores, para que se puedan comparar. Para "
+                  "el año en curso se cuentan los meses completos. Se puede acercar con la rueda del mouse.",
+                  "Hot spots per 1,000 km² from the harmonized series: all of Argentina by province, a province by "
+                  "department. Both maps share the same color scale so they can be compared. For the current year, "
+                  "complete months are counted. Zoom with the mouse wheel."),
     "puesto.max": ("el más alto de {n}", "the highest of {n}"),
     "puesto.min": ("el más bajo de {n}", "the lowest of {n}"),
     "puesto.k": ("{k}.° más alto de {n}", "{k}{suf} highest of {n}"),

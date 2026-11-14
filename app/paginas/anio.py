@@ -1,23 +1,15 @@
-"""View 2 - one year chosen by the user: the season (that year against a typical year) and the map of fire per
-1,000 km2, side by side, on one screen."""
+"""View 2 - one year chosen by the user: the season (that year against a typical year) and where fire concentrated
+(areas ranked, colored against their own normal), side by side, on one screen."""
 
-import json
-import math
-
-import geopandas as gpd
 import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
 
-from comun import DATOS, NARANJA, cabecera, mes, num, serie, t
+from comun import NARANJA, cabecera, mes, num, serie, t
+from mapas import ranking
 from tablero import alto_graficos, barra_lateral_final, encabezado, filtros
 
 RESTO = 300  # everything on this view that is not a chart (measured on screen)
-
-
-@st.cache_data
-def limites():
-    return gpd.read_parquet(DATOS / "limites.parquet")
 
 
 cabecera()
@@ -91,48 +83,25 @@ with izq.container(border=True):
     st.plotly_chart(f2, width="stretch", theme="streamlit", config={"displayModeBar": False})
 
 with der.container(border=True):
-    lim = limites()
-    if prov_cod == "00":
-        geo = lim[lim.nivel == "provincia"]
-        val = s[(s.nivel == "provincia") & (s.anio == anio_sel)].groupby("area_cod").valor.sum()
-        titulo_area = t("area.todo_pais")
-    else:
-        geo = lim[(lim.nivel == "departamento") & (lim.prov_cod == prov_cod)]
-        val = s[(s.nivel == "departamento") & (s.prov_cod == prov_cod) & (s.anio == anio_sel)].groupby("area_cod").valor.sum()
-        titulo_area = prov_nom
-    geo = geo[geo.km2 > 0].copy()
-    geo["valor"] = geo.area_cod.map(val).fillna(0)
-    geo["dens"] = 1000 * geo.valor / geo.km2
-    st.markdown(f"**{t('mapa.titulo.dep', area=titulo_area, anio=anio_sel)}**", help=t("mapa.ayuda"))
-    gj = json.loads(geo[["area_cod", "geometry"]].to_json())
-    zl = np.log10(geo.dens + 0.1)
-    ticks = [v for v in [0.1, 0.3, 1, 3, 10, 30, 100, 300] if zl.min() - 0.3 <= math.log10(v + 0.1) <= zl.max() + 0.3]
-    # A map canvas (MapLibre, light Carto basemap) instead of the geo subplot, which keeps a
-    # fixed aspect ratio and left the country small in the middle of the panel. The view is framed on the area's
-    # bounding box (Web Mercator zoom); the user can still zoom and pan.
-    x0, y0, x1, y1 = geo.total_bounds
-    merc = lambda lat: math.log(math.tan(math.pi / 4 + math.radians(lat) / 2))  # noqa: E731
-    frac_y = (merc(y1) - merc(y0)) / (2 * math.pi)
-    frac_x = (x1 - x0) / 360
-    ancho_px = 560  # approximate panel width; the height is the binding limit for tall areas such as Argentina
-    zoom = min(math.log2(ALTO / 512 / frac_y), math.log2(ancho_px / 512 / frac_x)) - 0.1
-    centro_lat = math.degrees(math.atan(math.sinh((merc(y0) + merc(y1)) / 2)))
-    f4 = go.Figure(go.Choroplethmap(
-        geojson=gj, featureidkey="properties.area_cod", locations=geo.area_cod, z=zl, colorscale="YlOrRd",
-        marker_line_width=0.5, marker_line_color="white",
-        customdata=np.stack([geo["area"], geo.valor.round(0), geo.dens.round(1)], axis=1),
-        hovertemplate="<b>%{customdata[0]}</b><br>%{customdata[1]} " + t("cal.hover.valor") +
-                      "<br>%{customdata[2]} " + t("mapa.leyenda") + "<extra></extra>",
-        colorbar=dict(title=t("mapa.leyenda"), tickvals=[math.log10(v + 0.1) for v in ticks],
-                      ticktext=[num(v, 1 if v < 1 else 0) for v in ticks], thickness=10)))
-    if dep_cod is not None:  # outline the chosen department
-        sel = geo[geo.area_cod == dep_cod]
-        f4.add_trace(go.Choroplethmap(geojson=json.loads(sel[["area_cod", "geometry"]].to_json()),
-                                      featureidkey="properties.area_cod", locations=sel.area_cod, z=[0],
-                                      colorscale=[[0, "rgba(0,0,0,0)"], [1, "rgba(0,0,0,0)"]], showscale=False,
-                                      marker_line_width=3, marker_line_color="#111827", hoverinfo="skip"))
-    f4.update_layout(height=ALTO, margin=dict(l=0, r=0, t=0, b=0),
-                     map=dict(style="carto-positron", center=dict(lat=centro_lat, lon=(x0 + x1) / 2), zoom=zoom))
-    st.plotly_chart(f4, width="stretch", theme="streamlit", config={"displayModeBar": False, "scrollZoom": True})
+    # Where fire concentrated in the chosen year: the areas with most hot spots, each colored by how far it was from
+    # its own normal (median of its 2003-2022 totals for the same months). The map moved to Geographic analysis.
+    r = ranking(prov_cod, anio_sel).iloc[::-1]  # largest on top
+    st.markdown(f"**{t('rank.titulo', anio=anio_sel)}** · "
+                f"{t('rank.provincias') if prov_cod == '00' else t('rank.departamentos', prov=prov_nom)}",
+                help=t("rank.ayuda"))
+    lr = np.clip(np.log2(r.razon), -2, 2)
+    etiquetas = [f"{num(v)} ({'+' if v >= n else '−'}{num(abs(100 * (v / n - 1)))} %)" if n > 0 else num(v)
+                 for v, n in zip(r.valor, r.normal)]
+    nombres = [f"<b>{a}</b>" if c == dep_cod else a for a, c in zip(r.area, r.area_cod)]
+    f4 = go.Figure(go.Bar(
+        x=r.valor, y=nombres, orientation="h", text=etiquetas, textposition="outside", cliponaxis=False,
+        marker=dict(color=lr, colorscale="RdBu_r", cmin=-2, cmax=2, showscale=False),
+        customdata=np.stack([r.normal.round(0)], axis=1),
+        hovertemplate="<b>%{y}</b><br>%{x:,.0f} " + t("cal.hover.valor") + "<br>" + t("cal.hover.normal") +
+                      ": %{customdata[0]:,.0f}<extra></extra>"))
+    f4.update_layout(height=ALTO, margin=dict(l=0, r=10, t=5, b=0), xaxis_title=t("cal.leyenda.focos"),
+                     xaxis=dict(range=[0, float(r.valor.max()) * 1.45]),
+                     separators=",." if st.query_params.get("lang") != "en" else ".,")
+    st.plotly_chart(f4, width="stretch", theme="streamlit", config={"displayModeBar": False})
 
 barra_lateral_final(d, nombre)
