@@ -18,9 +18,12 @@ with st.container(border=True):
 st.header(tr("Uso de herramientas de inteligencia artificial", "Use of artificial intelligence tools"))
 st.markdown(tr(
     "Usé un asistente de IA (Claude, de Anthropic) para escribir y revisar código y textos. Las decisiones de "
-    "método, la revisión de cada resultado y las conclusiones son mías. No hay imágenes ni voces generadas con IA.",
+    "método, la revisión de cada resultado y las conclusiones son mías. La locución del video de presentación se "
+    "generó con un clon de mi propia voz (ElevenLabs), a partir de un texto escrito por mí. No hay imágenes ni "
+    "video generados con IA.",
     "I used an AI assistant (Claude, by Anthropic) to write and review code and text. Method decisions, the review "
-    "of every result and the conclusions are mine. No AI-generated images or voices are used."))
+    "of every result and the conclusions are mine. The narration of the demo video was generated with a clone of my "
+    "own voice (ElevenLabs), from a script I wrote. No AI-generated images or video are used."))
 st.header(tr("Licencia y agradecimientos", "License and acknowledgements"))
 st.markdown(tr(
     "Código abierto bajo licencia MIT. Gracias a la NASA por FIRMS y a la organización local de Space Apps Catamarca.",
