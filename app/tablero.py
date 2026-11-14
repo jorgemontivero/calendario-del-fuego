@@ -45,7 +45,7 @@ def filtros():
     s = serie()
     st.markdown(CSS, unsafe_allow_html=True)
     if "prov_sel" not in st.session_state:
-        st.session_state["prov_sel"] = st.query_params.get("prov", "10")  # Catamarca by default: the local case
+        st.session_state["prov_sel"] = st.query_params.get("prov", "00")  # all of Argentina by default (?prov=10: Catamarca)
     with st.sidebar:
         st.markdown(f"### {t('tab.filtros')}")
         provincias = s[s.nivel == "provincia"].drop_duplicates("area_cod").sort_values("area")
@@ -98,7 +98,7 @@ def encabezado(d: pd.DataFrame, nombre: str):
         _tarjeta(t("kpi.mes", mes=mes(um, True).capitalize(), anio=ua), num(u.valor), d1, s1, ayuda1),
         _tarjeta(t("kpi.acum", anio=ua, mes=mes(um)), num(av), d2, s2, t("kpi.acum.ayuda", mes=mes(um, True))),
         _tarjeta(t("kpi.puesto", mes=mes(um)), t("ultimo.puesto.valor", k=num(u.puesto), n=num(u.n_anios))),
-        _tarjeta(t("kpi.estado"), f"{ICONO[u.estado]} {t('estado.' + u.estado)}", ayuda=ayuda4),
+        _tarjeta(t("kpi.estado"), f"{ICONO[u.estado]} {t('estado.corto.' + u.estado)}", ayuda=ayuda4),
     ])
     c0, c1 = st.columns([1, 3.2], vertical_alignment="center")
     with c0:

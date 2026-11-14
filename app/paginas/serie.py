@@ -48,9 +48,13 @@ with izq.container(border=True):
         partes.append(t({"aqua": "fuente.aqua", "snpp_converted": "fuente.snpp", "noaa20_converted": "fuente.noaa20"}[r.origen]))
         H[i, j] = "<br>".join(partes)
     if modo == "conteo":
+        # the color range follows the area: from its lowest months to its highest (all of Argentina never goes
+        # below a few hundred a month; starting at 0 painted every month red)
         vmax = max(1.0, np.nanmax(Z))
-        ticks = [v for v in [0, 1, 3, 10, 30, 100, 300, 1000, 3000, 10000, 30000] if math.log10(v + 1) <= vmax + 0.01]
-        escala = dict(colorscale="YlOrRd", zmin=0, zmax=vmax,
+        vmin = min(max(0.0, np.nanpercentile(Z, 2)), vmax - 0.5)
+        ticks = [v for v in [0, 1, 3, 10, 30, 100, 300, 1000, 3000, 10000, 30000]
+                 if vmin - 0.01 <= math.log10(v + 1) <= vmax + 0.01]
+        escala = dict(colorscale="YlOrRd", zmin=vmin, zmax=vmax,
                       colorbar=dict(title=t("cal.leyenda.focos"), tickvals=[math.log10(v + 1) for v in ticks],
                                     ticktext=[num(v) for v in ticks], thickness=10))
     else:

@@ -120,6 +120,9 @@ T = {
              "NASA Space Apps Challenge, Catamarca."),
     # dashboard
     "tab.filtros": ("Filtros", "Filters"),
+    "estado.corto.inusual": ("Inusual", "Unusual"), "estado.corto.arriba": ("Sobre lo normal", "Above normal"),
+    "estado.corto.normal": ("Normal", "Normal"), "estado.corto.abajo": ("Bajo lo normal", "Below normal"),
+    "estado.corto.en_curso": ("En curso", "In progress"),
     "nav.ayuda": ("Ayuda", "Help"),
     "lateral.ayuda": ("No es un sistema de alerta. Cómo leer los gráficos: sección **Ayuda**.",
                       "Not a warning system. How to read the charts: **Help** section."),
