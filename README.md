@@ -19,7 +19,7 @@ shows it as a fire calendar (year × month) for any province or department since
 | 3. Count evenly | `pipeline/paso3_contar.py` | `data/derivados/conteo_{provincia,pais,departamento}.parquet`, `servicio_satelites.csv`, `reportes/paso3_contar.md` |
 | 4. Convert | `pipeline/paso4_convertir.py`, `pipeline/modelo.py` | `data/derivados/serie_armonizada_{provincia,pais,departamento}.parquet`, `factores.parquet`, `reportes/paso4_convertir.md` |
 | 5. Validate | `pipeline/paso5_comprobar.py` | `reportes/validacion.md` |
-| App | *to do* | Streamlit app |
+| App | `pipeline/paso6_datos_app.py` → `app/` (Streamlit) | `app/datos/` (small files the app reads); run `streamlit run app/app.py`, English with `?lang=en` |
 
 Step 2 keeps vegetation fires only: FIRMS type 0, enough confidence (MODIS ≥ 30, VIIRS nominal/high), and no
 persistent heat sources (≈1 km cells where VIIRS saw heat on 30 or more distinct days: gas flares, industry).

@@ -1,6 +1,6 @@
 # Validación (paso 5)
 
-Generado por `pipeline/paso5_comprobar.py` el 14/11/2026 10:31. Criterios de aprobación fijados antes de correr las pruebas (presentacion/paso5_comprobar.pdf).
+Generado por `pipeline/paso5_comprobar.py` el 14/11/2026 10:54. Criterios de aprobación fijados antes de correr las pruebas (presentacion/paso5_comprobar.pdf).
 
 ## Resultado
 

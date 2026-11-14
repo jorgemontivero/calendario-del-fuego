@@ -1,0 +1,15 @@
+[theme]
+primaryColor = "#C2410C"
+font = "sans serif"
+
+[theme.light]
+primaryColor = "#C2410C"
+
+[theme.dark]
+primaryColor = "#F97316"
+
+[server]
+runOnSave = false
+
+[browser]
+gatherUsageStats = false

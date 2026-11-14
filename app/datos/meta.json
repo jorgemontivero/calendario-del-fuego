@@ -1,0 +1,135 @@
+{
+ "fecha_datos": "2026-11-14",
+ "ultimo_mes_completo": [
+  2026,
+  10
+ ],
+ "validacion": {
+  "elegido": "M2",
+  "pasa": {
+   "a": true,
+   "b": true,
+   "c_rankings": true,
+   "c_tendencia": false
+  },
+  "examen": [
+   {
+    "modelo": "M0",
+    "sesgo": 0.03566388441005719,
+    "sesgo_dia": -0.13042374107777976,
+    "sesgo_noche": 2.212732095490716,
+    "sesgo_region_max": 0.16518884268181355,
+    "error_tipico": 0.21717171717171718,
+    "error_chicas": 0.20586158192090398,
+    "cobertura": 0.9322916666666666,
+    "err_catamarca_dentro": 0.2038123167155425,
+    "err_catamarca_oculta": 0.225,
+    "cob_catamarca_oculta": 0.9375
+   },
+   {
+    "modelo": "M1",
+    "sesgo": -0.011179048183366791,
+    "sesgo_dia": -0.016812381956878952,
+    "sesgo_noche": 0.06266240655895827,
+    "sesgo_region_max": 0.07377062191661765,
+    "error_tipico": 0.19518072289156627,
+    "error_chicas": 0.22434900893898174,
+    "cobertura": 0.8654513888888888,
+    "err_catamarca_dentro": 0.25500770416024654,
+    "err_catamarca_oculta": NaN,
+    "cob_catamarca_oculta": NaN
+   },
+   {
+    "modelo": "M2",
+    "sesgo": -0.016345345465111683,
+    "sesgo_dia": -0.014190825136745966,
+    "sesgo_noche": -0.04458668917289599,
+    "sesgo_region_max": 0.06984866184402239,
+    "error_tipico": 0.18691588785046728,
+    "error_chicas": 0.21428571428571427,
+    "cobertura": 0.8654513888888888,
+    "err_catamarca_dentro": 0.19568537609774722,
+    "err_catamarca_oculta": 0.277811004784689,
+    "cob_catamarca_oculta": 0.9375
+   },
+   {
+    "modelo": "M3",
+    "sesgo": 0.140571357760217,
+    "sesgo_dia": 0.15350046604037382,
+    "sesgo_noche": -0.02890274093722367,
+    "sesgo_region_max": 0.20271830814484226,
+    "error_tipico": 0.24130173965206958,
+    "error_chicas": 0.27411873840445267,
+    "cobertura": 0.8810763888888888,
+    "err_catamarca_dentro": 0.31101694915254235,
+    "err_catamarca_oculta": 0.2090067008277493,
+    "cob_catamarca_oculta": 0.9166666666666666
+   }
+  ],
+  "tendencia": {
+   "Aqua solo (2003-2022)": {
+    "cambio": 2010,
+    "p_pettitt": 0.04445484203123453,
+    "z_mk": -2.563098453866048,
+    "p_mk": 0.010374262567202308,
+    "cambio_pct": -0.33664706572618186
+   },
+   "Armonizada (2003-2025)": {
+    "cambio": 2012,
+    "p_pettitt": 0.017725504576230587,
+    "z_mk": -3.4333593300490794,
+    "p_mk": 0.0005961514569789994,
+    "cambio_pct": -0.3511512677090415
+   },
+   "Ingenua: todos los focos sumados (2003-2025)": {
+    "cambio": 2012,
+    "p_pettitt": 0.0011030365987189233,
+    "z_mk": 4.43695667267881,
+    "p_mk": 9.123964935353612e-06,
+    "cambio_pct": 3.045992983629377
+   }
+  },
+  "spearman": {
+   "aqua": 0.34838434051359346,
+   "arm": 0.3488154435695881,
+   "ingenua": 0.31582266228750694
+  },
+  "spearman_dentro": {
+   "aqua": 0.4655844155844156,
+   "arm": 0.4791182501708817,
+   "ingenua": 0.12477785372522213
+  },
+  "tend_provincias": {
+   "n_sig": 5,
+   "arm": 4,
+   "ing": 0
+  },
+  "estacionalidad": 0.9720279720279721,
+  "records": [
+   [
+    "Córdoba",
+    2020,
+    2,
+    23,
+    1,
+    21
+   ],
+   [
+    "Corrientes",
+    2022,
+    2,
+    23,
+    1,
+    20
+   ],
+   [
+    "Entre Ríos",
+    2020,
+    2,
+    23,
+    1,
+    21
+   ]
+  ]
+ }
+}

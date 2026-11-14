@@ -344,4 +344,18 @@ L += ["", f"Estacionalidad: incendios reportados por mes (dt 427, 2017-2025) con
          "cuadrados: es fuego que se mueve, no una instalación. No aparece en la prensa: puede ser quema agrícola o de "
          "pastizal." if lp[3] < 15 and lp[1] >= 20 else "Revisar: hay concentración en pocos cuadrados.")]
 (REPORTES / "validacion.md").write_text("\n".join(L) + "\n", encoding="utf-8")
+
+# the numbers the website shows ("How do we know it works?")
+import json  # noqa: E402
+
+metricas = {
+    "elegido": elegido,
+    "pasa": {"a": bool(pasa_a), "b": bool(pasa_b), "c_rankings": bool(c_rank), "c_tendencia": bool(c_tend)},
+    "examen": ex.reset_index().to_dict(orient="records"),
+    "tendencia": tests_b, "spearman": rho, "spearman_dentro": {k: v[0] for k, v in dentro.items()},
+    "tend_provincias": {"n_sig": int(len(sig)), "arm": coinc_arm, "ing": coinc_ing},
+    "estacionalidad": float(rho_mes), "records": records,
+}
+(DERIV / "validacion_metricas.json").write_text(json.dumps(metricas, ensure_ascii=False, default=float, indent=1),
+                                                  encoding="utf-8")
 print("\n".join(L))
