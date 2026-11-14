@@ -316,7 +316,26 @@ T = {
                          "Rain over the last three full months in the province (NASA POWER). Normal for those months: "
                          "{n} mm (2003–2022 median); “drier” = within the driest third of years. Humidity last month: "
                          "{h} % (normal {hn} %). Context, not a forecast."),
+    # one-sentence summary (Series view); short, so it fits one line
+    "res.mes.max": ("{mes} de {anio} fue el {m} con más focos en {n} años ({v}).",
+                    "{mes} {anio} was the {m} with the most hot spots in {n} years ({v})."),
+    "res.mes.min": ("{mes} de {anio} fue el {m} con menos focos en {n} años ({v}).",
+                    "{mes} {anio} was the {m} with the fewest hot spots in {n} years ({v})."),
+    "res.mes.arriba": ("{mes} de {anio}: {v} focos, {p} % más que lo normal.",
+                       "{mes} {anio}: {v} hot spots, {p} % above normal."),
+    "res.mes.abajo": ("{mes} de {anio}: {v} focos, {p} % menos que lo normal.",
+                      "{mes} {anio}: {v} hot spots, {p} % below normal."),
+    "res.mes.normal": ("{mes} de {anio}: {v} focos, dentro de lo habitual (mediana: {n}).",
+                       "{mes} {anio}: {v} hot spots, within the usual range (median: {n})."),
+    "res.mes.sin": ("{mes} de {anio}: sin focos, como es habitual.", "{mes} {anio}: no hot spots, as usual."),
+    "res.anio.arriba": ("En el año, {p} % más que lo normal.", "Year so far: {p} % above normal."),
+    "res.anio.abajo": ("En el año, {p} % menos que lo normal.", "Year so far: {p} % below normal."),
+    "res.anio.cerca": ("En el año, cerca de lo normal.", "Year so far: close to normal."),
+    "res.lluvia.seco": ("Últimos tres meses: más secos que lo habitual.", "Last three months: drier than usual."),
+    "res.lluvia.lluvioso": ("Últimos tres meses: más lluviosos que lo habitual.",
+                            "Last three months: wetter than usual."),
     # Climate and fire view
+    "nav.datos": ("Datos abiertos", "Open data"),
     "nav.clima": ("Clima y fuego", "Climate and fire"),
     "clima.depto": ("clima de la provincia: {prov}", "climate of the province: {prov}"),
     "clima.variable": ("Variable de clima", "Climate variable"),

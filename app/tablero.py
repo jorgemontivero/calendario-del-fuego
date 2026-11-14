@@ -29,6 +29,8 @@ CSS = """<style>
   .tarjeta {flex: 1 1 calc(50% - 0.4rem);}
   .tarjeta .va, .tarjetas:has(> .tarjeta:nth-child(5)) .va {font-size: 1.05rem; white-space: normal;}
 }
+.resumen {font-size: 0.92rem; margin: 0.1rem 0 0.15rem 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+@media (max-width: 900px) {.resumen {white-space: normal;}}
 .area-titulo {font-size: 1.55rem; font-weight: 700; line-height: 1.15; margin: 0;}
 .area-sub {font-size: 0.75rem; opacity: 0.7;}
 /* the window-height probe is an invisible iframe: take it out of the layout (it keeps running) */
@@ -134,13 +136,13 @@ def _tarjetas_recientes(d: pd.DataFrame):
     ]
 
 
-def _tarjeta_lluvia(prov_cod: str, ua: int, um: int) -> str:
+def _lluvia(prov_cod: str, ua: int, um: int) -> dict | None:
     """Climate context: rain of the three months ending in the last full month, against the median of the same
     three months in 2003-2022 (NASA POWER, province of the area; the country for all of Argentina)."""
     c = clima()
     c = c[c.prov_cod == prov_cod].set_index(["anio", "mes"]).sort_index()
     if (ua, um) not in c.index or not c.loc[(ua, um), "completo"]:
-        return ""
+        return None
     meses = [((ua * 12 + um - 1 - k) // 12, (ua * 12 + um - 1 - k) % 12 + 1) for k in (2, 1, 0)]
     v = float(c.lluvia_mm.reindex(meses).sum())
     # the same three months in each reference year (shifted whole years back, so Dec-Feb windows still work)
@@ -148,18 +150,53 @@ def _tarjeta_lluvia(prov_cod: str, ua: int, um: int) -> str:
                     for a in range(2003, 2023)])
     ref = ref[~np.isnan(ref)]
     if not len(ref):
-        return ""
-    normal = float(np.median(ref))
+        return None
     q1, q2 = np.quantile(ref, [1 / 3, 2 / 3])
-    ter = "seco" if v <= q1 else ("lluvioso" if v >= q2 else "normal")
-    hum = float(c.loc[(ua, um), "humedad"])
-    hum_n = float(c.humedad.reindex([(a, um) for a in range(2003, 2023)]).median())
-    etiqueta = t("kpi.lluvia", m1=mes(meses[0][1]), m2=mes(um))
-    ayuda = t("kpi.lluvia.ayuda", n=num(normal), h=num(hum), hn=num(hum_n))
-    color = {"seco": "#EA580C", "lluvioso": "#3B82F6"}.get(ter, "inherit")
+    return dict(v=v, normal=float(np.median(ref)), m1=meses[0][1],
+                ter="seco" if v <= q1 else ("lluvioso" if v >= q2 else "normal"),
+                hum=float(c.loc[(ua, um), "humedad"]),
+                hum_n=float(c.humedad.reindex([(a, um) for a in range(2003, 2023)]).median()))
+
+
+def _tarjeta_lluvia(prov_cod: str, ua: int, um: int) -> str:
+    ll = _lluvia(prov_cod, ua, um)
+    if ll is None:
+        return ""
+    etiqueta = t("kpi.lluvia", m1=mes(ll["m1"]), m2=mes(um))
+    ayuda = t("kpi.lluvia.ayuda", n=num(ll["normal"]), h=num(ll["hum"]), hn=num(ll["hum_n"]))
+    color = {"seco": "#EA580C", "lluvioso": "#3B82F6"}.get(ll["ter"], "inherit")
     return (f'<div class="tarjeta" title="{html.escape(ayuda)}"><div class="et">{html.escape(etiqueta)}</div>'
-            f'<div class="va">{num(v)} mm<span class="de" style="color:{color}">'
-            f'{html.escape(t("kpi.lluvia." + ter))}</span></div></div>')
+            f'<div class="va">{num(ll["v"])} mm<span class="de" style="color:{color}">'
+            f'{html.escape(t("kpi.lluvia." + ll["ter"]))}</span></div></div>')
+
+
+def frase_resumen(d: pd.DataFrame) -> str:
+    """One sentence saying what the cards show, for someone who looks for thirty seconds: the last full month, the
+    year so far and the rain of the last three months. Plain facts side by side: no cause is claimed."""
+    ua, um = meta()["ultimo_mes_completo"]
+    u = d[(d.anio == ua) & (d.mes == um)].iloc[0]
+    m_largo, n = mes(um, True), int(u.n_anios) if not np.isnan(u.n_anios) else 0
+    if u.normal <= 0 and u.valor <= 0:
+        p_mes = t("res.mes.sin", mes=m_largo.capitalize(), anio=ua)
+    elif not np.isnan(u.puesto) and int(u.puesto) == 1 and n > 1:
+        p_mes = t("res.mes.max", mes=m_largo.capitalize(), anio=ua, m=m_largo, n=n, v=num(u.valor))
+    elif not np.isnan(u.puesto) and int(u.puesto) == n and n > 1:
+        p_mes = t("res.mes.min", mes=m_largo.capitalize(), anio=ua, m=m_largo, n=n, v=num(u.valor))
+    elif u.estado == "normal" or u.normal <= 0:
+        p_mes = t("res.mes.normal", mes=m_largo.capitalize(), anio=ua, v=num(u.valor), n=num(u.normal))
+    else:
+        p_mes = t("res.mes.arriba" if u.valor > u.normal else "res.mes.abajo", mes=m_largo.capitalize(), anio=ua,
+                  v=num(u.valor), p=num(abs(100 * (u.valor / u.normal - 1))))
+    av, an = d[(d.anio == ua) & (d.mes <= um)].valor.sum(), _normal_acumulado(d, um)
+    if not an:
+        p_anio = ""
+    elif abs(av / an - 1) < 0.1:
+        p_anio = t("res.anio.cerca")
+    else:
+        p_anio = t("res.anio.arriba" if av > an else "res.anio.abajo", p=num(abs(100 * (av / an - 1))))
+    ll = _lluvia(st.session_state.get("prov_sel", "00"), ua, um)
+    p_ll = t("res.lluvia." + ll["ter"]) if ll and ll["ter"] != "normal" else ""
+    return " ".join(x for x in (p_mes, p_anio, p_ll) if x)
 
 
 def _tarjetas_anio(d: pd.DataFrame, anio: int):

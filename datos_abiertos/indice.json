@@ -1,0 +1,117 @@
+{
+ "fecha_datos": "2026-11-14",
+ "archivos": [
+  {
+   "archivo": "serie_mensual_pais_provincias.csv",
+   "filas": 7175,
+   "kb": 515,
+   "columnas": [
+    "level",
+    "area_code",
+    "area",
+    "year",
+    "month",
+    "hotspots",
+    "lo90",
+    "hi90",
+    "median_month",
+    "p90_month",
+    "rank",
+    "n_years",
+    "prob_unusual",
+    "unusual",
+    "complete_month",
+    "source"
+   ],
+   "es": "Serie armonizada por mes, total país y 24 provincias, 2003 a hoy, con margen del 90 % y comparación con lo normal.",
+   "en": "Harmonized monthly series, country total and 24 provinces, 2003 to date, with 90 % range and comparison with normal."
+  },
+  {
+   "archivo": "serie_mensual_departamentos.zip",
+   "filas": 151823,
+   "kb": 558,
+   "columnas": [
+    "province_code",
+    "province",
+    "department_code",
+    "department",
+    "year",
+    "month",
+    "hotspots",
+    "median_month",
+    "complete_month",
+    "source"
+   ],
+   "es": "Serie armonizada por mes y departamento (códigos del IGN), 2003 a hoy. Sin margen: usan el factor de su provincia.",
+   "en": "Harmonized monthly series by department (IGN codes), 2003 to date. No range: they use their province's factor."
+  },
+  {
+   "archivo": "serie_diaria.zip",
+   "filas": 377416,
+   "kb": 1347,
+   "columnas": [
+    "level",
+    "area_code",
+    "date",
+    "hotspots"
+   ],
+   "es": "Serie armonizada por día, para país, provincias y departamentos. Solo figuran los días con focos; el resto es cero.",
+   "en": "Harmonized daily series for country, provinces and departments. Only days with hot spots are listed; the rest are zero."
+  },
+  {
+   "archivo": "factores_conversion.csv",
+   "filas": 192,
+   "kb": 18,
+   "columnas": [
+    "province_code",
+    "province",
+    "region",
+    "season",
+    "day_night",
+    "aqua_cell_days",
+    "snpp_cell_days",
+    "factor",
+    "viirs_per_modis",
+    "weight_own_data",
+    "viirs_per_modis_province_only",
+    "viirs_per_modis_region",
+    "noaa20_to_snpp",
+    "model"
+   ],
+   "es": "Factores para llevar VIIRS a equivalente MODIS (Aqua), por provincia, estación y día o noche.",
+   "en": "Factors that take VIIRS to MODIS (Aqua) equivalent, by province, season and day or night."
+  },
+  {
+   "archivo": "clima_mensual.csv",
+   "filas": 7475,
+   "kb": 468,
+   "columnas": [
+    "area_code",
+    "area",
+    "year",
+    "month",
+    "rain_mm",
+    "humidity_pct",
+    "tmax_c",
+    "rain_prev3_mm",
+    "rain_prev6_mm",
+    "complete_month"
+   ],
+   "es": "Lluvia, humedad y temperatura máxima por mes (NASA POWER), por provincia y total país.",
+   "en": "Monthly rain, humidity and maximum temperature (NASA POWER), by province and country total."
+  },
+  {
+   "archivo": "anual_pais_comparacion.csv",
+   "filas": 23,
+   "kb": 1,
+   "columnas": [
+    "year",
+    "harmonized",
+    "aqua_only",
+    "all_sensors_summed"
+   ],
+   "es": "Total anual del país de tres maneras: serie armonizada, Aqua solo y la suma de todos los sensores.",
+   "en": "Country yearly total three ways: harmonized series, Aqua only and the sum of all sensors."
+  }
+ ]
+}

@@ -20,6 +20,7 @@ shows it as a fire calendar (year × month) for any province or department since
 | 4. Convert | `pipeline/paso4_convertir.py`, `pipeline/modelo.py` | `data/derivados/serie_armonizada_{provincia,pais,departamento}.parquet`, `factores.parquet`, `reportes/paso4_convertir.md` |
 | 5. Validate | `pipeline/paso5_comprobar.py` | `reportes/validacion.md` |
 | App | `pipeline/paso6_datos_app.py` → `app/` (Streamlit) | `app/datos/` (small files the app reads); run `streamlit run app/app.py`, English with `?lang=en` |
+| Open data | `pipeline/paso7_datos_abiertos.py` | [`datos_abiertos/`](datos_abiertos/): the harmonized series (monthly and daily), conversion factors and climate as CSV, with a column dictionary |
 
 Step 2 keeps vegetation fires only: FIRMS type 0, enough confidence (MODIS ≥ 30, VIIRS nominal/high), and no
 persistent heat sources (≈1 km cells where VIIRS saw heat on 30 or more distinct days: gas flares, industry).

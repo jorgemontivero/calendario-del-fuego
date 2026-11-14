@@ -22,6 +22,7 @@ paginas = [
     st.Page(AQUI / "clima.py", title=t("nav.clima"), url_path="clima"),
     st.Page(AQUI / "metodologia.py", title=t("nav.metodologia"), url_path="metodologia", visibility="hidden"),
     st.Page(AQUI / "ayuda.py", title=t("nav.ayuda"), url_path="ayuda", visibility="hidden"),
+    st.Page(AQUI / "datos.py", title=t("nav.datos"), url_path="datos", visibility="hidden"),
     st.Page(AQUI / "equipo.py", title=t("nav.equipo"), url_path="equipo", visibility="hidden"),
     st.Page(AQUI / "contacto.py", title=t("nav.contacto"), url_path="contacto", visibility="hidden"),
 ]

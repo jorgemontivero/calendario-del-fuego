@@ -107,16 +107,18 @@ def cabecera():
       .block-container {padding-top: 3.6rem !important;}
     }
     /* "About the project" links: drawn first, shown last, at the foot of the sidebar */
-    [data-testid="stSidebarUserContent"] > div > [data-testid="stVerticalBlock"] {min-height: calc(100vh - 7rem);}
+    [data-testid="stSidebarUserContent"] {padding-bottom: 0.75rem !important;}
+    [data-testid="stSidebarUserContent"] > div > [data-testid="stVerticalBlock"] {min-height: calc(100vh - 6rem);}
     [data-testid="stLayoutWrapper"]:has(> .st-key-acerca) {order: 99; margin-top: auto;}
     .st-key-acerca {padding-top: 0.6rem; border-top: 1px solid rgba(128,128,128,0.25);}
-    .st-key-acerca a {padding: 0.05rem 0.25rem !important; min-height: 0 !important;}
+    .st-key-acerca a {padding: 0.2rem 0.25rem !important; min-height: 0 !important;}
     .st-key-acerca a p {font-size: 0.9rem;}
     </style>""", unsafe_allow_html=True)
-    with st.sidebar.container(key="acerca", gap="small"):
+    with st.sidebar.container(key="acerca", gap=None):
         st.caption(t("nav.acerca"))
         for archivo, clave, icono in [("metodologia", "nav.metodologia", ":material/science:"),
                                       ("ayuda", "nav.ayuda", ":material/help:"),
+                                      ("datos", "nav.datos", ":material/download:"),
                                       ("equipo", "nav.equipo", ":material/group:"),
                                       ("contacto", "nav.contacto", ":material/mail:")]:
             st.page_link(f"paginas/{archivo}.py", label=t(clave), icon=icono)

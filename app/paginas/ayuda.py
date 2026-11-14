@@ -32,7 +32,8 @@ with c1:
         "8. **Las tarjetas de arriba** resumen el último mes completo: cuántos focos hubo, cuánto es lo normal, en qué "
         "puesto queda y si es un mes normal o inusual. Pasá el cursor para ver el margen y la probabilidad.\n"
         "9. **El ícono ⓘ** al lado de cada título explica ese gráfico.\n"
-        "10. **Descargá** los datos de la zona elegida con el botón de la barra lateral.",
+        "10. **Descargá** los datos de la zona elegida con el botón de la barra lateral, o todas las tablas completas "
+        "en **Datos abiertos**.",
         "1. **Pick the area** in the sidebar: all of Argentina, a province or a department. The choice is kept when "
         "you switch views.\n"
         "2. **Historical series**: how fire has behaved over the whole series. On top you can narrow the years and "
@@ -53,7 +54,8 @@ with c1:
         "8. **The cards on top** sum up the last full month: how many hot spots, what is normal, its rank, and whether "
         "it is a normal or unusual month. Hover to see the range and the probability.\n"
         "9. **The ⓘ icon** next to each title explains that chart.\n"
-        "10. **Download** the data of the chosen area with the button in the sidebar."))
+        "10. **Download** the data of the chosen area with the button in the sidebar, or every full table in "
+        "**Open data**."))
 
     st.subheader(t("como_leer"))
     st.markdown(t("como_leer.texto"))

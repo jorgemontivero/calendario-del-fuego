@@ -7,15 +7,19 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from comun import CONFIG_GRAFICO, NARANJA, cabecera, fecha_datos, mes, num, serie, t
-from tablero import alto_graficos, barra_lateral_final, encabezado, filtros
+import html
 
-RESTO = 300  # everything on this view that is not a chart (measured on screen)
+from tablero import alto_graficos, barra_lateral_final, encabezado, filtros, frase_resumen
+
+RESTO = 330  # everything on this view that is not a chart (measured on screen)
 
 cabecera()
 d, nombre, prov_cod, prov_nom, dep_cod = filtros()
 ALTO = alto_graficos(RESTO)
 anio_max = int(serie().anio.max())
 encabezado(d, nombre)
+_frase = html.escape(frase_resumen(d))
+st.markdown(f'<div class="resumen" title="{_frase}">{_frase}</div>', unsafe_allow_html=True)
 
 c1, c2 = st.columns([3, 2], vertical_alignment="center")
 with c1:
