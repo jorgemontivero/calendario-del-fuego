@@ -10,9 +10,15 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-from comun import DATOS, NARANJA, cabecera, fecha_datos, meta, mes, num, pct, pie, serie, t
+from streamlit_js_eval import streamlit_js_eval
 
-ALTO = 390  # height of every chart in the tabs, so each tab fits on one screen
+from comun import DATOS, NARANJA, cabecera, fecha_datos, meta, mes, num, pct, serie, t
+
+# Every chart in the tabs gets the same height, computed from the browser window so the whole dashboard fits
+# on one screen without scrolling. The window height is read once with a tiny JS component (the first run, before it
+# answers, uses 900 px). RESTO is everything that is not a chart: top bar, title and indicators, tabs, the tab's
+# controls, panel titles and paddings (measured on screen).
+RESTO = 445
 st.markdown("""<style>
 div[data-testid="stMetricValue"] {font-size: 1.7rem;}
 div[data-testid="stMetric"] {padding: 0;}
@@ -26,6 +32,11 @@ def limites():
 
 
 cabecera()
+with st.sidebar:
+    alto_js = streamlit_js_eval(js_expressions="window.parent.innerHeight", key="alto_ventana")  # the component runs in an iframe
+if alto_js:
+    st.session_state["alto_px"] = int(alto_js)
+ALTO = int(min(560, max(230, st.session_state.get("alto_px", 900) - RESTO)))
 s = serie()
 ua, um = meta()["ultimo_mes_completo"]
 anio_max = int(s.anio.max())
@@ -105,7 +116,7 @@ with tab_serie:
     izq, der = st.columns([3, 2])
     with izq.container(border=True):
         st.markdown(f"**{t('panel.calendario')}** · {desde}–{hasta} · {t('cal.modo.' + modo).lower()}",
-                    help=t("cal.unidad") + " " + t("armon.corta"))
+                    help=t("cal.unidad") + " " + t("armon.corta") + " " + t("en_curso", fecha=fecha_datos()))
         dd = d[d.anio.between(desde, hasta)]
         anios = list(range(hasta, desde - 1, -1))
         Z = np.full((len(anios), 12), np.nan)
@@ -241,6 +252,5 @@ with st.sidebar:
     st.caption(t("desc.texto"))
     with st.expander(t("desc.citar")):
         st.code(t("cita"), language=None)
-if len(d[~d.mes_completo]):
-    st.caption(t("en_curso", fecha=fecha_datos()))
-pie()
+    st.divider()
+    st.caption(t("datos.actualizado", fecha=fecha_datos()) + " " + t("pie"))

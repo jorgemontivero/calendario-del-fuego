@@ -9,3 +9,4 @@ streamlit==1.67.0
 plotly==7.1.0
 openpyxl
 scipy==1.18.1
+streamlit-js-eval==1.0.0

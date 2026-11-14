@@ -75,7 +75,7 @@ def cabecera():
     st.markdown("""<style>
     .st-key-barra_sup {position: fixed; top: 0.55rem; right: 8.5rem; z-index: 999991; width: auto !important;}
     .st-key-barra_sup button {min-height: 2rem; padding-top: 0.15rem; padding-bottom: 0.15rem;}
-    .block-container {padding-top: 2.4rem !important;}
+    .block-container {padding-top: 2.4rem !important; padding-bottom: 0.5rem !important;}
     .block-container h2:first-of-type {padding-top: 0.2rem;}
     @media (max-width: 640px) {.st-key-barra_sup {right: 3.2rem;} .st-key-barra_sup p {font-size: 0.8rem;}}
     </style>""", unsafe_allow_html=True)
