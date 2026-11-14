@@ -121,6 +121,51 @@ T = {
     # dashboard
     "tab.filtros": ("Filtros", "Filters"),
     "nav.geo": ("Análisis geográfico", "Geographic analysis"),
+    "nav.rep": ("Detectados vs. reportados", "Detected vs. reported"),
+    "rep.depto": ("(datos oficiales por provincia; se muestra la de {dep})",
+                  "(official data are by province; showing that of {dep})"),
+    "rep.anios": ("Años comparados", "Years compared"),
+    "rep.anios.ayuda": ("Años con superficie informada por la provincia (2003–2025). Hay provincias y años sin dato.",
+                        "Years with burned area reported by the province (2003–2025). Some provinces and years have no "
+                        "data."),
+    "rep.rho": ("Coincidencia de rankings (ρ)", "Ranking agreement (ρ)"),
+    "rep.rho.ayuda": ("Correlación de Spearman entre los focos armonizados y las hectáreas informadas, año por año: 1 "
+                      "si ordenan los años igual, 0 si no tienen nada que ver. Compara órdenes, no valores. Para toda "
+                      "la Argentina da bajo: el total oficial lo mueven unos pocos años de pastizal enormes en La Pampa "
+                      "y Buenos Aires, y las provincias que informan cambian de un año a otro. Por provincia la "
+                      "coincidencia es mayor (mediana 0,48, ver Metodología).",
+                      "Spearman correlation between harmonized hot spots and reported hectares, year by year: 1 if they "
+                      "rank the years the same way, 0 if unrelated. It compares rankings, not values. For all of "
+                      "Argentina it is low: the national official total is driven by a few huge grassland years in La "
+                      "Pampa and Buenos Aires, and the provinces that report change from year to year. By province "
+                      "the agreement is higher (median 0.48, see Methods)."),
+    "rep.picos": ("Año pico: focos · hectáreas", "Peak year: hot spots · hectares"),
+    "rep.picos.ayuda": ("El año con más focos detectados y el año con más superficie informada.",
+                        "The year with most detected hot spots and the year with most reported area."),
+    "rep.top3": ("Años más fuertes en común", "Strongest years in common"),
+    "rep.top3.valor": ("{k} de 3", "{k} of 3"),
+    "rep.top3.ayuda": ("De los 3 años con más focos, cuántos están también entre los 3 con más superficie informada.",
+                       "Of the 3 years with most hot spots, how many are also among the 3 with most reported area."),
+    "rep.titulo.barras": ("Detectados y reportados, año por año", "Detected and reported, year by year"),
+    "rep.ayuda.barras": ("Arriba, los focos detectados por satélite (serie armonizada, equivalente MODIS). Abajo, la "
+                         "superficie quemada que la provincia informó al Ministerio de Ambiente (CIAM): hasta 2023, la "
+                         "serie larga (dt 510); 2024–2025, en gris claro, la tabla de reportes (dt 416), que no siempre "
+                         "coincide con la otra. Miden cosas distintas: calor visto desde el espacio y hectáreas "
+                         "contadas en tierra.",
+                         "Top: hot spots detected by satellite (harmonized series, MODIS equivalent). Bottom: burned area "
+                         "the province reported to the Ministry of Environment (CIAM): up to 2023, the long series "
+                         "(dt 510); 2024–2025, in light grey, the reports table (dt 416), which does not always agree "
+                         "with the other. They measure different things: heat seen from space and hectares counted on "
+                         "the ground."),
+    "rep.sub.focos": ("Focos detectados (satélite)", "Detected hot spots (satellite)"),
+    "rep.sub.ha": ("Hectáreas reportadas (provincias)", "Reported hectares (provinces)"),
+    "rep.titulo.disp": ("¿Coinciden los años fuertes?", "Do the strong years match?"),
+    "rep.ayuda.disp": ("Un punto por año (escala logarítmica en los dos ejes). Si los puntos suben de izquierda a "
+                       "derecha, los años con más focos son también los de más superficie informada.",
+                       "One point per year (log scale on both axes). If the points rise from left to right, the years "
+                       "with more hot spots are also those with more reported area."),
+    "rep.eje.focos": ("focos detectados", "detected hot spots"),
+    "rep.eje.ha": ("hectáreas reportadas", "reported hectares"),
     "rank.titulo": ("¿Dónde se concentró el fuego en {anio}?", "Where did fire concentrate in {anio}?"),
     "rank.provincias": ("provincias", "provinces"),
     "rank.mas": ("más que lo normal", "above normal"), "rank.menos": ("menos", "below"),

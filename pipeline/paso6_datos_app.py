@@ -120,6 +120,31 @@ lim = lim[~lim.geometry.is_empty]
 lim["geometry"] = lim.geometry.simplify(0.01, preserve_topology=True)
 lim.to_parquet(SAL / "limites.parquet", index=False)
 
+# "Detected vs reported": burned area that the provinces report to the Ministry of Environment (CIAM).
+# dt 510 (1993-2023, the longest table) for 2003-2023; dt 416 (reports 2017-2026) only for the years 510 lacks
+# (2024-2025; 2026 is still being loaded). The two tables don't always agree (Catamarca 2017: 45,170 vs 17,385 ha),
+# so each value keeps its source. The national value is the sum of the provinces with data, with their count.
+OFICIAL = RAIZ / "data" / "oficial"
+nom_cod = dict(zip(provs.provincia, provs.prov_cod))
+nom_cod.update({"Tierra del Fuego": nom_cod["Tierra del Fuego, Antártida e Islas del Atlántico Sur"],
+                "CABA": nom_cod["Ciudad Autónoma de Buenos Aires"]})
+o510 = pd.read_csv(OFICIAL / "ciam_dt510.csv", sep=";", na_values=["-", "s/d", ""])
+o510.columns = ["anio", "jur", "unidad", "ha", "ha_bosque"]
+o510 = o510[o510.anio.between(2003, 2023)].assign(fuente="dt510")
+o416 = pd.read_csv(OFICIAL / "ciam_dt416.csv", sep=";", na_values=["-", "s/d", ""])
+o416 = o416.melt(id_vars="jurisdicción", var_name="anio", value_name="ha").rename(columns={"jurisdicción": "jur"})
+o416["anio"] = o416.anio.str[-4:].astype(int)
+o416["ha"] = pd.to_numeric(o416.ha, errors="coerce")
+o416 = o416[o416.anio.between(2024, 2025)].assign(fuente="dt416")
+of = pd.concat([o510[["jur", "anio", "ha", "fuente"]], o416[["jur", "anio", "ha", "fuente"]]], ignore_index=True)
+of = of[of.jur != "Total"]
+of["prov_cod"] = of.jur.map(nom_cod)
+assert of.prov_cod.notna().all(), of[of.prov_cod.isna()].jur.unique()
+of = of.dropna(subset=["ha"])
+nac = of.groupby(["anio", "fuente"]).agg(ha=("ha", "sum"), n_prov=("prov_cod", "nunique")).reset_index().assign(prov_cod="00")
+of = pd.concat([of.assign(n_prov=1)[["prov_cod", "anio", "ha", "fuente", "n_prov"]], nac[["prov_cod", "anio", "ha", "fuente", "n_prov"]]])
+of.to_parquet(SAL / "oficial.parquet", index=False)
+
 fecha = con.execute(f"select max(fecha) from '{(DERIV / 'focos_limpios.parquet').as_posix()}'").fetchone()[0]
 meta = {"fecha_datos": str(fecha), "ultimo_mes_completo": None,
         "validacion": json.loads((DERIV / "validacion_metricas.json").read_text(encoding="utf-8"))}
