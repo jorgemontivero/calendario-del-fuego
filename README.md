@@ -8,7 +8,9 @@ consistent sensor, it fell. The jump comes from new satellites (VIIRS on Suomi N
 from more fire. This project harmonizes MODIS and VIIRS into one comparable series (MODIS-equivalent units) and
 shows it as a fire calendar (year × month) for any province or department since 2003.
 
-> Work in progress during the hackathon (14–15 November 2026).
+**Live demo:** https://calendariodelfuego.streamlit.app/ (English: add `?lang=en`) · **Open data:** [`datos_abiertos/`](datos_abiertos/)
+
+> Built during the hackathon (14–15 November 2026).
 
 ## Pipeline
 

@@ -27,6 +27,7 @@ CSS = """<style>
 @media (max-width: 640px) {
   .tarjetas {flex-wrap: wrap; gap: 0.4rem !important; margin-bottom: 0.9rem;}
   .tarjeta {flex: 1 1 calc(50% - 0.4rem);}
+  .tarjeta .et {white-space: normal;}
   .tarjeta .va, .tarjetas:has(> .tarjeta:nth-child(5)) .va {font-size: 1.05rem; white-space: normal;}
 }
 .resumen {font-size: 0.92rem; margin: 0.1rem 0 0.15rem 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
