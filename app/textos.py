@@ -120,6 +120,7 @@ T = {
              "NASA Space Apps Challenge, Catamarca."),
     # dashboard
     "tab.filtros": ("Filtros", "Filters"),
+    "area.aviso.corto": ("Área chica: números orientativos", "Small area: indicative numbers"),
     "tend.corta.sube": ("tendencia en alza", "upward trend"), "tend.corta.baja": ("tendencia en baja", "downward trend"),
     "tend.corta.nada": ("sin tendencia clara", "no clear trend"),
     "temp.corta": ("pico: {pico} · temporada: {temp}", "peak: {pico} · season: {temp}"),

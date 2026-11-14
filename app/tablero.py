@@ -1,0 +1,130 @@
+"""Pieces shared by the two dashboard views (Series and One year): the area filter in the sidebar, the compact
+indicator cards, and the chart height that makes each view fit the browser window without scrolling."""
+
+import html
+
+import numpy as np
+import pandas as pd
+import streamlit as st
+from streamlit_js_eval import streamlit_js_eval
+
+from comun import fecha_datos, meta, mes, num, pct, serie, t
+
+ICONO = {"inusual": "🔴", "arriba": "🟠", "normal": "⚪", "abajo": "🔵", "en_curso": "⏳"}
+
+CSS = """<style>
+.tarjetas {display: flex; gap: 0.6rem; align-items: stretch; width: 100%;}
+.tarjeta {flex: 1 1 0; min-width: 0; border: 1px solid rgba(128,128,128,0.28); border-radius: 0.5rem;
+          padding: 0.35rem 0.7rem; line-height: 1.25;}
+.tarjeta .et {font-size: 0.78rem; opacity: 0.75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
+.tarjeta .va {font-size: 1.35rem; font-weight: 600; white-space: nowrap;}
+.tarjeta .de {font-size: 0.75rem; margin-left: 0.35rem; font-weight: 500;}
+.tarjeta .de.baja {color: #15803d;} .tarjeta .de.sube {color: #b91c1c;}
+.area-titulo {font-size: 1.55rem; font-weight: 700; line-height: 1.15; margin: 0;}
+.area-sub {font-size: 0.75rem; opacity: 0.7;}
+/* the window-height probe is an invisible iframe: take it out of the layout (it keeps running) */
+div[data-testid="stElementContainer"]:has(iframe[title*="streamlit_js_eval"]) {position: absolute; height: 0;
+    width: 0; overflow: hidden; margin: 0; padding: 0;}
+</style>"""
+
+
+def alto_graficos(resto: int) -> int:
+    """Height for every chart of the view: the browser window minus `resto` (everything that is not a chart:
+    top bar, indicators, controls, panel titles; measured on screen). The window height is read once with a tiny JS
+    component, which runs in an iframe (hence window.parent); the first run, before it answers, assumes 900 px."""
+    with st.sidebar:
+        alto_js = streamlit_js_eval(js_expressions="window.parent.innerHeight", key="alto_ventana")
+    if alto_js:
+        st.session_state["alto_px"] = int(alto_js)
+    return int(min(600, max(230, st.session_state.get("alto_px", 900) - resto)))
+
+
+def filtros():
+    """Province and department in the sidebar. The choice lives in session_state, so it survives switching views
+    (widget values are dropped when the widget is not on the page, and the top menu drops the URL parameters)."""
+    s = serie()
+    st.markdown(CSS, unsafe_allow_html=True)
+    if "prov_sel" not in st.session_state:
+        st.session_state["prov_sel"] = st.query_params.get("prov", "10")  # Catamarca by default: the local case
+    with st.sidebar:
+        st.markdown(f"### {t('tab.filtros')}")
+        provincias = s[s.nivel == "provincia"].drop_duplicates("area_cod").sort_values("area")
+        opciones_p = [("00", t("area.todo_pais"))] + list(zip(provincias.area_cod, provincias.area))
+        idx_p = next((i for i, (c, _) in enumerate(opciones_p) if c == st.session_state["prov_sel"]), 0)
+        prov_cod, prov_nom = st.selectbox(t("area.provincia"), opciones_p, index=idx_p, format_func=lambda o: o[1])
+        if prov_cod != st.session_state["prov_sel"]:
+            st.session_state["prov_sel"], st.session_state["dep_sel"] = prov_cod, None
+        dep_cod, dep_nom = None, None
+        if prov_cod != "00":
+            deps = s[(s.nivel == "departamento") & (s.prov_cod == prov_cod)].drop_duplicates("area_cod").sort_values("area")
+            opciones_d = [(None, t("area.todos"))] + list(zip(deps.area_cod, deps.area))
+            idx_d = next((i for i, (c, _) in enumerate(opciones_d) if c == st.session_state.get("dep_sel")), 0)
+            dep_cod, dep_nom = st.selectbox(t("area.departamento"), opciones_d, index=idx_d, format_func=lambda o: o[1])
+            st.session_state["dep_sel"] = dep_cod
+    if dep_cod:
+        d, nombre = s[(s.nivel == "departamento") & (s.area_cod == dep_cod)], f"{dep_nom} ({prov_nom})"
+    elif prov_cod == "00":
+        d, nombre = s[s.nivel == "pais"], t("area.todo_pais")
+    else:
+        d, nombre = s[(s.nivel == "provincia") & (s.area_cod == prov_cod)], prov_nom
+    return d.copy(), nombre, prov_cod, prov_nom, dep_cod
+
+
+def _tarjeta(etiqueta, valor, delta=None, sube=None, ayuda=None):
+    tit = f' title="{html.escape(ayuda)}"' if ayuda else ""
+    de = ""
+    if delta:
+        flecha = "▲" if sube else "▼"
+        de = f'<span class="de {"sube" if sube else "baja"}">{flecha} {html.escape(delta)}</span>'
+    return (f'<div class="tarjeta"{tit}><div class="et">{html.escape(etiqueta)}</div>'
+            f'<div class="va">{html.escape(valor)}{de}</div></div>')
+
+
+def encabezado(d: pd.DataFrame, nombre: str):
+    """Area name and four compact cards of the same size, in one row."""
+    ua, um = meta()["ultimo_mes_completo"]
+    u = d[(d.anio == ua) & (d.mes == um)].iloc[0]
+    acum = d[(d.anio == ua) & (d.mes <= um)]
+    av, an = acum.valor.sum(), acum.normal.sum()
+
+    def pct_txt(v, n):
+        return (None, None) if not n else (f"{num(abs(100 * (v / n - 1)))} % {t('kpi.vs_normal')}", v > n)
+
+    ayuda1 = t("kpi.mes.ayuda") + (" " + t("ultimo.rango", li=num(u.min90), ls=num(u.max90)) if not np.isnan(u.min90) else "")
+    d1, s1 = pct_txt(u.valor, u.normal)
+    d2, s2 = pct_txt(av, an)
+    ayuda4 = t("ultimo.prob", p=pct(u.prob_inusual)) if not np.isnan(u.prob_inusual) else None
+    tarjetas = "".join([
+        _tarjeta(t("kpi.mes", mes=mes(um, True).capitalize(), anio=ua), num(u.valor), d1, s1, ayuda1),
+        _tarjeta(t("kpi.acum", anio=ua, mes=mes(um)), num(av), d2, s2, t("kpi.acum.ayuda", mes=mes(um, True))),
+        _tarjeta(t("kpi.puesto", mes=mes(um)), t("ultimo.puesto.valor", k=num(u.puesto), n=num(u.n_anios))),
+        _tarjeta(t("kpi.estado"), f"{ICONO[u.estado]} {t('estado.' + u.estado)}", ayuda=ayuda4),
+    ])
+    c0, c1 = st.columns([1, 3.2], vertical_alignment="center")
+    with c0:
+        aviso = f'<div class="area-sub">⚠️ {html.escape(t("area.aviso.corto"))}</div>' if d.mediana_anual.iloc[0] < 50 else ""
+        st.markdown(f'<div class="area-titulo">{html.escape(nombre)}</div>{aviso}', unsafe_allow_html=True,
+                    help=t("area.aviso.chica") if aviso else None)
+    with c1:
+        st.markdown(f'<div class="tarjetas">{tarjetas}</div>', unsafe_allow_html=True)
+
+
+def barra_lateral_final(d: pd.DataFrame, nombre: str):
+    """Help, download, citation and footer, at the bottom of the sidebar."""
+    csv = pd.DataFrame({
+        "area": nombre, "year": d.anio, "month": d.mes, "hotspots": d.valor, "lo90": d.min90, "hi90": d.max90,
+        "median_month": d.normal, "p90_month": d.p90, "rank": d.puesto, "n_years": d.n_anios,
+        "unusual": (d.estado == "inusual").astype(int), "status": d.estado, "complete_month": d.mes_completo.astype(int),
+        "source": d.origen})
+    with st.sidebar:
+        st.divider()
+        with st.expander(t("como_leer")):
+            st.markdown(t("como_leer.texto"))
+        with st.expander(t("foco.titulo")):
+            st.markdown(t("foco.texto"))
+        st.download_button("⬇️ " + t("desc.serie"), csv.to_csv(index=False).encode("utf-8"),
+                           file_name=f"calendario_del_fuego_{nombre.replace(' ', '_')}.csv", mime="text/csv",
+                           width="stretch", help=t("desc.texto"))
+        with st.expander(t("desc.citar")):
+            st.code(t("cita"), language=None)
+        st.caption(t("datos.actualizado", fecha=fecha_datos()) + " " + t("pie"))
