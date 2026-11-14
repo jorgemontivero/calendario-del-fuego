@@ -70,6 +70,11 @@ uv pip install -r requirements.txt
 .venv/Scripts/python pipeline/paso5_comprobar.py   # needs R + glmmTMB for M3
 ```
 
+## Contact
+
+calendariodelfuego (at) gmail.com · bugs and ideas: [issues](https://github.com/jorgemontivero/calendario-del-fuego/issues).
+This is not an emergency service: in Argentina, call 100 if you see a fire.
+
 ## License
 
 Code: MIT. Data: each source keeps its own terms (see *Data*).
