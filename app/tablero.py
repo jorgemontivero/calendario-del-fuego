@@ -80,26 +80,76 @@ def _tarjeta(etiqueta, valor, delta=None, sube=None, ayuda=None):
             f'<div class="va">{html.escape(valor)}{de}</div></div>')
 
 
-def encabezado(d: pd.DataFrame, nombre: str):
-    """Area name and four compact cards of the same size, in one row."""
+def _pct_txt(v, n):
+    return (None, None) if not n else (f"{num(abs(100 * (v / n - 1)))} % {t('kpi.vs_normal')}", v > n)
+
+
+def puesto_txt(k, n) -> str:
+    """Rank in words: "the highest of 24", "the lowest of 24", "3rd highest of 24"."""
+    k, n = int(k), int(n)
+    if k == 1:
+        return t("puesto.max", n=n)
+    if k == n:
+        return t("puesto.min", n=n)
+    suf = "th" if 10 <= k % 100 <= 20 else {1: "st", 2: "nd", 3: "rd"}.get(k % 10, "th")
+    return t("puesto.k", k=k, suf=suf, n=n)
+
+
+def _normal_acumulado(d: pd.DataFrame, hasta_mes: int) -> float:
+    """What is normal for January..hasta_mes: the median, over 2003-2022, of each year's January..hasta_mes total
+    (not the sum of the monthly medians, which is lower)."""
+    ref = d[d.anio.between(2003, 2022) & (d.mes <= hasta_mes)].groupby("anio").valor.sum()
+    return float(ref.median())
+
+
+def _tarjetas_recientes(d: pd.DataFrame):
+    """Series view: the last full month and the year so far."""
     ua, um = meta()["ultimo_mes_completo"]
     u = d[(d.anio == ua) & (d.mes == um)].iloc[0]
-    acum = d[(d.anio == ua) & (d.mes <= um)]
-    av, an = acum.valor.sum(), acum.normal.sum()
-
-    def pct_txt(v, n):
-        return (None, None) if not n else (f"{num(abs(100 * (v / n - 1)))} % {t('kpi.vs_normal')}", v > n)
-
+    av = d[(d.anio == ua) & (d.mes <= um)].valor.sum()
+    an = _normal_acumulado(d, um)
     ayuda1 = t("kpi.mes.ayuda") + (" " + t("ultimo.rango", li=num(u.min90), ls=num(u.max90)) if not np.isnan(u.min90) else "")
-    d1, s1 = pct_txt(u.valor, u.normal)
-    d2, s2 = pct_txt(av, an)
+    d1, s1 = _pct_txt(u.valor, u.normal)
+    d2, s2 = _pct_txt(av, an)
     ayuda4 = t("ultimo.prob", p=pct(u.prob_inusual)) if not np.isnan(u.prob_inusual) else None
-    tarjetas = "".join([
+    return [
         _tarjeta(t("kpi.mes", mes=mes(um, True).capitalize(), anio=ua), num(u.valor), d1, s1, ayuda1),
         _tarjeta(t("kpi.acum", anio=ua, mes=mes(um)), num(av), d2, s2, t("kpi.acum.ayuda", mes=mes(um, True))),
-        _tarjeta(t("kpi.puesto", mes=mes(um)), t("ultimo.puesto.valor", k=num(u.puesto), n=num(u.n_anios))),
+        _tarjeta(t("kpi.puesto", mes=mes(um)), puesto_txt(u.puesto, u.n_anios), ayuda=t("puesto.ayuda")),
         _tarjeta(t("kpi.estado"), f"{ICONO[u.estado]} {t('estado.corto.' + u.estado)}", ayuda=ayuda4),
-    ])
+    ]
+
+
+def _tarjetas_anio(d: pd.DataFrame, anio: int):
+    """One-year view: the chosen year. The current year is incomplete, so it is compared January..last full month
+    against the same months of every other year."""
+    ua, um = meta()["ultimo_mes_completo"]
+    hasta = um if anio == ua else 12
+    tot = d[(d.mes <= hasta) & (d.anio <= ua) & ~((d.anio == ua) & (d.mes > um))].groupby("anio").valor.sum()
+    tot = tot[tot.index >= 2003]
+    if anio != ua:
+        tot = tot[tot.index < ua]  # complete years only
+    v = float(tot.loc[anio])
+    normal = _normal_acumulado(d, hasta)
+    puesto = int(tot.rank(ascending=False, method="min").loc[anio])
+    da, sa = _pct_txt(v, normal)
+    etiqueta = t("kpi.anio.parcial", anio=anio, mes=mes(um)) if anio == ua else t("kpi.anio", anio=anio)
+    meses = d[(d.anio == anio) & d.mes_completo]
+    pico = meses.loc[meses.valor.idxmax()] if len(meses) else None
+    inusuales = int((meses.estado == "inusual").sum())
+    return [
+        _tarjeta(etiqueta, num(v), da, sa, t("kpi.anio.ayuda")),
+        _tarjeta(t("kpi.puesto.anios"), puesto_txt(puesto, len(tot)), ayuda=t("kpi.puesto.anios.ayuda")),
+        _tarjeta(t("kpi.pico", anio=anio), f"{mes(int(pico.mes), True).capitalize()} · {num(pico.valor)}" if pico is not None else "—",
+                 ayuda=t("kpi.pico.ayuda")),
+        _tarjeta(t("kpi.inusuales"), t("kpi.inusuales.valor", k=inusuales, n=len(meses)), ayuda=t("kpi.inusuales.ayuda")),
+    ]
+
+
+def encabezado(d: pd.DataFrame, nombre: str, anio: int | None = None):
+    """Area name and four compact cards of the same size, in one row: about the latest months (Series view) or
+    about the chosen year (One-year view)."""
+    tarjetas = "".join(_tarjetas_recientes(d) if anio is None else _tarjetas_anio(d, anio))
     c0, c1 = st.columns([1, 3.2], vertical_alignment="center")
     with c0:
         aviso = f'<div class="area-sub">⚠️ {html.escape(t("area.aviso.corto"))}</div>' if d.mediana_anual.iloc[0] < 50 else ""

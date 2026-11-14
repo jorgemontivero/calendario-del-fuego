@@ -25,16 +25,23 @@ s = serie()
 d, nombre, prov_cod, prov_nom, dep_cod = filtros()
 ALTO = alto_graficos(RESTO)
 anio_max = int(s.anio.max())
-encabezado(d, nombre)
-
+# The chosen year lives in session_state (kept across views) and is updated by the selector's callback, which runs
+# before the page is drawn: the cards above the selector and the charts below always show the same year.
 anios = list(range(anio_max, 2002, -1))
 if "anio_sel_v" not in st.session_state:
     st.session_state["anio_sel_v"] = anio_max
+
+
+def _cambiar_anio():
+    st.session_state["anio_sel_v"] = st.session_state["anio_sel_w"]
+
+
+anio_sel = st.session_state["anio_sel_v"]
+encabezado(d, nombre, anio=anio_sel)
 c1, _ = st.columns([1, 5], vertical_alignment="center")
 with c1:
-    anio_sel = st.selectbox(t("tab.anio"), anios, index=anios.index(st.session_state["anio_sel_v"]),
-                            label_visibility="collapsed")
-st.session_state["anio_sel_v"] = anio_sel
+    st.selectbox(t("tab.anio"), anios, index=anios.index(anio_sel), key="anio_sel_w", on_change=_cambiar_anio,
+                 label_visibility="collapsed")
 
 izq, der = st.columns(2)
 with izq.container(border=True):
@@ -44,11 +51,25 @@ with izq.container(border=True):
     orden = med.sort_values(ascending=False)
     cum = orden.cumsum() / max(orden.sum(), 1e-9)
     temporada = sorted(orden.index[: int((cum < 0.8).sum()) + 1])
-    # the season as a range (jul–nov) when its months are consecutive, also across December
-    inicio = next((m for m in temporada if (m - 2) % 12 + 1 not in temporada), temporada[0])
-    corrido = set(temporada) == {(inicio - 1 + k) % 12 + 1 for k in range(len(temporada))}
-    temp_txt = (f"{mes(inicio)}–{mes((inicio - 1 + len(temporada) - 1) % 12 + 1)}" if corrido and len(temporada) > 1
-                else ", ".join(mes(m) for m in temporada))
+    # the season as runs of consecutive months ("ene, jul–nov"; a run can cross December), so the title fits one line
+    resto = set(temporada)
+    tramos = []
+    for m0 in sorted(temporada, key=lambda m: ((m - 2) % 12 + 1) in temporada):  # run starts first
+        if m0 not in resto or ((m0 - 2) % 12 + 1) in resto:
+            continue
+        fin = m0
+        while (fin % 12 + 1) in resto and (fin % 12 + 1) != m0:
+            fin = fin % 12 + 1
+        k = m0
+        while True:
+            resto.discard(k)
+            if k == fin:
+                break
+            k = k % 12 + 1
+        tramos.append((m0, fin))
+    if resto:  # all twelve months: no run start
+        tramos = [(1, 12)]
+    temp_txt = ", ".join(mes(a) if a == b else f"{mes(a)}–{mes(b)}" for a, b in sorted(tramos))
     st.markdown(f"**{t('panel.temporada')} · {anio_sel}** · {t('temp.corta', pico=mes(int(med.idxmax())), temp=temp_txt)}",
                 help=t("temp.temporada.ayuda"))
     ac = d[d.anio == anio_sel].sort_values("mes")
@@ -67,7 +88,7 @@ with izq.container(border=True):
     f2.update_layout(height=ALTO, margin=dict(l=0, r=0, t=5, b=0),
                      legend=dict(orientation="h", y=1.02, yanchor="bottom", font=dict(size=10)),
                      yaxis_title=t("cal.leyenda.focos"))
-    st.plotly_chart(f2, width="stretch", theme="streamlit")
+    st.plotly_chart(f2, width="stretch", theme="streamlit", config={"displayModeBar": False})
 
 with der.container(border=True):
     lim = limites()

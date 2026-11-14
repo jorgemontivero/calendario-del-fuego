@@ -120,6 +120,28 @@ T = {
              "NASA Space Apps Challenge, Catamarca."),
     # dashboard
     "tab.filtros": ("Filtros", "Filters"),
+    "puesto.max": ("el más alto de {n}", "the highest of {n}"),
+    "puesto.min": ("el más bajo de {n}", "the lowest of {n}"),
+    "puesto.k": ("{k}.° más alto de {n}", "{k}{suf} highest of {n}"),
+    "puesto.ayuda": ("Lugar entre los mismos meses de todos los años desde 2003, del más alto al más bajo.",
+                     "Rank among the same month of every year since 2003, from highest to lowest."),
+    "kpi.anio": ("Año {anio}", "Year {anio}"),
+    "kpi.anio.parcial": ("{anio}, ene–{mes}", "{anio}, Jan–{mes}"),
+    "kpi.anio.ayuda": ("Total del año en focos equivalentes MODIS, contra lo normal: la mediana de los totales de "
+                       "2003–2022.", "Year total in MODIS-equivalent hot spots, against normal: the median of the "
+                       "2003–2022 totals."),
+    "kpi.puesto.anios": ("Puesto entre los años", "Rank among years"),
+    "kpi.puesto.anios.ayuda": ("Lugar del total de este año entre los años completos desde 2003 (para el año en curso, "
+                               "comparando los mismos meses).", "Rank of this year's total among the complete years "
+                               "since 2003 (for the current year, comparing the same months)."),
+    "kpi.pico": ("Mes pico de {anio}", "Peak month of {anio}"),
+    "kpi.pico.ayuda": ("El mes con más focos de este año. El pico de un año típico está en el título de la temporada.",
+                       "The month with the most hot spots this year. The peak of a typical year is in the season title."),
+    "temp.corta": ("pico típico: {pico} · temporada: {temp}", "typical peak: {pico} · season: {temp}"),
+    "kpi.inusuales": ("Meses inusuales", "Unusual months"),
+    "kpi.inusuales.valor": ("{k} de {n}", "{k} of {n}"),
+    "kpi.inusuales.ayuda": ("Meses que superaron a 9 de cada 10 de los mismos meses de 2003–2022.",
+                            "Months higher than 9 out of 10 of the same months in 2003–2022."),
     "estado.corto.inusual": ("Inusual", "Unusual"), "estado.corto.arriba": ("Sobre lo normal", "Above normal"),
     "estado.corto.normal": ("Normal", "Normal"), "estado.corto.abajo": ("Bajo lo normal", "Below normal"),
     "estado.corto.en_curso": ("En curso", "In progress"),
@@ -129,7 +151,6 @@ T = {
     "area.aviso.corto": ("Área chica: números orientativos", "Small area: indicative numbers"),
     "tend.corta.sube": ("tendencia en alza", "upward trend"), "tend.corta.baja": ("tendencia en baja", "downward trend"),
     "tend.corta.nada": ("sin tendencia clara", "no clear trend"),
-    "temp.corta": ("pico: {pico} · temporada: {temp}", "peak: {pico} · season: {temp}"),
     "tab.serie": ("Serie histórica", "Historical series"),
     "tab.un_anio": ("Un año", "One year"),
     "tab.anio": ("Año del mapa y de la temporada", "Year for the map and season"),
