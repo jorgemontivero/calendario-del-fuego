@@ -193,6 +193,25 @@ dif = (chk.loc[comun_idx] / mens.loc[comun_idx] - 1).abs()
 print(f"diaria: {len(dia_df):,} filas | diferencia con la serie mensual del país: mediana {dif.median():.2%}, "
       f"máx. Aqua {dif[[a <= 2022 for a, _ in comun_idx]].max():.2%}")
 
+# Climate (NASA POWER, MERRA-2) by province and month, plus Argentina as the mean of the provinces weighted by their
+# number of grid points (~ their area). Rain of the 3 and 6 PREVIOUS months (t-n .. t-1) for the "Climate and fire"
+# view, as in the preparation's test. Departments use their province (the 0.5 deg grid is coarser than most of them).
+cl = pd.read_parquet(RAIZ / "data" / "clima_provincia_mes.parquet")
+cl["prov_cod"] = cl.provincia.map(nom_cod)
+assert cl.prov_cod.notna().all()
+var = ["lluvia_mm", "humedad", "temp_max"]
+pesos = cl.puntos
+nac_cl = (cl.assign(**{v: cl[v] * pesos for v in var}).groupby(["anio", "mes"])
+          .agg(**{v: (v, "sum") for v in var}, puntos=("puntos", "sum"), completo=("completo", "all")).reset_index())
+for v in var:
+    nac_cl[v] = nac_cl[v] / nac_cl.puntos
+cl = pd.concat([cl[["prov_cod", "anio", "mes", *var, "completo"]], nac_cl.assign(prov_cod="00")[["prov_cod", "anio", "mes", *var, "completo"]]])
+cl = cl.sort_values(["prov_cod", "anio", "mes"])
+for n in (3, 6):
+    cl[f"lluvia_prev{n}"] = cl.groupby("prov_cod").lluvia_mm.transform(lambda x: x.shift(1).rolling(n).sum())
+cl.to_parquet(SAL / "clima.parquet", index=False)
+print("clima:", len(cl), "filas,", cl.prov_cod.nunique(), "áreas,", f"{cl.anio.min()}-{cl.anio.max()}")
+
 fecha = con.execute(f"select max(fecha) from '{(DERIV / 'focos_limpios.parquet').as_posix()}'").fetchone()[0]
 meta = {"fecha_datos": str(fecha), "ultimo_mes_completo": None,
         "validacion": json.loads((DERIV / "validacion_metricas.json").read_text(encoding="utf-8"))}

@@ -19,6 +19,7 @@ paginas = {
         st.Page(AQUI / "ahora.py", title=t("nav.ahora"), url_path="ahora"),
         st.Page(AQUI / "geografico.py", title=t("nav.geo"), url_path="geografico"),
         st.Page(AQUI / "reportados.py", title=t("nav.rep"), url_path="reportados"),
+        st.Page(AQUI / "clima.py", title=t("nav.clima"), url_path="clima"),
     ],
     t("nav.acerca"): [
         st.Page(AQUI / "metodologia.py", title=t("nav.metodologia"), url_path="metodologia"),

@@ -8,7 +8,7 @@ import pandas as pd
 import streamlit as st
 from streamlit_js_eval import streamlit_js_eval
 
-from comun import fecha_datos, meta, mes, num, pct, serie, t
+from comun import clima, fecha_datos, meta, mes, num, pct, serie, t
 
 ICONO = {"inusual": "🔴", "arriba": "🟠", "normal": "⚪", "abajo": "🔵", "en_curso": "⏳"}
 
@@ -19,6 +19,9 @@ CSS = """<style>
 .tarjeta .et {font-size: 0.78rem; opacity: 0.75; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;}
 .tarjeta .va {font-size: 1.35rem; font-weight: 600; white-space: nowrap;}
 .tarjeta .de {font-size: 0.75rem; margin-left: 0.35rem; font-weight: 500;}
+.tarjetas:has(> .tarjeta:nth-child(5)) {gap: 0.45rem;}
+.tarjetas:has(> .tarjeta:nth-child(5)) .tarjeta {padding: 0.35rem 0.55rem;}
+.tarjetas:has(> .tarjeta:nth-child(5)) .va {font-size: 1.12rem; overflow: hidden; text-overflow: ellipsis;}
 .tarjeta .de.baja {color: #15803d;} .tarjeta .de.sube {color: #b91c1c;}
 .area-titulo {font-size: 1.55rem; font-weight: 700; line-height: 1.15; margin: 0;}
 .area-sub {font-size: 0.75rem; opacity: 0.7;}
@@ -121,7 +124,36 @@ def _tarjetas_recientes(d: pd.DataFrame):
         _tarjeta(t("kpi.acum", anio=ua, mes=mes(um)), num(av), d2, s2, t("kpi.acum.ayuda", mes=mes(um, True))),
         _tarjeta(t("kpi.puesto", mes=mes(um)), puesto_txt(u.puesto, u.n_anios), ayuda=t("puesto.ayuda")),
         _tarjeta(t("kpi.estado"), f"{ICONO[u.estado]} {t('estado.corto.' + u.estado)}", ayuda=ayuda4),
+        _tarjeta_lluvia(st.session_state.get("prov_sel", "00"), ua, um),
     ]
+
+
+def _tarjeta_lluvia(prov_cod: str, ua: int, um: int) -> str:
+    """Climate context: rain of the three months ending in the last full month, against the median of the same
+    three months in 2003-2022 (NASA POWER, province of the area; the country for all of Argentina)."""
+    c = clima()
+    c = c[c.prov_cod == prov_cod].set_index(["anio", "mes"]).sort_index()
+    if (ua, um) not in c.index or not c.loc[(ua, um), "completo"]:
+        return ""
+    meses = [((ua * 12 + um - 1 - k) // 12, (ua * 12 + um - 1 - k) % 12 + 1) for k in (2, 1, 0)]
+    v = float(c.lluvia_mm.reindex(meses).sum())
+    # the same three months in each reference year (shifted whole years back, so Dec-Feb windows still work)
+    ref = np.array([c.lluvia_mm.reindex([(y + a - ua, m) for y, m in meses]).sum(min_count=3)
+                    for a in range(2003, 2023)])
+    ref = ref[~np.isnan(ref)]
+    if not len(ref):
+        return ""
+    normal = float(np.median(ref))
+    q1, q2 = np.quantile(ref, [1 / 3, 2 / 3])
+    ter = "seco" if v <= q1 else ("lluvioso" if v >= q2 else "normal")
+    hum = float(c.loc[(ua, um), "humedad"])
+    hum_n = float(c.humedad.reindex([(a, um) for a in range(2003, 2023)]).median())
+    etiqueta = t("kpi.lluvia", m1=mes(meses[0][1]), m2=mes(um))
+    ayuda = t("kpi.lluvia.ayuda", n=num(normal), h=num(hum), hn=num(hum_n))
+    color = {"seco": "#C2410C", "lluvioso": "#1D4ED8"}.get(ter, "inherit")
+    return (f'<div class="tarjeta" title="{html.escape(ayuda)}"><div class="et">{html.escape(etiqueta)}</div>'
+            f'<div class="va">{num(v)} mm<span class="de" style="color:{color}">'
+            f'{html.escape(t("kpi.lluvia." + ter))}</span></div></div>')
 
 
 def _tarjetas_anio(d: pd.DataFrame, anio: int):
@@ -160,7 +192,7 @@ def encabezado(d: pd.DataFrame, nombre: str, anio: int | None = None):
     """Area name and four compact cards of the same size, in one row: about the latest months (Series view) or
     about the chosen year (One-year view)."""
     tarjetas = "".join(_tarjetas_recientes(d) if anio is None else _tarjetas_anio(d, anio))
-    c0, c1 = st.columns([1, 3.2], vertical_alignment="center")
+    c0, c1 = st.columns([1, 4.2] if anio is None else [1, 3.2], vertical_alignment="center")
     with c0:
         aviso = f'<div class="area-sub">⚠️ {html.escape(t("area.aviso.corto"))}</div>' if d.mediana_anual.iloc[0] < 50 else ""
         st.markdown(f'<div class="area-titulo">{html.escape(nombre)}</div>{aviso}', unsafe_allow_html=True,

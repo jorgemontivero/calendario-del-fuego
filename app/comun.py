@@ -60,6 +60,12 @@ def serie() -> pd.DataFrame:
 
 
 @st.cache_data
+def clima() -> pd.DataFrame:
+    """NASA POWER by province (and "00" for the country): rain, humidity, max temperature per month."""
+    return pd.read_parquet(DATOS / "clima.parquet")
+
+
+@st.cache_data
 def anual_pais() -> pd.DataFrame:
     return pd.read_parquet(DATOS / "anual_pais.parquet")
 
@@ -82,6 +88,9 @@ def cabecera():
     .st-key-barra_sup {position: fixed; top: 0.55rem; right: 8.5rem; z-index: 999991; width: auto !important;}
     .st-key-barra_sup button {min-height: 2rem; padding-top: 0.15rem; padding-bottom: 0.15rem;}
     .block-container {padding-top: 2.4rem !important; padding-bottom: 0.5rem !important;}
+    /* the menu must stop before the pinned language/emergency buttons; whatever does not fit goes to its "more" item */
+    [data-testid="stTopNav"] {max-width: calc(100% - 430px) !important;}
+    [data-testid="stTopNavLink"] {padding-left: 0.45rem !important; padding-right: 0.45rem !important;}
     .block-container h2:first-of-type {padding-top: 0.2rem;}
     @media (max-width: 640px) {.st-key-barra_sup {right: 3.2rem;} .st-key-barra_sup p {font-size: 0.8rem;}}
     </style>""", unsafe_allow_html=True)

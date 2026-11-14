@@ -304,6 +304,71 @@ T = {
                     "Say where you are, what you see (smoke, flames) and which way the fire is moving."),
     "fuente.aqua": ("Aqua observado", "Aqua observed"), "fuente.snpp": ("Suomi NPP convertido", "Suomi NPP converted"),
     "fuente.noaa20": ("NOAA-20 convertido", "NOAA-20 converted"),
+    # climate context card (Series view)
+    "kpi.lluvia": ("Lluvia {m1}–{m2}", "Rain {m1}–{m2}"),
+    "kpi.lluvia.seco": ("más seco", "drier"), "kpi.lluvia.normal": ("normal", "normal"),
+    "kpi.lluvia.lluvioso": ("más lluvioso", "wetter"),
+    "kpi.lluvia.ayuda": ("Lluvia acumulada de los últimos tres meses completos en la provincia (NASA POWER). Lo normal "
+                         "para esos meses: {n} mm (mediana 2003–2022); «más seco» = entre el tercio de años más secos. "
+                         "Humedad del último mes: {h} % (normal {hn} %). Contexto, no pronóstico.",
+                         "Rain over the last three full months in the province (NASA POWER). Normal for those months: "
+                         "{n} mm (2003–2022 median); “drier” = within the driest third of years. Humidity last month: "
+                         "{h} % (normal {hn} %). Context, not a forecast."),
+    # Climate and fire view
+    "nav.clima": ("Clima y fuego", "Climate and fire"),
+    "clima.depto": ("clima de la provincia: {prov}", "climate of the province: {prov}"),
+    "clima.variable": ("Variable de clima", "Climate variable"),
+    "clima.var.humedad": ("Humedad del mes", "Humidity of the month"),
+    "clima.var.lluvia3": ("Lluvia de los 3 meses previos", "Rain of the 3 previous months"),
+    "clima.var.lluvia6": ("Lluvia de los 6 meses previos", "Rain of the 6 previous months"),
+    "clima.var.temp": ("Temperatura máxima", "Maximum temperature"),
+    "clima.ter.humedad.seco": ("Más seco", "Drier"), "clima.ter.humedad.humedo": ("Más húmedo", "More humid"),
+    "clima.ter.lluvia3.seco": ("Menos lluvia", "Less rain"), "clima.ter.lluvia3.humedo": ("Más lluvia", "More rain"),
+    "clima.ter.lluvia6.seco": ("Menos lluvia", "Less rain"), "clima.ter.lluvia6.humedo": ("Más lluvia", "More rain"),
+    "clima.ter.temp.seco": ("Más calor", "Hotter"), "clima.ter.temp.humedo": ("Más fresco", "Cooler"),
+    "clima.ter.medio": ("Normal", "Normal"),
+    "clima.rho": ("Asociación (ρ de Spearman)", "Association (Spearman ρ)"),
+    "clima.rho.ayuda": ("Entre −1 y 1. Negativo: cuanto más bajo el clima respecto de lo normal, más fuego respecto de "
+                        "lo normal. Cerca de 0: sin relación. Es una asociación, no una causa.",
+                        "Between −1 and 1. Negative: the lower the climate against normal, the more fire against "
+                        "normal. Near 0: no relation. It is an association, not a cause."),
+    "clima.n": ("Meses de temporada comparados", "Season months compared"),
+    "clima.n.meses": ("Temporada de esta zona: {m}.", "This area's season: {m}."),
+    "clima.n.ayuda": ("Solo los meses de la temporada de fuego de la zona (los que juntan el 80 % del fuego de un año "
+                      "típico), de 2003 al último mes completo. Fuera de temporada casi no hay fuego y la comparación no "
+                      "dice nada.",
+                      "Only the area's fire-season months (those holding 80 % of a typical year's fire), from 2003 to "
+                      "the last full month. Off season there is hardly any fire and the comparison says nothing."),
+    "clima.p": ("Fuego sobre lo normal · {ter}", "Fire above normal · {ter}"),
+    "clima.p.ayuda": ("De los meses del tercio «{ter}», qué parte tuvo más focos que lo normal para ese mes. Si el "
+                      "clima no importara, rondaría el 50 %.",
+                      "Of the months in the “{ter}” third, the share with more hot spots than normal for that month. If "
+                      "climate did not matter it would be around 50 %."),
+    "clima.titulo.disp": ("Clima contra fuego, cada mes de temporada", "Climate against fire, each season month"),
+    "clima.ayuda.disp": ("Cada punto es un mes de temporada. Horizontal: cuánto se apartó el clima de lo normal para ese "
+                         "mes del año. Vertical: cuántas veces lo normal fueron los focos (1 = normal, 2 = el doble). "
+                         "Los puntos grandes son el último año; la línea negra, la tendencia (mediana móvil). Se usa la "
+                         "diferencia con lo normal porque, si no, las dos series siguen las estaciones y la relación solo "
+                         "diría que existe el invierno.",
+                         "Each dot is a season month. Horizontal: how far climate was from normal for that month of the "
+                         "year. Vertical: how many times normal the hot spots were (1 = normal, 2 = double). Large dots "
+                         "are the last year; the black line, the trend (running median). The difference from normal is "
+                         "used because otherwise both series follow the seasons and the relation would only say that "
+                         "winter exists."),
+    "clima.titulo.box": ("Fuego según el clima del mes", "Fire by the month's climate"),
+    "clima.ayuda.box": ("Los meses de temporada partidos en tres grupos iguales según el clima. La caja va del 25 % al "
+                        "75 % de los meses de cada grupo y la raya del medio es la mediana. Arriba, qué parte de esos "
+                        "meses tuvo fuego sobre lo normal.",
+                        "Season months split into three equal groups by climate. The box spans 25 % to 75 % of each "
+                        "group's months and the middle line is the median. On top, the share of those months with fire "
+                        "above normal."),
+    "clima.sobre": ("{p} % sobre lo normal", "{p} % above normal"),
+    "clima.tendencia": ("Tendencia", "Trend"),
+    "clima.eje.fuego": ("Focos / lo normal", "Hot spots / normal"),
+    "clima.eje.humedad": ("Humedad: diferencia con lo normal (puntos de %)", "Humidity: difference from normal (% points)"),
+    "clima.eje.lluvia3": ("Lluvia de los 3 meses previos / lo normal", "Rain of the 3 previous months / normal"),
+    "clima.eje.lluvia6": ("Lluvia de los 6 meses previos / lo normal", "Rain of the 6 previous months / normal"),
+    "clima.eje.temp": ("Temperatura máxima: diferencia con lo normal (°C)", "Max temperature: difference from normal (°C)"),
 }
 
 MESES = {"es": ["ene", "feb", "mar", "abr", "may", "jun", "jul", "ago", "sep", "oct", "nov", "dic"],
