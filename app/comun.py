@@ -88,12 +88,25 @@ def cabecera():
     .st-key-barra_sup {position: fixed; top: 0.55rem; right: 8.5rem; z-index: 999991; width: auto !important;}
     .st-key-barra_sup button {min-height: 2rem; padding-top: 0.15rem; padding-bottom: 0.15rem;}
     .block-container {padding-top: 2.4rem !important; padding-bottom: 0.5rem !important;}
-    /* the menu must stop before the pinned language/emergency buttons; whatever does not fit goes to its "more" item */
+    /* the menu must stop before the pinned language/emergency buttons (on narrow screens the rest folds away) */
     [data-testid="stTopNav"] {max-width: calc(100% - 430px) !important;}
     [data-testid="stTopNavLink"] {padding-left: 0.45rem !important; padding-right: 0.45rem !important;}
     .block-container h2:first-of-type {padding-top: 0.2rem;}
     @media (max-width: 640px) {.st-key-barra_sup {right: 3.2rem;} .st-key-barra_sup p {font-size: 0.8rem;}}
+    /* "About the project" links: drawn first, shown last, at the foot of the sidebar */
+    [data-testid="stSidebarUserContent"] > div > [data-testid="stVerticalBlock"] {min-height: calc(100vh - 7rem);}
+    [data-testid="stLayoutWrapper"]:has(> .st-key-acerca) {order: 99; margin-top: auto;}
+    .st-key-acerca {padding-top: 0.6rem; border-top: 1px solid rgba(128,128,128,0.25);}
+    .st-key-acerca a {padding: 0.05rem 0.25rem !important; min-height: 0 !important;}
+    .st-key-acerca a p {font-size: 0.9rem;}
     </style>""", unsafe_allow_html=True)
+    with st.sidebar.container(key="acerca", gap="small"):
+        st.caption(t("nav.acerca"))
+        for archivo, clave, icono in [("metodologia", "nav.metodologia", ":material/science:"),
+                                      ("ayuda", "nav.ayuda", ":material/help:"),
+                                      ("equipo", "nav.equipo", ":material/group:"),
+                                      ("contacto", "nav.contacto", ":material/mail:")]:
+            st.page_link(f"paginas/{archivo}.py", label=t(clave), icon=icono)
     with st.container(key="barra_sup", horizontal=True, gap="small"):
         elegido = st.segmented_control(t("idioma"), ["ES", "EN"], default=idioma().upper(), label_visibility="collapsed",
                                        key="selector_idioma")
