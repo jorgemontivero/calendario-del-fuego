@@ -32,10 +32,14 @@ def alto_graficos(resto: int) -> int:
     """Height for every chart of the view: the browser window minus `resto` (everything that is not a chart:
     top bar, indicators, controls, panel titles; measured on screen). The window height is read once with a tiny JS
     component, which runs in an iframe (hence window.parent); the first run, before it answers, assumes 900 px."""
-    with st.sidebar:
-        alto_js = streamlit_js_eval(js_expressions="window.parent.innerHeight", key="alto_ventana")
-    if alto_js:
-        st.session_state["alto_px"] = int(alto_js)
+    # The probe is drawn only until it answers, once per session. Drawn on every page, its answer arrived after the
+    # user had switched views and triggered a rerun of the previous page: the app jumped back to "Historical series".
+    if "alto_px" not in st.session_state:
+        with st.sidebar:
+            alto_js = streamlit_js_eval(js_expressions="window.parent.innerHeight", key="alto_ventana")
+        if alto_js:
+            st.session_state["alto_px"] = int(alto_js)
+            st.rerun()  # redraw at the right size right away
     return int(min(600, max(230, st.session_state.get("alto_px", 900) - resto)))
 
 

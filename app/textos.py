@@ -166,14 +166,14 @@ T = {
                        "with more hot spots are also those with more reported area."),
     "rep.eje.focos": ("focos detectados", "detected hot spots"),
     "rep.eje.ha": ("hectáreas reportadas", "reported hectares"),
-    "rank.titulo": ("¿Dónde se concentró el fuego en {anio}?", "Where did fire concentrate in {anio}?"),
-    "rank.provincias": ("provincias", "provinces"),
+    "rank.titulo": ("¿Dónde hubo más fuego en {anio}?", "Where was there most fire in {anio}?"),
+    "rank.provincias": ("top {n} provincias", "top {n} provinces"),
     "rank.mas": ("más que lo normal", "above normal"), "rank.menos": ("menos", "below"),
-    "rank.departamentos": ("departamentos de {prov}", "departments of {prov}"),
-    "rank.ayuda": ("Las zonas con más focos en el año (equivalente MODIS). El color compara cada una con su propio "
+    "rank.departamentos": ("top {n} departamentos de {prov}", "top {n} departments of {prov}"),
+    "rank.ayuda": ("Las 10 zonas con más focos en el año (equivalente MODIS). El color compara cada una con su propio "
                    "normal (mediana de sus totales 2003–2022 en los mismos meses): rojo, más fuego que lo habitual; "
                    "azul, menos. El mapa está en Análisis geográfico.",
-                   "The areas with the most hot spots in the year (MODIS equivalent). Color compares each with its own "
+                   "The 10 areas with the most hot spots in the year (MODIS equivalent). Color compares each with its own "
                    "normal (median of its 2003–2022 totals for the same months): red, more fire than usual; blue, "
                    "less. The map is in Geographic analysis."),
     "geo.titulo": ("Análisis geográfico", "Geographic analysis"),

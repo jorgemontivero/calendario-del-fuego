@@ -87,7 +87,7 @@ with der.container(border=True):
     # its own normal (median of its 2003-2022 totals for the same months). The map moved to Geographic analysis.
     r = ranking(prov_cod, anio_sel).iloc[::-1]  # largest on top
     st.markdown(f"**{t('rank.titulo', anio=anio_sel)}** · "
-                f"{t('rank.provincias') if prov_cod == '00' else t('rank.departamentos', prov=prov_nom)}",
+                f"{t('rank.provincias', n=len(r)) if prov_cod == '00' else t('rank.departamentos', n=len(r), prov=prov_nom)}",
                 help=t("rank.ayuda"))
     lr = np.clip(np.log2(r.razon), -2, 2)
     etiquetas = [f"{num(v)} ({'+' if v >= n else '−'}{num(abs(100 * (v / n - 1)))} %)" if n > 0 else num(v)

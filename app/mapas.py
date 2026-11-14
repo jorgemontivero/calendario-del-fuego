@@ -75,7 +75,7 @@ def figura_mapa(geo: gpd.GeoDataFrame, alto: int, ancho_px: int = 560, resaltar:
 CONFIG = {"displayModeBar": False, "scrollZoom": True}
 
 
-def ranking(prov_cod: str, anio: int, n: int = 12) -> pd.DataFrame:
+def ranking(prov_cod: str, anio: int, n: int = 10) -> pd.DataFrame:
     """Areas with the most fire in the year (provinces, or departments of a province), with their own normal: the
     median of their 2003-2022 totals for the same months."""
     s = serie()
