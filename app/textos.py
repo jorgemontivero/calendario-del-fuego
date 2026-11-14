@@ -100,6 +100,7 @@ T = {
     "temp.anio": ("Año a comparar", "Year to compare"),
     "temp.banda": ("Rango habitual (8 de cada 10 años, 2003–2022)", "Usual range (8 out of 10 years, 2003–2022)"),
     "temp.mediana": ("Mediana 2003–2022", "2003–2022 median"),
+    "temp.en_curso.corto": ("en curso", "in progress"),
     "temp.en_curso": ("En curso (al {fecha})", "In progress (to {fecha})"),
     "temp.pico": ("Mes pico", "Peak month"),
     "temp.temporada": ("Temporada de fuego", "Fire season"),
@@ -162,7 +163,7 @@ T = {
                            "actual, en naranja fuerte; la línea punteada es lo normal (mediana 2003–2022).",
                            "The same calendar period in every year since 2003, from the harmonized series. The current "
                            "year in strong orange; the dashed line is normal (2003–2022 median)."),
-    "ahora.normal": ("normal: {v}", "normal: {v}"),
+    "ahora.normal": ("línea punteada: lo normal ({v})", "dashed line: normal ({v})"),
     "ahora.titulo.acum": ("Cómo se fue acumulando", "How it built up"),
     "ahora.ayuda.acum": ("Focos acumulados día por día dentro del período: el año actual contra la mediana y el rango "
                          "habitual (8 de cada 10 años) de 2003–2022. Si la línea naranja sale de la banda, el episodio "

@@ -54,6 +54,14 @@ def mes(m: int, largo=False) -> str:
     return (MESES_LARGOS if largo else MESES)[idioma()][m - 1]
 
 
+def oscuro() -> bool:
+    """True on the dark theme (colors that are near black or very faint need a lighter twin there)."""
+    try:
+        return st.context.theme.type == "dark"
+    except Exception:  # older Streamlit: no theme in the context
+        return False
+
+
 @st.cache_data
 def serie() -> pd.DataFrame:
     return pd.read_parquet(DATOS / "serie.parquet")

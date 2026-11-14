@@ -22,7 +22,7 @@ CSS = """<style>
 .tarjetas:has(> .tarjeta:nth-child(5)) {gap: 0.45rem;}
 .tarjetas:has(> .tarjeta:nth-child(5)) .tarjeta {padding: 0.35rem 0.55rem;}
 .tarjetas:has(> .tarjeta:nth-child(5)) .va {font-size: 1.12rem; overflow: hidden; text-overflow: ellipsis;}
-.tarjeta .de.baja {color: #15803d;} .tarjeta .de.sube {color: #b91c1c;}
+.tarjeta .de.baja {color: #16a34a;} .tarjeta .de.sube {color: #dc2626;}  /* readable on light and dark */
 /* phones: two cards per row instead of five squeezed into one */
 @media (max-width: 640px) {
   .tarjetas {flex-wrap: wrap; gap: 0.4rem !important; margin-bottom: 0.9rem;}
@@ -156,7 +156,7 @@ def _tarjeta_lluvia(prov_cod: str, ua: int, um: int) -> str:
     hum_n = float(c.humedad.reindex([(a, um) for a in range(2003, 2023)]).median())
     etiqueta = t("kpi.lluvia", m1=mes(meses[0][1]), m2=mes(um))
     ayuda = t("kpi.lluvia.ayuda", n=num(normal), h=num(hum), hn=num(hum_n))
-    color = {"seco": "#C2410C", "lluvioso": "#1D4ED8"}.get(ter, "inherit")
+    color = {"seco": "#EA580C", "lluvioso": "#3B82F6"}.get(ter, "inherit")
     return (f'<div class="tarjeta" title="{html.escape(ayuda)}"><div class="et">{html.escape(etiqueta)}</div>'
             f'<div class="va">{num(v)} mm<span class="de" style="color:{color}">'
             f'{html.escape(t("kpi.lluvia." + ter))}</span></div></div>')

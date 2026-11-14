@@ -6,7 +6,7 @@ import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
 
-from comun import CONFIG_GRAFICO, NARANJA, cabecera, clima, meta, mes, num, t
+from comun import CONFIG_GRAFICO, NARANJA, cabecera, clima, meta, mes, num, oscuro, t
 from tablero import _tarjeta, alto_graficos, barra_lateral_final, filtros
 
 RESTO = 300  # everything on this view that is not a chart (measured on screen)
@@ -81,7 +81,7 @@ with izq.container(border=True):
     reciente = x.anio == ultimo_anio
     f1 = go.Figure()
     f1.add_trace(go.Scatter(x=x.ac[~reciente], y=x.af[~reciente], mode="markers", name="2003–" + str(ultimo_anio - 1),
-                            marker=dict(size=6, color="rgba(194,65,12,0.35)"),
+                            marker=dict(size=6, color="rgba(251,146,60,0.55)" if oscuro() else "rgba(194,65,12,0.35)"),
                             customdata=np.stack([x.anio[~reciente], x.mes[~reciente].map(lambda m: mes(m))], axis=1),
                             hovertemplate="%{customdata[1]} %{customdata[0]}<extra></extra>"))
     f1.add_trace(go.Scatter(x=x.ac[reciente], y=x.af[reciente], mode="markers+text", name=str(ultimo_anio),
@@ -92,7 +92,7 @@ with izq.container(border=True):
         o = x.sort_values("ac")
         k = max(7, len(o) // 4)
         f1.add_trace(go.Scatter(x=o.ac.rolling(k, center=True).median(), y=o.af.rolling(k, center=True).median(),
-                                mode="lines", line=dict(color="#111827", width=2), name=t("clima.tendencia"),
+                                mode="lines", line=dict(color="#F3F4F6" if oscuro() else "#111827", width=2), name=t("clima.tendencia"),
                                 hoverinfo="skip"))
     f1.add_hline(y=0, line=dict(color="gray", width=1, dash="dot"))
     f1.add_vline(x=0, line=dict(color="gray", width=1, dash="dot"))

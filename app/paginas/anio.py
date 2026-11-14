@@ -80,7 +80,9 @@ with izq.container(border=True):
                                 fillcolor="rgba(194,65,12,0.2)", showlegend=False, hoverinfo="skip"))
     f2.add_trace(go.Scatter(x=xa, y=ac.valor, line=dict(color=NARANJA, width=3), mode="lines+markers", name=str(anio_sel)))
     if len(curso):
-        f2.add_trace(go.Scatter(x=[mes(m).capitalize() for m in curso.mes], y=curso.valor, mode="markers",
+        f2.add_trace(go.Scatter(x=[mes(m).capitalize() for m in curso.mes], y=curso.valor, mode="markers+text",
+                                text=[t("temp.en_curso.corto")] * len(curso), textposition="top center",
+                                textfont=dict(size=10), showlegend=False,
                                 marker=dict(size=9, color="rgba(0,0,0,0)", line=dict(color=NARANJA, width=2)),
                                 name=t("temp.en_curso", fecha=fecha_datos()),
                                 hovertemplate="%{x}: %{y:,.0f} · " + t("temp.en_curso", fecha=fecha_datos())

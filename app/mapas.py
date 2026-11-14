@@ -13,7 +13,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
 
-from comun import DATOS, meta, num, serie, t
+from comun import DATOS, meta, num, oscuro, serie, t
 
 
 @st.cache_data
@@ -66,10 +66,18 @@ def figura_mapa(geo: gpd.GeoDataFrame, alto: int, ancho_px: int = 560, resaltar:
         fig.add_trace(go.Choroplethmap(geojson=json.loads(sel[["area_cod", "geometry"]].to_json()),
                                        featureidkey="properties.area_cod", locations=sel.area_cod, z=[0],
                                        colorscale=[[0, "rgba(0,0,0,0)"], [1, "rgba(0,0,0,0)"]], showscale=False,
-                                       marker_line_width=3, marker_line_color="#111827", hoverinfo="skip"))
+                                       marker_line_width=3, marker_line_color="#F9FAFB" if oscuro() else "#111827", hoverinfo="skip"))
+    # dark theme: "white-bg" is white, so a world-sized rectangle in the app's dark background goes under the areas
+    capas = [dict(sourcetype="geojson", source=MUNDO, type="fill", color=FONDO_OSCURO, below="traces")] if oscuro() else []
     fig.update_layout(height=alto, margin=dict(l=0, r=0, t=0, b=0),
-                      map=dict(style=SIN_FONDO, center=dict(lat=centro_lat, lon=(x0 + x1) / 2), zoom=zoom))
+                      map=dict(style=SIN_FONDO, center=dict(lat=centro_lat, lon=(x0 + x1) / 2), zoom=zoom, layers=capas))
     return fig
+
+
+FONDO_OSCURO = "#171614"  # Streamlit's dark background with this app's theme
+MUNDO = {"type": "Feature", "properties": {}, "geometry": {"type": "Polygon", "coordinates": [
+    [[-180, -85], [180, -85], [180, 85], [-180, 85], [-180, -85]]]}}
+
 
 
 # No basemap: the colored areas carry the map, and third-party tiles (OpenStreetMap/CARTO) would require their

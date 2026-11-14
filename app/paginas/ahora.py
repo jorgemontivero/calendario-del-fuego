@@ -91,14 +91,13 @@ st.markdown(f'<div class="tarjetas" style="margin-top:0.3rem">{tarjetas}</div>',
 sep = ",." if st.query_params.get("lang") != "en" else ".,"
 izq, der = st.columns([3, 2])
 with izq.container(border=True):
-    st.markdown(f"**{t('ahora.titulo.barras', p=etiqueta)}**", help=t("ahora.ayuda.barras"))
+    st.markdown(f"**{t('ahora.titulo.barras', p=etiqueta)}**"
+                + ("" if np.isnan(normal) else " · " + t("ahora.normal", v=num(normal))), help=t("ahora.ayuda.barras"))
     colores = [NARANJA if a == anio_ref else ("#FDBA74" if a <= 2022 else "#FB923C") for a in tot.index]
     f1 = go.Figure(go.Bar(x=tot.index, y=tot.values, marker_color=colores,
                           hovertemplate="%{x}: %{y:,.0f}<extra></extra>"))
     if not np.isnan(normal):
-        f1.add_hline(y=normal, line=dict(color="gray", dash="dash", width=1.5),
-                     annotation_text=t("ahora.normal", v=num(normal)), annotation_position="top left",
-                     annotation_font_size=11)
+        f1.add_hline(y=normal, line=dict(color="gray", dash="dash", width=1.5))  # its value goes in the title
     f1.update_layout(dragmode=False, height=ALTO, margin=dict(l=0, r=0, t=5, b=0), separators=sep,
                      yaxis_title=t("cal.leyenda.focos"), bargap=0.15)
     st.plotly_chart(f1, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
