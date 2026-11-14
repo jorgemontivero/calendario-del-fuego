@@ -145,6 +145,54 @@ nac = of.groupby(["anio", "fuente"]).agg(ha=("ha", "sum"), n_prov=("prov_cod", "
 of = pd.concat([of.assign(n_prov=1)[["prov_cod", "anio", "ha", "fuente", "n_prov"]], nac[["prov_cod", "anio", "ha", "fuente", "n_prov"]]])
 of.to_parquet(SAL / "oficial.parquet", index=False)
 
+# "Now vs before": the harmonized series by DAY, for any date window. Same rule as the monthly series:
+# Aqua observed up to 2022; Suomi NPP converted 2023-2025; NOAA-20 (x k) converted 2026, with the step-4 factor of
+# the province x season x day/night (the expected value: daily values carry no 90 % range). Departments use their
+# province's factor. Country: Aqua counted directly; converted years as the sum of the provinces (as the monthly
+# country series). Only days with fire are stored.
+ESTACION = {12: "DEF", 1: "DEF", 2: "DEF", 3: "MAM", 4: "MAM", 5: "MAM", 6: "JJA", 7: "JJA", 8: "JJA",
+            9: "SON", 10: "SON", 11: "SON"}
+fac = pd.read_parquet(DERIV / "factores.parquet")[["prov_cod", "estacion", "momento", "factor_M2", "k_noaa20"]]
+lim_sql = (DERIV / "focos_limpios.parquet").as_posix()
+diar = con.execute(f"""
+select plataforma, fecha, mes, case when dia then 'dia' else 'noche' end momento, prov_cod, depto_cod,
+       count(distinct (ci, cj)) n
+from '{lim_sql}'
+where provincia is not null and ((plataforma = 'Aqua' and anio between 2003 and 2022)
+   or (plataforma = 'SNPP' and anio between 2023 and 2025) or (plataforma = 'NOAA20' and anio = 2026))
+group by all""").df()
+pais_aqua = con.execute(f"""
+select fecha, sum(n) n from (
+  select fecha, dia, count(distinct (ci, cj)) n from '{lim_sql}'
+  where plataforma = 'Aqua' and anio between 2003 and 2022 group by all)
+group by 1""").df()  # day and night counted separately, as in the monthly series
+diar["estacion"] = diar.mes.map(ESTACION)
+diar = diar.merge(fac, on=["prov_cod", "estacion", "momento"], how="left")
+conv = diar.plataforma != "Aqua"
+diar["valor"] = np.where(conv, diar.n * diar.factor_M2 * np.where(diar.plataforma == "NOAA20", diar.k_noaa20, 1.0),
+                         diar.n)
+assert diar.loc[conv, "factor_M2"].notna().all()
+partes_d = [
+    diar.groupby(["prov_cod", "fecha"]).valor.sum().reset_index().rename(columns={"prov_cod": "area_cod"})
+        .assign(nivel="provincia"),
+    diar.dropna(subset=["depto_cod"]).groupby(["depto_cod", "fecha"]).valor.sum().reset_index()
+        .rename(columns={"depto_cod": "area_cod"}).assign(nivel="departamento"),
+    pd.concat([pais_aqua.rename(columns={"n": "valor"}),
+               diar[conv].groupby("fecha").valor.sum().reset_index()]).assign(area_cod="00", nivel="pais"),
+]
+dia_df = pd.concat(partes_d, ignore_index=True)
+dia_df["fecha"] = pd.to_datetime(dia_df.fecha)
+dia_df["valor"] = dia_df.valor.astype("float32").round(2)
+dia_df[["nivel", "area_cod", "fecha", "valor"]].sort_values(["nivel", "area_cod", "fecha"]).to_parquet(
+    SAL / "diaria.parquet", index=False)
+# check: the daily series adds up to the monthly one (country, complete months)
+chk = dia_df[dia_df.nivel == "pais"].groupby([dia_df.fecha.dt.year, dia_df.fecha.dt.month]).valor.sum()
+mens = pais.set_index(["anio", "mes"]).valor
+comun_idx = chk.index.intersection(mens.index)
+dif = (chk.loc[comun_idx] / mens.loc[comun_idx] - 1).abs()
+print(f"diaria: {len(dia_df):,} filas | diferencia con la serie mensual del país: mediana {dif.median():.2%}, "
+      f"máx. Aqua {dif[[a <= 2022 for a, _ in comun_idx]].max():.2%}")
+
 fecha = con.execute(f"select max(fecha) from '{(DERIV / 'focos_limpios.parquet').as_posix()}'").fetchone()[0]
 meta = {"fecha_datos": str(fecha), "ultimo_mes_completo": None,
         "validacion": json.loads((DERIV / "validacion_metricas.json").read_text(encoding="utf-8"))}

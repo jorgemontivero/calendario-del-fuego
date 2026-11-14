@@ -128,6 +128,48 @@ T = {
     "tab.filtros": ("Filtros", "Filters"),
     "nav.geo": ("Análisis geográfico", "Geographic analysis"),
     "nav.rep": ("Detectados vs. reportados", "Detected vs. reported"),
+    "nav.ahora": ("Ahora vs. antes", "Now vs. before"),
+    "nav.acerca": ("Acerca del proyecto", "About the project"),
+    "ahora.periodo": ("Período", "Period"),
+    "ahora.modo.7": ("Últimos 7 días", "Last 7 days"), "ahora.modo.30": ("Últimos 30 días", "Last 30 days"),
+    "ahora.modo.anio": ("En lo que va del año", "Year to date"), "ahora.modo.fechas": ("Elegir fechas", "Pick dates"),
+    "ahora.fechas": ("Fechas", "Dates"),
+    "ahora.max_anio": ("El período puede ser de hasta un año.", "The period can be up to one year."),
+    "ahora.focos.ayuda": ("Focos del período en equivalente MODIS (serie armonizada diaria), contra lo normal: la "
+                          "mediana del mismo período en 2003–2022. El último día con datos todavía se está cargando, "
+                          "así que los períodos terminan el día anterior. Los valores diarios convertidos no llevan "
+                          "margen.", "Hot spots in the period in MODIS equivalents (daily harmonized series), against "
+                          "normal: the median of the same period in 2003–2022. The last day with data is still being "
+                          "loaded, so periods end the day before. Converted daily values carry no range."),
+    "ahora.puesto": ("Puesto entre los años", "Rank among years"),
+    "ahora.puesto.ayuda": ("Lugar de este período entre los mismos períodos de los {n} años desde 2003.",
+                           "Rank of this period among the same periods of the {n} years since 2003."),
+    "ahora.desde.alto": ("Último año así de alto", "Last year this high"),
+    "ahora.desde.bajo": ("Último año así de bajo", "Last year this low"),
+    "ahora.desde.ayuda": ("El último año anterior con un período igual o más fuerte (o igual o más débil, si este "
+                          "período viene bajo).", "The last earlier year with an equal or stronger period (or equal "
+                          "or weaker, if this period is low)."),
+    "ahora.record": ("ninguno: récord", "none: a record"),
+    "ahora.minimo": ("ninguno: mínimo", "none: a record low"),
+    "ahora.dias": ("Días con fuego", "Days with fire"),
+    "ahora.dias.valor": ("{k} (normal: {n})", "{k} (normal: {n})"),
+    "ahora.dias.ayuda": ("Días del período con al menos un foco equivalente en la zona, contra la mediana de 2003–2022.",
+                         "Days in the period with at least one equivalent hot spot in the area, against the 2003–2022 "
+                         "median."),
+    "ahora.titulo.barras": ("{p}, año por año", "{p}, year by year"),
+    "ahora.ayuda.barras": ("El mismo período del calendario en cada año desde 2003, con la serie armonizada. El año "
+                           "actual, en naranja fuerte; la línea punteada es lo normal (mediana 2003–2022).",
+                           "The same calendar period in every year since 2003, from the harmonized series. The current "
+                           "year in strong orange; the dashed line is normal (2003–2022 median)."),
+    "ahora.normal": ("normal: {v}", "normal: {v}"),
+    "ahora.titulo.acum": ("Cómo se fue acumulando", "How it built up"),
+    "ahora.ayuda.acum": ("Focos acumulados día por día dentro del período: el año actual contra la mediana y el rango "
+                         "habitual (8 de cada 10 años) de 2003–2022. Si la línea naranja sale de la banda, el episodio "
+                         "es fuera de lo común.", "Hot spots accumulated day by day within the period: the current "
+                         "year against the 2003–2022 median and usual range (8 out of 10 years). If the orange line "
+                         "leaves the band, the episode is out of the ordinary."),
+    "ahora.eje.dia": ("día del período", "day of the period"),
+    "ahora.eje.acum": ("focos acumulados", "cumulative hot spots"),
     "rep.depto": ("(datos oficiales por provincia; se muestra la de {dep})",
                   "(official data are by province; showing that of {dep})"),
     "rep.anios": ("Años comparados", "Years compared"),
