@@ -9,8 +9,8 @@ from comun import AZUL, NARANJA, anual_pais, cabecera, meta, num, pie, t, tr
 cabecera()
 st.title(tr("Metodología", "Methods"))
 
-st.header(tr("¿Qué es un foco de calor?", "What is a hot spot?"))
-st.markdown(t("foco.texto"))
+st.caption(tr("Qué es un foco de calor y cómo se leen los gráficos: sección **Ayuda**.",
+              "What a hot spot is and how to read the charts: **Help** section."))
 
 # ------------------------------------------------------------------------------------------------ why
 st.header(tr("¿Por qué hay que armonizar?", "Why harmonize?"))
