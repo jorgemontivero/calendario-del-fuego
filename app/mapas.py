@@ -42,7 +42,7 @@ def datos_mapa(prov_cod: str, anio: int) -> gpd.GeoDataFrame:
 
 def figura_mapa(geo: gpd.GeoDataFrame, alto: int, ancho_px: int = 560, resaltar: str | None = None,
                 zrango: tuple[float, float] | None = None, barra: bool = True) -> go.Figure:
-    """A MapLibre map (light Carto basemap) framed on the areas' bounding box. The geo subplot keeps a fixed aspect
+    """A MapLibre map (no basemap) framed on the areas' bounding box. The geo subplot keeps a fixed aspect
     ratio and left the country small in the panel; this fills it, and the user can zoom and pan."""
     zmin, zmax = zrango if zrango else (float(geo.zl.min()), float(geo.zl.max()))
     ticks = [v for v in [0.1, 0.3, 1, 3, 10, 30, 100, 300] if zmin - 0.3 <= math.log10(v + 0.1) <= zmax + 0.3]
@@ -55,7 +55,7 @@ def figura_mapa(geo: gpd.GeoDataFrame, alto: int, ancho_px: int = 560, resaltar:
     fig = go.Figure(go.Choroplethmap(
         geojson=json.loads(geo[["area_cod", "geometry"]].to_json()), featureidkey="properties.area_cod",
         locations=geo.area_cod, z=geo.zl, zmin=zmin, zmax=zmax, colorscale="YlOrRd",
-        marker_line_width=0.5, marker_line_color="white", showscale=barra,
+        marker_line_width=0.6, marker_line_color="#9CA3AF", showscale=barra,  # grey: visible on any background
         customdata=np.stack([geo["area"], geo.valor.round(0), geo.dens.round(1)], axis=1),
         hovertemplate="<b>%{customdata[0]}</b><br>%{customdata[1]} " + t("cal.hover.valor") +
                       "<br>%{customdata[2]} " + t("mapa.leyenda") + "<extra></extra>",
@@ -68,8 +68,13 @@ def figura_mapa(geo: gpd.GeoDataFrame, alto: int, ancho_px: int = 560, resaltar:
                                        colorscale=[[0, "rgba(0,0,0,0)"], [1, "rgba(0,0,0,0)"]], showscale=False,
                                        marker_line_width=3, marker_line_color="#111827", hoverinfo="skip"))
     fig.update_layout(height=alto, margin=dict(l=0, r=0, t=0, b=0),
-                      map=dict(style="carto-positron", center=dict(lat=centro_lat, lon=(x0 + x1) / 2), zoom=zoom))
+                      map=dict(style=SIN_FONDO, center=dict(lat=centro_lat, lon=(x0 + x1) / 2), zoom=zoom))
     return fig
+
+
+# No basemap: the colored areas carry the map, and third-party tiles (OpenStreetMap/CARTO) would require their
+# attribution on top of it. (A hand-made transparent style drew fine but made MapLibre log "Map error" on updates.)
+SIN_FONDO = "white-bg"
 
 
 CONFIG = {"displayModeBar": False, "scrollZoom": True}
