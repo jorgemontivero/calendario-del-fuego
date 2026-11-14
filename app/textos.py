@@ -120,17 +120,22 @@ T = {
              "NASA Space Apps Challenge, Catamarca."),
     # dashboard
     "tab.filtros": ("Filtros", "Filters"),
+    "tend.corta.sube": ("tendencia en alza", "upward trend"), "tend.corta.baja": ("tendencia en baja", "downward trend"),
+    "tend.corta.nada": ("sin tendencia clara", "no clear trend"),
+    "temp.corta": ("pico: {pico} · temporada: {temp}", "peak: {pico} · season: {temp}"),
+    "tab.serie": ("Serie {desde}–{hasta}", "Series {desde}–{hasta}"),
+    "tab.un_anio": ("Un año", "One year"),
     "tab.anio": ("Año del mapa y de la temporada", "Year for the map and season"),
     "kpi.mes": ("{mes} {anio}", "{mes} {anio}"),
     "kpi.mes.ayuda": ("Último mes completo, en focos equivalentes MODIS. La flecha compara con lo normal para ese mes "
                       "(mediana 2003–2022).", "Last full month, in MODIS-equivalent hot spots. The arrow compares with "
                       "normal for that month (2003–2022 median)."),
-    "kpi.acum": ("En lo que va de {anio}", "So far in {anio}"),
+    "kpi.acum": ("{anio}, ene–{mes}", "{anio}, Jan–{mes}"),
     "kpi.acum.ayuda": ("Enero a {mes}, contra lo normal de esos meses.", "January to {mes}, against normal for those months."),
-    "kpi.puesto": ("Puesto entre los meses de {mes}", "Rank among {mes} months"),
+    "kpi.puesto": ("Puesto en {mes}", "Rank in {mes}"),
     "kpi.estado": ("Cómo viene", "How it looks"),
     "kpi.vs_normal": ("vs. lo normal", "vs. normal"),
-    "anual.titulo": ("Focos por año (equivalente MODIS)", "Hot spots per year (MODIS equivalent)"),
+    "anual.titulo": ("Focos por año", "Hot spots per year"),
     "anual.ayuda": ("Barras: total del año; la línea fina es el margen del 90 % de los años convertidos. "
                     "{anio} está incompleto.", "Bars: yearly total; the thin line is the 90 % range of converted years. "
                     "{anio} is incomplete."),
