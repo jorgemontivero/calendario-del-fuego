@@ -9,8 +9,8 @@ Filters (each one has a stated reason, is measured, and is checked by province):
   2.1  FIRMS type = 0 (vegetation fire). Drops volcanoes (1), other static sources (2), offshore (3).
        Near-real-time data has no type: it comes as 0 and is covered by 2.3.
   2.2  Confidence: MODIS >= 30; VIIRS nominal or high (`conf_ok`, computed in step 1).
-  2.3  Persistent sources FIRMS did not flag: 0.01 deg cells (~1 km) where VIIRS detected heat on
-       >= 30 distinct days (2012-today). All hot spots in those cells are dropped, from every satellite
+  2.3  Persistent sources FIRMS did not flag: 0.01 deg cells (~1 km) where VIIRS (Suomi NPP and NOAA-20, the
+       calibration set; see VIIRS_REFERENCIA) detected heat on >= 30 distinct days (2012-today). All hot spots in those cells are dropped, from every satellite
        and year. Threshold chosen with two control provinces: Neuquen (gas flares) and Formosa (real fire).
   2.4  Day/night flag (`dia`): nothing is dropped; step 4 converts day and night separately.
 
@@ -27,6 +27,12 @@ FOCOS = (RAIZ / "data" / "focos.parquet").as_posix()
 DERIV = RAIZ / "data" / "derivados"
 REPORTES = RAIZ / "reportes"
 UMBRAL_DIAS = 30
+# The persistence count uses a FIXED set of VIIRS satellites, the one the 30-day threshold was calibrated with.
+# Counting days with every VIIRS satellite makes the rule depend on how many satellites fly: adding NOAA-21
+# (2023-) turned 260 more cells into "fixed sources", almost all recurrent agricultural burning (sugarcane in
+# Tucuman, wetlands in Formosa) and only 16 in Neuquen's flare area; Formosa's loss of real fire went from 0.8 %
+# to 1.1 %. NOAA-21 stays in the data for everything else.
+VIIRS_REFERENCIA = ("SNPP", "NOAA20")
 
 DERIV.mkdir(parents=True, exist_ok=True)
 REPORTES.mkdir(parents=True, exist_ok=True)
@@ -45,7 +51,7 @@ con.execute(f"""
 create table fijos as
 select ci, cj, count(distinct fecha) as dias, min(fecha) as primera, max(fecha) as ultima,
        (ci + 0.5) / 100 as lat, (cj + 0.5) / 100 as lon, mode(provincia) as provincia
-from base where sensor = 'VIIRS'
+from base where plataforma in {VIIRS_REFERENCIA}
 group by ci, cj having count(distinct fecha) >= {UMBRAL_DIAS}
 """)
 con.execute("create view limpio as select * from base anti join fijos using (ci, cj)")
@@ -125,7 +131,7 @@ for s, tot, s21, s22 in por_sensor:
     L.append(f"| {s} | {miles(tot)} | {miles(s21)} | {miles(s22)} | {miles(saca_23.get(s, 0))} | {dn[s]:.0%} |")
 L += ["", "## 2.1 Tipos de FIRMS", "", "| Tipo | Qué es | Focos |", "|---|---|---|"]
 L += [f"| {t} | {nombres_tipo.get(t, '?')} | {miles(c)} |" for t, c in por_tipo]
-L += ["", f"## 2.3 Fuentes fijas: {miles(n_fijos)} cuadrados con VIIRS en {UMBRAL_DIAS} días distintos o más", "",
+L += ["", f"## 2.3 Fuentes fijas: {miles(n_fijos)} cuadrados con VIIRS (Suomi NPP o NOAA-20) en {UMBRAL_DIAS} días distintos o más", "",
       "Dónde más saca:", "", "| Provincia | Focos que saca | Proporción de sus focos |", "|---|---|---|"]
 L += [f"| {p} | {miles(s)} | {pr:.1%} |" for p, s, pr in por_prov]
 L += ["", "Los cinco cuadrados con más días:", "", "| Provincia | Lat | Lon | Días | Primera | Última |",

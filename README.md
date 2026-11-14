@@ -23,6 +23,8 @@ shows it as a fire calendar (year × month) for any province or department since
 
 Step 2 keeps vegetation fires only: FIRMS type 0, enough confidence (MODIS ≥ 30, VIIRS nominal/high), and no
 persistent heat sources (≈1 km cells where VIIRS saw heat on 30 or more distinct days: gas flares, industry).
+The day count uses a fixed pair of satellites (Suomi NPP and NOAA-20), so the rule does not change when a new
+satellite is added.
 
 ## Data
 
@@ -30,7 +32,7 @@ The data files are not in git (too large). Put them in `data/`:
 
 | File | Source |
 |---|---|
-| `focos.parquet` | NASA FIRMS: MODIS Collection 6.1 (Terra, Aqua) and VIIRS 375 m (Suomi NPP, NOAA-20, NOAA-21), Argentina, 2000–2026 (annual country files + FIRMS area API) |
+| `focos.parquet` | NASA FIRMS: MODIS Collection 6.1 (Terra, Aqua) and VIIRS 375 m (Suomi NPP, NOAA-20, NOAA-21), Argentina, 2000–2026. Annual country files up to 2025; FIRMS area API for 2026 and for NOAA-21 since March 2023 (FIRMS has no NOAA-21 country files) |
 | `provincias.parquet`, `departamentos.parquet` | Instituto Geográfico Nacional (IGN), Argentina |
 | `clima_provincia_mes.parquet`, `clima_grilla_mes.parquet` | NASA POWER (MERRA-2), monthly rainfall, maximum temperature and relative humidity |
 | `estimaciones_agricolas.parquet` | Ministerio de Agricultura, Ganadería y Pesca, Estimaciones Agrícolas |
