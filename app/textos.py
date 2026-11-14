@@ -138,10 +138,12 @@ T = {
     "kpi.pico.ayuda": ("El mes con más focos de este año. El pico de un año típico está en el título de la temporada.",
                        "The month with the most hot spots this year. The peak of a typical year is in the season title."),
     "temp.corta": ("pico típico: {pico} · temporada: {temp}", "typical peak: {pico} · season: {temp}"),
-    "kpi.inusuales": ("Meses inusuales", "Unusual months"),
-    "kpi.inusuales.valor": ("{k} de {n}", "{k} of {n}"),
-    "kpi.inusuales.ayuda": ("Meses que superaron a 9 de cada 10 de los mismos meses de 2003–2022.",
-                            "Months higher than 9 out of 10 of the same months in 2003–2022."),
+    "kpi.inusuales": ("Fuera de lo habitual", "Outside the usual range"),
+    "kpi.inusuales.valor": ("{bajos} bajos · {altos} altos", "{bajos} low · {altos} high"),
+    "kpi.inusuales.ayuda": ("De los {n} meses completos del año, cuántos quedaron por debajo o por encima del rango "
+                            "habitual (la banda gris del gráfico de temporada: 8 de cada 10 años de 2003–2022).",
+                            "Of the year's {n} complete months, how many fell below or above the usual range (the grey "
+                            "band of the season chart: 8 out of 10 years in 2003–2022)."),
     "estado.corto.inusual": ("Inusual", "Unusual"), "estado.corto.arriba": ("Sobre lo normal", "Above normal"),
     "estado.corto.normal": ("Normal", "Normal"), "estado.corto.abajo": ("Bajo lo normal", "Below normal"),
     "estado.corto.en_curso": ("En curso", "In progress"),

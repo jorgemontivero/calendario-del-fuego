@@ -136,13 +136,19 @@ def _tarjetas_anio(d: pd.DataFrame, anio: int):
     etiqueta = t("kpi.anio.parcial", anio=anio, mes=mes(um)) if anio == ua else t("kpi.anio", anio=anio)
     meses = d[(d.anio == anio) & d.mes_completo]
     pico = meses.loc[meses.valor.idxmax()] if len(meses) else None
-    inusuales = int((meses.estado == "inusual").sum())
+    # months outside the usual range = the grey band of the season chart (10th-90th percentile of 2003-2022 for
+    # that month), on both sides, so the card and the chart say the same thing
+    banda = d[d.anio.between(2003, 2022)].groupby("mes").valor.quantile([0.1, 0.9]).unstack()
+    m_b = meses.join(banda, on="mes")
+    bajos = int((m_b.valor < m_b[0.1]).sum())
+    altos = int((m_b.valor > m_b[0.9]).sum())
     return [
         _tarjeta(etiqueta, num(v), da, sa, t("kpi.anio.ayuda")),
         _tarjeta(t("kpi.puesto.anios"), puesto_txt(puesto, len(tot)), ayuda=t("kpi.puesto.anios.ayuda")),
         _tarjeta(t("kpi.pico", anio=anio), f"{mes(int(pico.mes), True).capitalize()} · {num(pico.valor)}" if pico is not None else "—",
                  ayuda=t("kpi.pico.ayuda")),
-        _tarjeta(t("kpi.inusuales"), t("kpi.inusuales.valor", k=inusuales, n=len(meses)), ayuda=t("kpi.inusuales.ayuda")),
+        _tarjeta(t("kpi.inusuales"), t("kpi.inusuales.valor", bajos=bajos, altos=altos),
+                 ayuda=t("kpi.inusuales.ayuda", n=len(meses))),
     ]
 
 
