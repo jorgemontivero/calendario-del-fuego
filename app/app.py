@@ -15,6 +15,7 @@ paginas = [
             url_path="serie"),
     st.Page(AQUI / "anio.py", title=t("tab.un_anio"), url_path="anio"),
     st.Page(AQUI / "metodologia.py", title=t("nav.metodologia"), url_path="metodologia"),
+    st.Page(AQUI / "ayuda.py", title=t("nav.ayuda"), url_path="ayuda"),
     st.Page(AQUI / "equipo.py", title=t("nav.equipo"), url_path="equipo"),
     st.Page(AQUI / "contacto.py", title=t("nav.contacto"), url_path="contacto"),
 ]

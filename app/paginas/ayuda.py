@@ -1,0 +1,59 @@
+"""Help: how to use the dashboard, how to read each chart, what a hot spot is, downloads and how to cite."""
+
+import streamlit as st
+
+from comun import cabecera, pie, t, tr
+
+cabecera()
+st.title(tr("Ayuda", "Help"))
+
+c1, c2 = st.columns(2, gap="large")
+with c1:
+    st.subheader(tr("Cómo se usa", "How to use it"))
+    st.markdown(tr(
+        "1. **Elegí la zona** en la barra lateral: toda la Argentina, una provincia o un departamento. La elección se "
+        "mantiene al cambiar de vista.\n"
+        "2. **Serie 2003–2026**: cómo viene el fuego en toda la serie. Arriba podés acotar los años y cambiar entre "
+        "*cantidad de focos* y *comparado con lo normal*.\n"
+        "3. **Un año**: elegí un año y mirá su temporada contra un año típico, y el mapa por departamento.\n"
+        "4. **Las tarjetas de arriba** resumen el último mes completo: cuántos focos hubo, cuánto es lo normal, en qué "
+        "puesto queda y si es un mes normal o inusual. Pasá el cursor para ver el margen y la probabilidad.\n"
+        "5. **El ícono ⓘ** al lado de cada título explica ese gráfico.\n"
+        "6. **Descargá** los datos de la zona elegida con el botón de la barra lateral.",
+        "1. **Pick the area** in the sidebar: all of Argentina, a province or a department. The choice is kept when "
+        "you switch views.\n"
+        "2. **Series 2003–2026**: how fire has behaved over the whole series. On top you can narrow the years and "
+        "switch between *number of hot spots* and *compared with normal*.\n"
+        "3. **One year**: pick a year and see its season against a typical year, and the map by department.\n"
+        "4. **The cards on top** sum up the last full month: how many hot spots, what is normal, its rank, and whether "
+        "it is a normal or unusual month. Hover to see the range and the probability.\n"
+        "5. **The ⓘ icon** next to each title explains that chart.\n"
+        "6. **Download** the data of the chosen area with the button in the sidebar."))
+
+    st.subheader(t("como_leer"))
+    st.markdown(t("como_leer.texto"))
+
+with c2:
+    st.subheader(t("foco.titulo"))
+    st.markdown(t("foco.texto"))
+
+    st.subheader(tr("Los otros gráficos", "The other charts"))
+    st.markdown(tr(
+        "- **Focos por año**: el total de cada año en la misma vara (focos equivalentes MODIS). Las barras más "
+        "oscuras son años convertidos desde VIIRS; la línea fina es su margen del 90 %. El año en curso está incompleto.\n"
+        "- **Temporada**: la línea naranja es el año elegido; la gris punteada, la mediana de 2003–2022; la banda gris, "
+        "el rango habitual (8 de cada 10 años). Lo que sale de la banda es un mes fuera de lo habitual.\n"
+        "- **Mapa**: focos por cada 1.000 km² en cada departamento, para que los departamentos grandes no parezcan los "
+        "que más arden solo por su tamaño. Con toda la Argentina elegida, muestra las provincias.",
+        "- **Hot spots per year**: each year's total on the same yardstick (MODIS-equivalent hot spots). Darker bars "
+        "are years converted from VIIRS; the thin line is their 90 % range. The current year is incomplete.\n"
+        "- **Season**: the orange line is the chosen year; the dotted grey line, the 2003–2022 median; the grey band, "
+        "the usual range (8 out of 10 years). Anything outside the band is an unusual month.\n"
+        "- **Map**: hot spots per 1,000 km² in each department, so large departments don't look like the most burned "
+        "just because of their size. With all of Argentina chosen, it shows the provinces."))
+
+    st.subheader(tr("Descargas y cómo citar", "Downloads and how to cite"))
+    st.markdown(t("desc.texto"))
+    st.code(t("cita"), language=None)
+
+pie()

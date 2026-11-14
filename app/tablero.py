@@ -110,7 +110,8 @@ def encabezado(d: pd.DataFrame, nombre: str):
 
 
 def barra_lateral_final(d: pd.DataFrame, nombre: str):
-    """Help, download, citation and footer, at the bottom of the sidebar."""
+    """The download of the chosen area and the data date, at the bottom of the sidebar. Explanations (how to read,
+    what a hot spot is, how to cite, sources) live in the Help page."""
     csv = pd.DataFrame({
         "area": nombre, "year": d.anio, "month": d.mes, "hotspots": d.valor, "lo90": d.min90, "hi90": d.max90,
         "median_month": d.normal, "p90_month": d.p90, "rank": d.puesto, "n_years": d.n_anios,
@@ -118,13 +119,7 @@ def barra_lateral_final(d: pd.DataFrame, nombre: str):
         "source": d.origen})
     with st.sidebar:
         st.divider()
-        with st.expander(t("como_leer")):
-            st.markdown(t("como_leer.texto"))
-        with st.expander(t("foco.titulo")):
-            st.markdown(t("foco.texto"))
         st.download_button("⬇️ " + t("desc.serie"), csv.to_csv(index=False).encode("utf-8"),
                            file_name=f"calendario_del_fuego_{nombre.replace(' ', '_')}.csv", mime="text/csv",
                            width="stretch", help=t("desc.texto"))
-        with st.expander(t("desc.citar")):
-            st.code(t("cita"), language=None)
-        st.caption(t("datos.actualizado", fecha=fecha_datos()) + " " + t("pie"))
+        st.caption(t("datos.actualizado", fecha=fecha_datos()) + " " + t("lateral.ayuda"))
