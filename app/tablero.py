@@ -179,7 +179,7 @@ def barra_lateral_final(d: pd.DataFrame, nombre: str):
         "source": d.origen})
     with st.sidebar:
         st.divider()
-        st.download_button("⬇️ " + t("desc.serie"), csv.to_csv(index=False).encode("utf-8"),
+        st.download_button("⬇️ " + t("desc.boton", area=t("area.pais_frase") if nombre == t("area.todo_pais") else nombre), csv.to_csv(index=False).encode("utf-8"),
                            file_name=f"calendario_del_fuego_{nombre.replace(' ', '_')}.csv", mime="text/csv",
                            width="stretch", help=t("desc.texto"))
-        st.caption(t("datos.actualizado", fecha=fecha_datos()) + " " + t("lateral.ayuda"))
+        st.caption(t("datos.actualizado", fecha=fecha_datos()))

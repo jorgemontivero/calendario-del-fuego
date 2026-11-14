@@ -21,7 +21,7 @@ nombre_de = dict(zonas)
 ALTO = alto_graficos(RESTO)
 with st.sidebar:
     st.caption(t("geo.ayuda"))
-    st.caption(t("datos.actualizado", fecha=fecha_datos()) + " " + t("lateral.ayuda"))
+    st.caption(t("datos.actualizado", fecha=fecha_datos()))
 
 # defaults: the area chosen in the other views, and a contrast that tells a story (2020, the record year, vs. now)
 base = st.session_state.get("prov_sel", "00")

@@ -114,9 +114,12 @@ T = {
     # downloads
     "desc.titulo": ("Descargar los datos de {area}", "Download data for {area}"),
     "desc.serie": ("Serie mensual armonizada (CSV)", "Harmonized monthly series (CSV)"),
-    "desc.texto": ("Focos por mes en equivalente MODIS, 2003–hoy, con lo normal, el puesto, el margen y la fuente. "
+    "desc.boton": ("Descargar los datos de {area} (CSV)", "Download the data for {area} (CSV)"),
+    "area.pais_frase": ("la Argentina", "Argentina"),
+    "desc.texto": ("Una planilla con un renglón por mes, de 2003 a hoy: focos en equivalente MODIS, lo normal, el puesto, el margen y la fuente. "
                    "Los nombres de columna van en inglés en los dos idiomas.",
-                   "Monthly hot spots in MODIS equivalents, 2003–today, with normal, rank, range and source."),
+                   "A spreadsheet with one row per month, 2003 to today: hot spots in MODIS equivalents, normal, rank, "
+                   "range and source."),
     "desc.citar": ("Cómo citar", "How to cite"),
     "cita": ("Calendario del Fuego (2026). https://github.com/jorgemontivero/calendario-del-fuego. NASA Space Apps "
              "Challenge, Catamarca.", "Calendario del Fuego (2026). https://github.com/jorgemontivero/calendario-del-fuego. "
