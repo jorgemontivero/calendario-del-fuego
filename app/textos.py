@@ -118,6 +118,29 @@ T = {
     "cita": ("Calendario del Fuego (2026). https://github.com/jorgemontivero/calendario-del-fuego. NASA Space Apps "
              "Challenge, Catamarca.", "Calendario del Fuego (2026). https://github.com/jorgemontivero/calendario-del-fuego. "
              "NASA Space Apps Challenge, Catamarca."),
+    # dashboard
+    "tab.filtros": ("Filtros", "Filters"),
+    "tab.anio": ("Año del mapa y de la temporada", "Year for the map and season"),
+    "kpi.mes": ("{mes} {anio}", "{mes} {anio}"),
+    "kpi.mes.ayuda": ("Último mes completo, en focos equivalentes MODIS. La flecha compara con lo normal para ese mes "
+                      "(mediana 2003–2022).", "Last full month, in MODIS-equivalent hot spots. The arrow compares with "
+                      "normal for that month (2003–2022 median)."),
+    "kpi.acum": ("En lo que va de {anio}", "So far in {anio}"),
+    "kpi.acum.ayuda": ("Enero a {mes}, contra lo normal de esos meses.", "January to {mes}, against normal for those months."),
+    "kpi.puesto": ("Puesto entre los meses de {mes}", "Rank among {mes} months"),
+    "kpi.estado": ("Cómo viene", "How it looks"),
+    "kpi.vs_normal": ("vs. lo normal", "vs. normal"),
+    "anual.titulo": ("Focos por año (equivalente MODIS)", "Hot spots per year (MODIS equivalent)"),
+    "anual.ayuda": ("Barras: total del año; la línea fina es el margen del 90 % de los años convertidos. "
+                    "{anio} está incompleto.", "Bars: yearly total; the thin line is the 90 % range of converted years. "
+                    "{anio} is incomplete."),
+    "mapa.titulo.dep": ("{area} · focos por cada 1.000 km², {anio}", "{area} · hot spots per 1,000 km², {anio}"),
+    "mapa.ayuda": ("Serie armonizada por departamento, dividida por la superficie: así los departamentos grandes no "
+                   "parecen los que más arden solo por su tamaño. Los departamentos no llevan margen todavía.",
+                   "Harmonized series by department, divided by area, so large departments don't look like the most "
+                   "burned just because of their size. Departments carry no range yet."),
+    "mapa.leyenda": ("focos / 1.000 km²", "hot spots / 1,000 km²"),
+    "panel.calendario": ("Calendario", "Calendar"), "panel.temporada": ("Temporada", "Season"),
     # emergency
     "emerg.boton": ("¿Ves fuego ahora?", "See a fire now?"),
     "emerg.titulo": ("Si ves un incendio, llamá ya", "If you see a fire, call now"),

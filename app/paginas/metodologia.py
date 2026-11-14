@@ -39,7 +39,7 @@ for a, n in [(2012, "Suomi NPP"), (2018, "NOAA-20"), (2023, "NOAA-21")]:
     fig.add_vline(x=a - 0.5, line=dict(color="gray", width=1, dash="dash"), annotation_text=n, annotation_position="top left")
 fig.update_layout(height=380, margin=dict(l=10, r=10, t=30, b=10), legend=dict(orientation="h", y=-0.15),
                   yaxis_title=tr("Índice (promedio 2003–2011 = 100)", "Index (2003–2011 average = 100)"))
-st.plotly_chart(fig, use_container_width=True, theme="streamlit")
+st.plotly_chart(fig, width="stretch", theme="streamlit")
 v = meta()["validacion"]["tendencia"]
 st.caption(tr(
     f"Cambio de nivel (prueba de Pettitt): todos los focos sumados {'+' + num(100 * v['Ingenua: todos los focos sumados (2003-2025)']['cambio_pct'])} %; "
@@ -105,7 +105,7 @@ tabla = pd.DataFrame({
     tr("Error típico por mes", "Typical monthly error"): [f"{num(100 * x)} %" for x in ex.error_tipico],
     tr("Acierto del margen del 90 %", "90 % range coverage"): [f"{num(100 * x, 1)} %" for x in ex.cobertura],
 })
-st.dataframe(tabla, hide_index=True, use_container_width=True)
+st.dataframe(tabla, hide_index=True, width="stretch")
 st.caption(tr("Error típico: mediana del error relativo en provincia-meses con 10 celdas-día de Aqua o más. Acierto del "
               "margen: tiene que estar entre 85 % y 95 %. M0 parece bien en el total solo porque compensa dos errores "
               "grandes (de día da de menos y de noche, tres veces de más).",

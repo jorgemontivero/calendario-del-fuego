@@ -81,7 +81,7 @@ def cabecera():
             st.query_params["lang"] = elegido.lower()
             st.rerun()
     with c3:
-        with st.popover("🔥 " + t("emerg.boton"), use_container_width=True):
+        with st.popover("🔥 " + t("emerg.boton"), width="stretch"):
             st.markdown(f"**{t('emerg.titulo')}**")
             st.write(t("emerg.texto"))
             st.markdown(t("emerg.lista"))

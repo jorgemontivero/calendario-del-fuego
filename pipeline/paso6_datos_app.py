@@ -108,6 +108,11 @@ an.to_parquet(SAL / "anual_pais.parquet", index=False)
 lim = pd.concat([provs.assign(nivel="provincia", area_cod=provs.prov_cod, area=provs.provincia)[["nivel", "area_cod", "area", "prov_cod", "geometry"]],
                  deptos.assign(nivel="departamento", area_cod=deptos.depto_cod, area=deptos.depto)[["nivel", "area_cod", "area", "prov_cod", "geometry"]]])
 lim = gpd.GeoDataFrame(lim, geometry="geometry", crs=provs.crs)
+# Albers equal-area (South America): fire per 1,000 km2 in the map. Clipped north of 60 S: the Antarctic sector
+# makes the area of Tierra del Fuego invalid (and it has no hot spots).
+from shapely.geometry import box  # noqa: E402
+
+lim["km2"] = lim.geometry.make_valid().intersection(box(-80, -60, -50, -20)).to_crs("ESRI:102033").area / 1e6
 lim["geometry"] = lim.geometry.simplify(0.01, preserve_topology=True)
 lim.to_parquet(SAL / "limites.parquet", index=False)
 
