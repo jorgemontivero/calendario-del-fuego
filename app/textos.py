@@ -9,9 +9,9 @@ T = {
     "nav.equipo": ("Equipo", "Team"), "nav.contacto": ("Contacto", "Contact"),
     "idioma": ("Idioma", "Language"),
     "datos.actualizado": ("Datos al {fecha}.", "Data as of {fecha}."),
-    "pie": ("Datos: NASA FIRMS, IGN, Ministerio de Ambiente. Código abierto (MIT). **No es un sistema de alerta.** "
+    "pie": ("Datos: NASA FIRMS, NASA POWER, IGN, Ministerio de Ambiente. Código abierto (MIT). **No es un sistema de alerta.** "
             "Este proyecto usa datos de la NASA, pero no está respaldado por la NASA.",
-            "Data: NASA FIRMS, IGN, Argentina's Ministry of Environment. Open code (MIT). **Not a warning system.** "
+            "Data: NASA FIRMS, NASA POWER, IGN, Argentina's Ministry of Environment. Open code (MIT). **Not a warning system.** "
             "This project uses NASA data but is not endorsed by NASA."),
     # area
     "area.titulo": ("¿Qué zona querés mirar?", "Which area do you want to explore?"),
@@ -100,6 +100,7 @@ T = {
     "temp.anio": ("Año a comparar", "Year to compare"),
     "temp.banda": ("Rango habitual (8 de cada 10 años, 2003–2022)", "Usual range (8 out of 10 years, 2003–2022)"),
     "temp.mediana": ("Mediana 2003–2022", "2003–2022 median"),
+    "temp.en_curso": ("En curso (al {fecha})", "In progress (to {fecha})"),
     "temp.pico": ("Mes pico", "Peak month"),
     "temp.temporada": ("Temporada de fuego", "Fire season"),
     "temp.temporada.ayuda": ("Meses que juntan el 80 % de los focos de un año típico.",

@@ -92,7 +92,12 @@ def cabecera():
     [data-testid="stTopNav"] {max-width: calc(100% - 430px) !important;}
     [data-testid="stTopNavLink"] {padding-left: 0.45rem !important; padding-right: 0.45rem !important;}
     .block-container h2:first-of-type {padding-top: 0.2rem;}
-    @media (max-width: 640px) {.st-key-barra_sup {right: 3.2rem;} .st-key-barra_sup p {font-size: 0.8rem;}}
+    /* phones: the bar has no room next to the logo, so the buttons go back into the page, as its first row */
+    @media (max-width: 640px) {
+      .st-key-barra_sup {position: static; justify-content: flex-end;}
+      .st-key-barra_sup p {font-size: 0.8rem;}
+      .block-container {padding-top: 3.6rem !important;}
+    }
     /* "About the project" links: drawn first, shown last, at the foot of the sidebar */
     [data-testid="stSidebarUserContent"] > div > [data-testid="stVerticalBlock"] {min-height: calc(100vh - 7rem);}
     [data-testid="stLayoutWrapper"]:has(> .st-key-acerca) {order: 99; margin-top: auto;}

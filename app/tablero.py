@@ -23,6 +23,12 @@ CSS = """<style>
 .tarjetas:has(> .tarjeta:nth-child(5)) .tarjeta {padding: 0.35rem 0.55rem;}
 .tarjetas:has(> .tarjeta:nth-child(5)) .va {font-size: 1.12rem; overflow: hidden; text-overflow: ellipsis;}
 .tarjeta .de.baja {color: #15803d;} .tarjeta .de.sube {color: #b91c1c;}
+/* phones: two cards per row instead of five squeezed into one */
+@media (max-width: 640px) {
+  .tarjetas {flex-wrap: wrap; gap: 0.4rem !important; margin-bottom: 0.9rem;}
+  .tarjeta {flex: 1 1 calc(50% - 0.4rem);}
+  .tarjeta .va, .tarjetas:has(> .tarjeta:nth-child(5)) .va {font-size: 1.05rem; white-space: normal;}
+}
 .area-titulo {font-size: 1.55rem; font-weight: 700; line-height: 1.15; margin: 0;}
 .area-sub {font-size: 0.75rem; opacity: 0.7;}
 /* the window-height probe is an invisible iframe: take it out of the layout (it keeps running) */

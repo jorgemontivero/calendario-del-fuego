@@ -5,7 +5,7 @@ import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
 
-from comun import CONFIG_GRAFICO, NARANJA, cabecera, mes, num, serie, t
+from comun import CONFIG_GRAFICO, NARANJA, cabecera, fecha_datos, mes, num, serie, t
 from mapas import ranking
 from tablero import alto_graficos, barra_lateral_final, encabezado, filtros
 
@@ -64,8 +64,10 @@ with izq.container(border=True):
     temp_txt = ", ".join(mes(a) if a == b else f"{mes(a)}–{mes(b)}" for a, b in sorted(tramos))
     st.markdown(f"**{t('panel.temporada')} · {anio_sel}** · {t('temp.corta', pico=mes(int(med.idxmax())), temp=temp_txt)}",
                 help=t("temp.temporada.ayuda"))
-    ac = d[d.anio == anio_sel].sort_values("mes")
-    x = [mes(m).capitalize() for m in range(1, 13)]
+    todo = d[d.anio == anio_sel].sort_values("mes")
+    ac = todo[todo.mes_completo]  # the month in progress is partial: drawn apart, not joined to the line
+    curso = todo[~todo.mes_completo]
+    x =[mes(m).capitalize() for m in range(1, 13)]
     f2 = go.Figure()
     f2.add_trace(go.Scatter(x=x, y=q[0.9], mode="lines", line=dict(width=0), showlegend=False, hoverinfo="skip"))
     f2.add_trace(go.Scatter(x=x, y=q[0.1], mode="lines", fill="tonexty", line=dict(width=0),
@@ -77,6 +79,12 @@ with izq.container(border=True):
         f2.add_trace(go.Scatter(x=xa, y=ac.min90, mode="lines", fill="tonexty", line=dict(width=0),
                                 fillcolor="rgba(194,65,12,0.2)", showlegend=False, hoverinfo="skip"))
     f2.add_trace(go.Scatter(x=xa, y=ac.valor, line=dict(color=NARANJA, width=3), mode="lines+markers", name=str(anio_sel)))
+    if len(curso):
+        f2.add_trace(go.Scatter(x=[mes(m).capitalize() for m in curso.mes], y=curso.valor, mode="markers",
+                                marker=dict(size=9, color="rgba(0,0,0,0)", line=dict(color=NARANJA, width=2)),
+                                name=t("temp.en_curso", fecha=fecha_datos()),
+                                hovertemplate="%{x}: %{y:,.0f} · " + t("temp.en_curso", fecha=fecha_datos())
+                                              + "<extra></extra>"))
     f2.update_layout(dragmode=False, height=ALTO, margin=dict(l=0, r=0, t=5, b=0),
                      legend=dict(orientation="h", y=1.02, yanchor="bottom", font=dict(size=10)),
                      yaxis_title=t("cal.leyenda.focos"))

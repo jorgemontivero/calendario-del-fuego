@@ -162,10 +162,14 @@ st.markdown(tr(
     "- **NASA FIRMS**: MODIS Colección 6.1 (Terra, Aqua) y VIIRS 375 m (Suomi NPP, NOAA-20, NOAA-21).\n"
     "- **Instituto Geográfico Nacional**: límites de provincias y departamentos.\n"
     "- **Ministerio de Ambiente de la Nación** (CIAM): estadísticas de incendios forestales, para validar.\n"
+    "- **NASA POWER** (reanálisis MERRA-2): lluvia, humedad y temperatura máxima por mes, para la vista Clima y "
+    "fuego y la tarjeta de lluvia. No interviene en la armonización.\n"
     "- Código: https://github.com/jorgemontivero/calendario-del-fuego",
     "- **NASA FIRMS**: MODIS Collection 6.1 (Terra, Aqua) and VIIRS 375 m (Suomi NPP, NOAA-20, NOAA-21).\n"
     "- **Instituto Geográfico Nacional** (Argentina): province and department boundaries.\n"
     "- **Argentina's Ministry of Environment** (CIAM): wildfire statistics, for validation.\n"
+    "- **NASA POWER** (MERRA-2 reanalysis): monthly rain, humidity and maximum temperature, for the Climate and "
+    "fire view and the rain card. It plays no part in the harmonization.\n"
     "- Code: https://github.com/jorgemontivero/calendario-del-fuego"))
 with st.expander(tr("Glosario", "Glossary")):
     st.markdown(tr(
