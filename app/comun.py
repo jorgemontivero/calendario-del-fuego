@@ -69,19 +69,24 @@ def fecha_datos() -> str:
 
 
 def cabecera():
-    """Language switch and the emergency button, on every page."""
-    c1, c2, c3 = st.columns([6, 2, 2])
-    with c1:
-        st.caption(t("app.lema"))
-    with c2:
+    """Language switch and the emergency button, on every page. Streamlit has no slot for custom widgets in its top
+    navigation bar, so this container is pinned there with CSS (class st-key-barra_sup), to the left of the
+    toolbar; the page content then starts right under the bar."""
+    st.markdown("""<style>
+    .st-key-barra_sup {position: fixed; top: 0.55rem; right: 8.5rem; z-index: 999991; width: auto !important;}
+    .st-key-barra_sup button {min-height: 2rem; padding-top: 0.15rem; padding-bottom: 0.15rem;}
+    .block-container {padding-top: 2.4rem !important;}
+    .block-container h2:first-of-type {padding-top: 0.2rem;}
+    @media (max-width: 640px) {.st-key-barra_sup {right: 3.2rem;} .st-key-barra_sup p {font-size: 0.8rem;}}
+    </style>""", unsafe_allow_html=True)
+    with st.container(key="barra_sup", horizontal=True, gap="small"):
         elegido = st.segmented_control(t("idioma"), ["ES", "EN"], default=idioma().upper(), label_visibility="collapsed",
                                        key="selector_idioma")
         if elegido and elegido.lower() != idioma():
             st.session_state["lang"] = elegido.lower()
             st.query_params["lang"] = elegido.lower()
             st.rerun()
-    with c3:
-        with st.popover("🔥 " + t("emerg.boton"), width="stretch"):
+        with st.popover("🔥 " + t("emerg.boton")):
             st.markdown(f"**{t('emerg.titulo')}**")
             st.write(t("emerg.texto"))
             st.markdown(t("emerg.lista"))
