@@ -130,7 +130,7 @@ T = {
     "tend.corta.sube": ("tendencia en alza", "upward trend"), "tend.corta.baja": ("tendencia en baja", "downward trend"),
     "tend.corta.nada": ("sin tendencia clara", "no clear trend"),
     "temp.corta": ("pico: {pico} · temporada: {temp}", "peak: {pico} · season: {temp}"),
-    "tab.serie": ("Serie {desde}–{hasta}", "Series {desde}–{hasta}"),
+    "tab.serie": ("Serie histórica", "Historical series"),
     "tab.un_anio": ("Un año", "One year"),
     "tab.anio": ("Año del mapa y de la temporada", "Year for the map and season"),
     "kpi.mes": ("{mes} {anio}", "{mes} {anio}"),

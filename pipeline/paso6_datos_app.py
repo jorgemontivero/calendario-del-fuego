@@ -113,6 +113,10 @@ lim = gpd.GeoDataFrame(lim, geometry="geometry", crs=provs.crs)
 from shapely.geometry import box  # noqa: E402
 
 lim["km2"] = lim.geometry.make_valid().intersection(box(-80, -60, -50, -20)).to_crs("ESRI:102033").area / 1e6
+# For drawing, the same clip (the Antarctic sector and the South Atlantic islands made every map of the country fit
+# down to the South Pole, leaving mainland Argentina as a thin strip). Malvinas stay (they are north of 56 S).
+lim["geometry"] = lim.geometry.make_valid().intersection(box(-75, -56, -53, -21))
+lim = lim[~lim.geometry.is_empty]
 lim["geometry"] = lim.geometry.simplify(0.01, preserve_topology=True)
 lim.to_parquet(SAL / "limites.parquet", index=False)
 

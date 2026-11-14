@@ -86,17 +86,32 @@ with der.container(border=True):
     gj = json.loads(geo[["area_cod", "geometry"]].to_json())
     zl = np.log10(geo.dens + 0.1)
     ticks = [v for v in [0.1, 0.3, 1, 3, 10, 30, 100, 300] if zl.min() - 0.3 <= math.log10(v + 0.1) <= zl.max() + 0.3]
-    f4 = go.Figure(go.Choropleth(
+    # A map canvas (MapLibre, light Carto basemap) instead of the geo subplot, which keeps a
+    # fixed aspect ratio and left the country small in the middle of the panel. The view is framed on the area's
+    # bounding box (Web Mercator zoom); the user can still zoom and pan.
+    x0, y0, x1, y1 = geo.total_bounds
+    merc = lambda lat: math.log(math.tan(math.pi / 4 + math.radians(lat) / 2))  # noqa: E731
+    frac_y = (merc(y1) - merc(y0)) / (2 * math.pi)
+    frac_x = (x1 - x0) / 360
+    ancho_px = 560  # approximate panel width; the height is the binding limit for tall areas such as Argentina
+    zoom = min(math.log2(ALTO / 512 / frac_y), math.log2(ancho_px / 512 / frac_x)) - 0.1
+    centro_lat = math.degrees(math.atan(math.sinh((merc(y0) + merc(y1)) / 2)))
+    f4 = go.Figure(go.Choroplethmap(
         geojson=gj, featureidkey="properties.area_cod", locations=geo.area_cod, z=zl, colorscale="YlOrRd",
-        marker_line_width=[2.5 if c == dep_cod else 0.4 for c in geo.area_cod],
-        marker_line_color=["#111827" if c == dep_cod else "white" for c in geo.area_cod],
+        marker_line_width=0.5, marker_line_color="white",
         customdata=np.stack([geo["area"], geo.valor.round(0), geo.dens.round(1)], axis=1),
         hovertemplate="<b>%{customdata[0]}</b><br>%{customdata[1]} " + t("cal.hover.valor") +
                       "<br>%{customdata[2]} " + t("mapa.leyenda") + "<extra></extra>",
         colorbar=dict(title=t("mapa.leyenda"), tickvals=[math.log10(v + 0.1) for v in ticks],
                       ticktext=[num(v, 1 if v < 1 else 0) for v in ticks], thickness=10)))
-    f4.update_geos(fitbounds="locations", visible=False)
-    f4.update_layout(height=ALTO, margin=dict(l=0, r=0, t=0, b=0), geo=dict(bgcolor="rgba(0,0,0,0)"))
-    st.plotly_chart(f4, width="stretch", theme="streamlit", config={"displayModeBar": False})
+    if dep_cod is not None:  # outline the chosen department
+        sel = geo[geo.area_cod == dep_cod]
+        f4.add_trace(go.Choroplethmap(geojson=json.loads(sel[["area_cod", "geometry"]].to_json()),
+                                      featureidkey="properties.area_cod", locations=sel.area_cod, z=[0],
+                                      colorscale=[[0, "rgba(0,0,0,0)"], [1, "rgba(0,0,0,0)"]], showscale=False,
+                                      marker_line_width=3, marker_line_color="#111827", hoverinfo="skip"))
+    f4.update_layout(height=ALTO, margin=dict(l=0, r=0, t=0, b=0),
+                     map=dict(style="carto-positron", center=dict(lat=centro_lat, lon=(x0 + x1) / 2), zoom=zoom))
+    st.plotly_chart(f4, width="stretch", theme="streamlit", config={"displayModeBar": False, "scrollZoom": True})
 
 barra_lateral_final(d, nombre)
