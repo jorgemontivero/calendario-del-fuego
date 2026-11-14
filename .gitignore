@@ -1,0 +1,9 @@
+# data: too big for git; see README ("Data")
+data/*
+!data/README.md
+.venv/
+__pycache__/
+*.pyc
+.map_key
+*.log
+.streamlit/secrets.toml
