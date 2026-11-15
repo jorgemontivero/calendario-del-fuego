@@ -7,7 +7,7 @@ import plotly.graph_objects as go
 import streamlit as st
 
 from comun import CONFIG_GRAFICO, NARANJA, cabecera, clima, meta, mes, num, oscuro, t
-from tablero import _tarjeta, alto_graficos, barra_lateral_final, filtros
+from tablero import _tarjeta, _tarjeta_lluvia, alto_graficos, barra_lateral_final, filtros
 
 RESTO = 300  # everything on this view that is not a chart (measured on screen)
 VARS = {  # variable -> (column, kind of anomaly, which side is "dry/hot")
@@ -66,6 +66,7 @@ tarjetas = "".join([
              ayuda=t("clima.p.ayuda", ter=et_seco)),
     _tarjeta(t("clima.p", ter=et_hum), f"{num(100 * p_hum)} %" if not np.isnan(p_hum) else "—",
              ayuda=t("clima.p.ayuda", ter=et_hum)),
+    _tarjeta_lluvia(prov_cod, ua, um),  # the last three months, read against the correlation on its left
 ])
 st.markdown(f'<div class="tarjetas" style="margin-top:0.3rem">{tarjetas}</div>', unsafe_allow_html=True)
 

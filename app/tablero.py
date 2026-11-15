@@ -133,7 +133,6 @@ def _tarjetas_recientes(d: pd.DataFrame):
         _tarjeta(t("kpi.acum", anio=ua, mes=mes(um)), num(av), d2, s2, t("kpi.acum.ayuda", mes=mes(um, True))),
         _tarjeta(t("kpi.puesto", mes=mes(um)), puesto_txt(u.puesto, u.n_anios), ayuda=t("puesto.ayuda")),
         _tarjeta(t("kpi.estado"), f"{ICONO[u.estado]} {t('estado.corto.' + u.estado)}", ayuda=ayuda4),
-        _tarjeta_lluvia(st.session_state.get("prov_sel", "00"), ua, um),
     ]
 
 
@@ -172,8 +171,8 @@ def _tarjeta_lluvia(prov_cod: str, ua: int, um: int) -> str:
 
 
 def frase_resumen(d: pd.DataFrame) -> str:
-    """One sentence saying what the cards show, for someone who looks for thirty seconds: the last full month, the
-    year so far and the rain of the last three months. Plain facts side by side: no cause is claimed."""
+    """One sentence saying what the cards show, for someone who looks for thirty seconds: the last full month and
+    the year so far. Fire only: the rain context lives in the Climate and fire view, next to its correlation."""
     ua, um = meta()["ultimo_mes_completo"]
     u = d[(d.anio == ua) & (d.mes == um)].iloc[0]
     m_largo, n = mes(um, True), int(u.n_anios) if not np.isnan(u.n_anios) else 0
@@ -195,9 +194,7 @@ def frase_resumen(d: pd.DataFrame) -> str:
         p_anio = t("res.anio.cerca")
     else:
         p_anio = t("res.anio.arriba" if av > an else "res.anio.abajo", p=num(abs(100 * (av / an - 1))))
-    ll = _lluvia(st.session_state.get("prov_sel", "00"), ua, um)
-    p_ll = t("res.lluvia." + ll["ter"]) if ll and ll["ter"] != "normal" else ""
-    return " ".join(x for x in (p_mes, p_anio, p_ll) if x)
+    return " ".join(x for x in (p_mes, p_anio) if x)
 
 
 def _tarjetas_anio(d: pd.DataFrame, anio: int):

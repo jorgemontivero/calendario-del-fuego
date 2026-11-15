@@ -331,9 +331,6 @@ T = {
     "res.anio.arriba": ("En el año, {p} % más que lo normal.", "Year so far: {p} % above normal."),
     "res.anio.abajo": ("En el año, {p} % menos que lo normal.", "Year so far: {p} % below normal."),
     "res.anio.cerca": ("En el año, cerca de lo normal.", "Year so far: close to normal."),
-    "res.lluvia.seco": ("Últimos tres meses: más secos que lo habitual.", "Last three months: drier than usual."),
-    "res.lluvia.lluvioso": ("Últimos tres meses: más lluviosos que lo habitual.",
-                            "Last three months: wetter than usual."),
     # Climate and fire view
     "nav.datos": ("Datos abiertos", "Open data"),
     "nav.clima": ("Clima y fuego", "Climate and fire"),
