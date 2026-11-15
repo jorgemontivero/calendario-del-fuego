@@ -276,14 +276,14 @@ T = {
     "tab.serie": ("Serie histórica", "Historical series"),
     "tab.un_anio": ("Un año", "One year"),
     "tab.anio": ("Año del mapa y de la temporada", "Year for the map and season"),
-    "kpi.mes": ("{mes} {anio}", "{mes} {anio}"),
+    "kpi.mes": ("Focos en {mes} {anio}", "Hot spots in {mes} {anio}"),
     "kpi.mes.ayuda": ("Último mes completo, en focos equivalentes MODIS. La flecha compara con lo normal para ese mes "
                       "(mediana 2003–2022).", "Last full month, in MODIS-equivalent hot spots. The arrow compares with "
                       "normal for that month (2003–2022 median)."),
-    "kpi.acum": ("{anio}, ene–{mes}", "{anio}, Jan–{mes}"),
+    "kpi.acum": ("Focos en {anio}, ene–{mes}", "Hot spots in {anio}, Jan–{mes}"),
     "kpi.acum.ayuda": ("Enero a {mes}, contra lo normal de esos meses.", "January to {mes}, against normal for those months."),
-    "kpi.puesto": ("Puesto en {mes}", "Rank in {mes}"),
-    "kpi.estado": ("Cómo viene", "How it looks"),
+    "kpi.puesto": ("Puesto de este {mes}", "Rank of this {mes}"),
+    "kpi.estado": ("Cómo viene este mes", "How this month looks"),
     "kpi.vs_normal": ("vs. lo normal", "vs. normal"),
     "anual.titulo": ("Focos por año", "Hot spots per year"),
     "anual.modo": ("Vista", "View"), "anual.modo.anio": ("Por año", "Per year"), "anual.modo.mes": ("Por mes", "Per month"),

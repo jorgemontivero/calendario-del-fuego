@@ -129,9 +129,9 @@ def _tarjetas_recientes(d: pd.DataFrame):
     d2, s2 = _pct_txt(av, an)
     ayuda4 = t("ultimo.prob", p=pct(u.prob_inusual)) if not np.isnan(u.prob_inusual) else None
     return [
-        _tarjeta(t("kpi.mes", mes=mes(um, True).capitalize(), anio=ua), num(u.valor), d1, s1, ayuda1),
+        _tarjeta(t("kpi.mes", mes=mes(um, True), anio=ua), num(u.valor), d1, s1, ayuda1),
         _tarjeta(t("kpi.acum", anio=ua, mes=mes(um)), num(av), d2, s2, t("kpi.acum.ayuda", mes=mes(um, True))),
-        _tarjeta(t("kpi.puesto", mes=mes(um)), puesto_txt(u.puesto, u.n_anios), ayuda=t("puesto.ayuda")),
+        _tarjeta(t("kpi.puesto", mes=mes(um, True)), puesto_txt(u.puesto, u.n_anios), ayuda=t("puesto.ayuda")),
         _tarjeta(t("kpi.estado"), f"{ICONO[u.estado]} {t('estado.corto.' + u.estado)}", ayuda=ayuda4),
     ]
 
