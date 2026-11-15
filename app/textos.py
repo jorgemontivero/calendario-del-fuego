@@ -350,14 +350,14 @@ T = {
                         "lo normal. Cerca de 0: sin relación. Es una asociación, no una causa.",
                         "Between −1 and 1. Negative: the lower the climate against normal, the more fire against "
                         "normal. Near 0: no relation. It is an association, not a cause."),
-    "clima.n": ("Meses de temporada comparados", "Season months compared"),
+    "clima.n": ("Meses comparados", "Months compared"),
     "clima.n.meses": ("Temporada de esta zona: {m}.", "This area's season: {m}."),
     "clima.n.ayuda": ("Solo los meses de la temporada de fuego de la zona (los que juntan el 80 % del fuego de un año "
                       "típico), de 2003 al último mes completo. Fuera de temporada casi no hay fuego y la comparación no "
                       "dice nada.",
                       "Only the area's fire-season months (those holding 80 % of a typical year's fire), from 2003 to "
                       "the last full month. Off season there is hardly any fire and the comparison says nothing."),
-    "clima.p": ("Fuego sobre lo normal · {ter}", "Fire above normal · {ter}"),
+    "clima.p": ("Fuego alto · {ter}", "Fire above normal · {ter}"),
     "clima.p.ayuda": ("De los meses del tercio «{ter}», qué parte tuvo más focos que lo normal para ese mes. Si el "
                       "clima no importara, rondaría el 50 %.",
                       "Of the months in the “{ter}” third, the share with more hot spots than normal for that month. If "
