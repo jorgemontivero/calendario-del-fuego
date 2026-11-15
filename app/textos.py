@@ -345,16 +345,6 @@ T = {
                     "Say where you are, what you see (smoke, flames) and which way the fire is moving."),
     "fuente.aqua": ("Aqua observado", "Aqua observed"), "fuente.snpp": ("Suomi NPP convertido", "Suomi NPP converted"),
     "fuente.noaa20": ("NOAA-20 convertido", "NOAA-20 converted"),
-    # climate context card (Series view)
-    "kpi.lluvia": ("Lluvia {m1}–{m2}", "Rain {m1}–{m2}"),
-    "kpi.lluvia.seco": ("más seco", "drier"), "kpi.lluvia.normal": ("normal", "normal"),
-    "kpi.lluvia.lluvioso": ("más lluvioso", "wetter"),
-    "kpi.lluvia.ayuda": ("Lluvia acumulada de los últimos tres meses completos en la provincia (NASA POWER). Lo normal "
-                         "para esos meses: {n} mm (mediana 2003–2022); «más seco» = entre el tercio de años más secos. "
-                         "Humedad del último mes: {h} % (normal {hn} %). Contexto, no pronóstico.",
-                         "Rain over the last three full months in the province (NASA POWER). Normal for those months: "
-                         "{n} mm (2003–2022 median); “drier” = within the driest third of years. Humidity last month: "
-                         "{h} % (normal {hn} %). Context, not a forecast."),
     # one-sentence summary (Series view); short, so it fits one line
     "res.mes.max": ("{mes} de {anio} fue el {m} con más focos en {n} años ({v}).",
                     "{mes} {anio} was the {m} with the most hot spots in {n} years ({v})."),
@@ -370,9 +360,9 @@ T = {
     "res.anio.arriba": ("En el año, {p} % más que lo normal.", "Year so far: {p} % above normal."),
     "res.anio.abajo": ("En el año, {p} % menos que lo normal.", "Year so far: {p} % below normal."),
     "res.anio.cerca": ("En el año, cerca de lo normal.", "Year so far: close to normal."),
-    # Climate and fire view
+    # Climate vs. fire view
     "nav.datos": ("Datos abiertos", "Open data"),
-    "nav.clima": ("Clima y fuego", "Climate and fire"),
+    "nav.clima": ("Clima vs. fuego", "Climate vs. fire"),
     "clima.depto": ("clima de la provincia: {prov}", "climate of the province: {prov}"),
     "clima.variable": ("Variable de clima", "Climate variable"),
     "clima.var.humedad": ("Humedad del mes", "Humidity of the month"),
@@ -384,7 +374,16 @@ T = {
     "clima.ter.lluvia6.seco": ("Menos lluvia", "Less rain"), "clima.ter.lluvia6.humedo": ("Más lluvia", "More rain"),
     "clima.ter.temp.seco": ("Más calor", "Hotter"), "clima.ter.temp.humedo": ("Más fresco", "Cooler"),
     "clima.ter.medio": ("Normal", "Normal"),
-    "clima.rho": ("Asociación (ρ de Spearman)", "Association (Spearman ρ)"),
+    "clima.rho": ("Correlación (ρ de Spearman)", "Correlation (Spearman ρ)"),
+    "clima.ctx.lluvia": ("Lluvia {m1}–{m2}", "Rain {m1}–{m2}"),
+    "clima.ctx.humedad": ("Humedad de {mes}", "Humidity in {mes}"),
+    "clima.ctx.temp": ("Temp. máxima de {mes}", "Max. temperature in {mes}"),
+    "clima.ctx.ayuda": ("{var}, el dato más reciente, en la provincia (NASA POWER). Lo normal para esos meses: {n} "
+                        "(mediana 2003–2022); «{seco}» = entre el tercio de años más secos o más cálidos. Contexto, "
+                        "no pronóstico.",
+                        "{var}, the latest value, in the province (NASA POWER). Normal for those months: {n} "
+                        "(2003–2022 median); “{seco}” = within the driest or hottest third of years. Context, not a "
+                        "forecast."),
     "clima.rho.ayuda": ("Entre −1 y 1. Negativo: cuanto más bajo el clima respecto de lo normal, más fuego respecto de "
                         "lo normal. Cerca de 0: sin relación. Es una asociación, no una causa.",
                         "Between −1 and 1. Negative: the lower the climate against normal, the more fire against "

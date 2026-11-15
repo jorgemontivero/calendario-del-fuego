@@ -1,13 +1,15 @@
-"""Climate and fire: does a dry month come with more fire? Anomalies - how far each month was from normal for that
+"""Climate vs. fire: does a dry month come with more fire? Anomalies - how far each month was from normal for that
 month of the year - of fire (harmonized series) and of climate (NASA POWER), fire-season months only. Without
 anomalies both follow the seasons and the correlation only says that winter exists. Fits one screen."""
+
+import html
 
 import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
 
 from comun import CONFIG_GRAFICO, NARANJA, cabecera, clima, meta, mes, num, oscuro, t
-from tablero import _tarjeta, _tarjeta_lluvia, alto_graficos, barra_lateral_final, filtros
+from tablero import _tarjeta, alto_graficos, barra_lateral_final, filtros
 
 RESTO = 300  # everything on this view that is not a chart (measured on screen)
 VARS = {  # variable -> (column, kind of anomaly, which side is "dry/hot")
@@ -17,6 +19,42 @@ VARS = {  # variable -> (column, kind of anomaly, which side is "dry/hot")
     "temp": ("temp_max", "dif", "alto"),
 }
 AZUL_T, GRIS_T = "#2563EB", "#9CA3AF"
+UNIDAD = {"humedad": (" %", 0), "lluvia3": (" mm", 0), "lluvia6": (" mm", 0), "temp": (" °C", 1)}
+
+
+def tarjeta_contexto(prov_cod: str, ua: int, um: int, var: str) -> str:
+    """The latest value of the chosen variable against its normal (median 2003-2022 for the same months) and its
+    tercile. Humidity and temperature: the last full month. Rain: the 3 or 6 months ending in the last full month -
+    the "previous months" of the month now in progress, the same window the analysis uses."""
+    col, _, lado = VARS[var]
+    c = clima()
+    c = c[c.prov_cod == prov_cod].set_index(["anio", "mes"]).sort_index()
+    if var.startswith("lluvia"):
+        k = 3 if var == "lluvia3" else 6
+        fila = (ua + um // 12, um % 12 + 1)  # the month after the last full month
+        m1 = (um - k) % 12 + 1
+        etiqueta = t("clima.ctx.lluvia", m1=mes(m1), m2=mes(um))
+    else:
+        fila = (ua, um)
+        etiqueta = t(f"clima.ctx.{var}", mes=mes(um, True))
+    if fila not in c.index or not np.isfinite(c.loc[fila, col]):
+        return ""
+    v = float(c.loc[fila, col])
+    ref = c[col].reindex([(a, fila[1]) for a in range(2003, 2023)]).dropna().to_numpy()
+    if len(ref) < 10:
+        return ""
+    q1, q2 = np.quantile(ref, [1 / 3, 2 / 3])
+    bajo, alto = v <= q1, v >= q2
+    seco = (bajo and lado == "bajo") or (alto and lado == "alto")
+    humedo = (alto and lado == "bajo") or (bajo and lado == "alto")
+    tag = t(f"clima.ter.{var}.seco").lower() if seco else t(f"clima.ter.{var}.humedo").lower() if humedo else t("clima.ter.medio").lower()
+    color = "#EA580C" if seco else "#3B82F6" if humedo else "inherit"
+    u, dec = UNIDAD[var]
+    ayuda = t("clima.ctx.ayuda", var=t(f"clima.var.{var}"), n=num(float(np.median(ref)), dec) + u,
+              seco=t(f"clima.ter.{var}.seco").lower())
+    return (f'<div class="tarjeta" title="{html.escape(ayuda)}"><div class="et">{html.escape(etiqueta)}</div>'
+            f'<div class="va">{num(v, dec)}{u}<span class="de" style="color:{color}">{html.escape(tag)}</span></div></div>')
+
 
 cabecera()
 d, nombre, prov_cod, prov_nom, dep_cod = filtros()
@@ -66,7 +104,7 @@ tarjetas = "".join([
              ayuda=t("clima.p.ayuda", ter=et_seco)),
     _tarjeta(t("clima.p", ter=et_hum), f"{num(100 * p_hum)} %" if not np.isnan(p_hum) else "—",
              ayuda=t("clima.p.ayuda", ter=et_hum)),
-    _tarjeta_lluvia(prov_cod, ua, um),  # the last three months, read against the correlation on its left
+    tarjeta_contexto(prov_cod, ua, um, var),  # now, read against the correlation on its left
 ])
 st.markdown(f'<div class="tarjetas" style="margin-top:0.3rem">{tarjetas}</div>', unsafe_allow_html=True)
 

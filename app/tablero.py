@@ -136,43 +136,9 @@ def _tarjetas_recientes(d: pd.DataFrame):
     ]
 
 
-def _lluvia(prov_cod: str, ua: int, um: int) -> dict | None:
-    """Climate context: rain of the three months ending in the last full month, against the median of the same
-    three months in 2003-2022 (NASA POWER, province of the area; the country for all of Argentina)."""
-    c = clima()
-    c = c[c.prov_cod == prov_cod].set_index(["anio", "mes"]).sort_index()
-    if (ua, um) not in c.index or not c.loc[(ua, um), "completo"]:
-        return None
-    meses = [((ua * 12 + um - 1 - k) // 12, (ua * 12 + um - 1 - k) % 12 + 1) for k in (2, 1, 0)]
-    v = float(c.lluvia_mm.reindex(meses).sum())
-    # the same three months in each reference year (shifted whole years back, so Dec-Feb windows still work)
-    ref = np.array([c.lluvia_mm.reindex([(y + a - ua, m) for y, m in meses]).sum(min_count=3)
-                    for a in range(2003, 2023)])
-    ref = ref[~np.isnan(ref)]
-    if not len(ref):
-        return None
-    q1, q2 = np.quantile(ref, [1 / 3, 2 / 3])
-    return dict(v=v, normal=float(np.median(ref)), m1=meses[0][1],
-                ter="seco" if v <= q1 else ("lluvioso" if v >= q2 else "normal"),
-                hum=float(c.loc[(ua, um), "humedad"]),
-                hum_n=float(c.humedad.reindex([(a, um) for a in range(2003, 2023)]).median()))
-
-
-def _tarjeta_lluvia(prov_cod: str, ua: int, um: int) -> str:
-    ll = _lluvia(prov_cod, ua, um)
-    if ll is None:
-        return ""
-    etiqueta = t("kpi.lluvia", m1=mes(ll["m1"]), m2=mes(um))
-    ayuda = t("kpi.lluvia.ayuda", n=num(ll["normal"]), h=num(ll["hum"]), hn=num(ll["hum_n"]))
-    color = {"seco": "#EA580C", "lluvioso": "#3B82F6"}.get(ll["ter"], "inherit")
-    return (f'<div class="tarjeta" title="{html.escape(ayuda)}"><div class="et">{html.escape(etiqueta)}</div>'
-            f'<div class="va">{num(ll["v"])} mm<span class="de" style="color:{color}">'
-            f'{html.escape(t("kpi.lluvia." + ll["ter"]))}</span></div></div>')
-
-
 def frase_resumen(d: pd.DataFrame) -> str:
     """One sentence saying what the cards show, for someone who looks for thirty seconds: the last full month and
-    the year so far. Fire only: the rain context lives in the Climate and fire view, next to its correlation."""
+    the year so far. Fire only: the climate context lives in the Climate vs. fire view, next to its correlation."""
     ua, um = meta()["ultimo_mes_completo"]
     u = d[(d.anio == ua) & (d.mes == um)].iloc[0]
     m_largo, n = mes(um, True), int(u.n_anios) if not np.isnan(u.n_anios) else 0
