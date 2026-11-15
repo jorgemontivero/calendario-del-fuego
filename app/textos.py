@@ -245,8 +245,8 @@ T = {
     "puesto.k": ("{k}.° más alto de {n}", "{k}{suf} highest of {n}"),
     "puesto.ayuda": ("Lugar entre los mismos meses de todos los años desde 2003, del más alto al más bajo.",
                      "Rank among the same month of every year since 2003, from highest to lowest."),
-    "kpi.anio": ("Año {anio}", "Year {anio}"),
-    "kpi.anio.parcial": ("{anio}, ene–{mes}", "{anio}, Jan–{mes}"),
+    "kpi.anio": ("Focos en {anio}", "Hot spots in {anio}"),
+    "kpi.anio.parcial": ("Focos en {anio}, ene–{mes}", "Hot spots in {anio}, Jan–{mes}"),
     "kpi.anio.ayuda": ("Total del año en focos equivalentes MODIS, contra lo normal: la mediana de los totales de "
                        "2003–2022.", "Year total in MODIS-equivalent hot spots, against normal: the median of the "
                        "2003–2022 totals."),
@@ -258,7 +258,7 @@ T = {
     "kpi.pico.ayuda": ("El mes con más focos de este año. El pico de un año típico está en el título de la temporada.",
                        "The month with the most hot spots this year. The peak of a typical year is in the season title."),
     "temp.corta": ("pico típico: {pico} · temporada: {temp}", "typical peak: {pico} · season: {temp}"),
-    "kpi.inusuales": ("Fuera de lo habitual", "Outside the usual range"),
+    "kpi.inusuales": ("Meses atípicos", "Unusual months"),
     "kpi.inusuales.valor": ("{bajos} bajos · {altos} altos", "{bajos} low · {altos} high"),
     "kpi.inusuales.ayuda": ("De los {n} meses completos del año, cuántos quedaron por debajo o por encima del rango "
                             "habitual (la banda gris del gráfico de temporada: 8 de cada 10 años de 2003–2022).",
