@@ -9,7 +9,7 @@ import plotly.graph_objects as go
 import streamlit as st
 from plotly.subplots import make_subplots
 
-from comun import CONFIG_GRAFICO, DATOS, NARANJA, cabecera, num, serie, t
+from comun import CONFIG_GRAFICO, DATOS, NARANJA, cabecera, num, oscuro, serie, t
 from tablero import _tarjeta, alto_graficos, barra_lateral_final, filtros
 
 RESTO = 245  # everything on this view that is not a chart (no controls row here; measured on screen)
@@ -96,8 +96,15 @@ with der.container(border=True):
         marker=dict(size=9, color=np.where(comp.fuente == "dt416", "#94A3B8", NARANJA),
                     line=dict(width=1, color="white")),
         customdata=comp.index, hovertemplate="%{customdata}<br>%{x:,.0f} " + t("cal.hover.valor") +
-                                             "<br>%{y:,.0f} ha<extra></extra>"))
+                                             "<br>%{y:,.0f} ha<extra></extra>", showlegend=False))
+    if len(comp) >= 5 and comp.focos.min() > 0 and comp.focos.nunique() > 1:
+        # least-squares line on the logarithms of both (the axes are logarithmic, so it is drawn straight)
+        b, a = np.polyfit(np.log10(comp.focos), np.log10(comp.ha), 1)
+        xs = np.array([comp.focos.min(), comp.focos.max()])
+        f2.add_trace(go.Scatter(x=xs, y=10 ** (a + b * np.log10(xs)), mode="lines", name=t("clima.tendencia"),
+                                line=dict(color="#F3F4F6" if oscuro() else "#111827", width=2), hoverinfo="skip"))
     f2.update_layout(dragmode=False, height=ALTO, margin=dict(l=0, r=0, t=5, b=0), separators=sep,
+                     legend=dict(orientation="h", y=1.02, yanchor="bottom", font=dict(size=10)),
                      xaxis=dict(type="log", title=t("rep.eje.focos"), **marcas(comp.focos)),
                      yaxis=dict(type="log", title=t("rep.eje.ha"), **marcas(comp.ha)))
     st.plotly_chart(f2, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)

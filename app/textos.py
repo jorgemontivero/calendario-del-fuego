@@ -213,9 +213,11 @@ T = {
     "rep.sub.ha": ("Hectáreas reportadas (provincias)", "Reported hectares (provinces)"),
     "rep.titulo.disp": ("¿Coinciden los años fuertes?", "Do the strong years match?"),
     "rep.ayuda.disp": ("Un punto por año (escala logarítmica en los dos ejes). Si los puntos suben de izquierda a "
-                       "derecha, los años con más focos son también los de más superficie informada.",
+                       "derecha, los años con más focos son también los de más superficie informada. La línea es la recta "
+                       "de regresión (mínimos cuadrados sobre los logaritmos).",
                        "One point per year (log scale on both axes). If the points rise from left to right, the years "
-                       "with more hot spots are also those with more reported area."),
+                       "with more hot spots are also those with more reported area. The line is the regression line "
+                       "(least squares on the logarithms)."),
     "rep.eje.focos": ("focos detectados", "detected hot spots"),
     "rep.eje.ha": ("hectáreas reportadas", "reported hectares"),
     "rank.titulo": ("¿Dónde hubo más fuego en {anio}?", "Where was there most fire in {anio}?"),
