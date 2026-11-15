@@ -405,12 +405,12 @@ T = {
     "clima.nom.lluvia6": ("Lluvia de 6 meses", "6-month rain"), "clima.nom.temp": ("Temperatura máxima", "Max temperature"),
     "clima.ayuda.disp": ("Cada punto es un mes de temporada. Horizontal: cuánto se apartó el clima de lo normal para ese "
                          "mes del año. Vertical: cuántas veces lo normal fueron los focos (1 = normal, 2 = el doble). "
-                         "Los puntos grandes son el último año; la línea negra, la tendencia (mediana móvil). Se usa la "
+                         "Los puntos grandes son el último año; la línea negra, la recta de regresión (mínimos cuadrados). Se usa la "
                          "diferencia con lo normal porque, si no, las dos series siguen las estaciones y la relación solo "
                          "diría que existe el invierno.",
                          "Each dot is a season month. Horizontal: how far climate was from normal for that month of the "
                          "year. Vertical: how many times normal the hot spots were (1 = normal, 2 = double). Large dots "
-                         "are the last year; the black line, the trend (running median). The difference from normal is "
+                         "are the last year; the black line, the regression line (least squares). The difference from normal is "
                          "used because otherwise both series follow the seasons and the relation would only say that "
                          "winter exists."),
     "clima.titulo.box.humedad": ("Fuego según la humedad del mes", "Fire by the month's humidity"),
@@ -424,7 +424,7 @@ T = {
                         "group's months and the middle line is the median. On top, the share of those months with fire "
                         "above normal."),
     "clima.sobre": ("{p} % sobre lo normal", "{p} % above normal"),
-    "clima.tendencia": ("Tendencia", "Trend"),
+    "clima.tendencia": ("Recta de regresión", "Regression line"),
     "clima.eje.fuego": ("Focos / lo normal", "Hot spots / normal"),
     "clima.eje.humedad": ("Humedad: diferencia con lo normal (puntos de %)", "Humidity: difference from normal (% points)"),
     "clima.eje.lluvia3": ("Lluvia de los 3 meses previos / lo normal", "Rain of the 3 previous months / normal"),

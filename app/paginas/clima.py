@@ -127,10 +127,10 @@ with izq.container(border=True):
                             text=x.mes[reciente].map(lambda m: mes(m)), textposition="top center",
                             textfont=dict(size=10), marker=dict(size=10, color=NARANJA, line=dict(width=1, color="white")),
                             hoverinfo="skip"))
-    if len(x) >= 15:  # running median of the fire anomaly along the climate anomaly
-        o = x.sort_values("ac")
-        k = max(7, len(o) // 4)
-        f1.add_trace(go.Scatter(x=o.ac.rolling(k, center=True).median(), y=o.af.rolling(k, center=True).median(),
+    if len(x) >= 15 and x.ac.nunique() > 1:  # least-squares line of the fire anomaly on the climate anomaly
+        b, a = np.polyfit(x.ac, x.af, 1)
+        xs = np.array([x.ac.min(), x.ac.max()])
+        f1.add_trace(go.Scatter(x=xs, y=a + b * xs,
                                 mode="lines", line=dict(color="#F3F4F6" if oscuro() else "#111827", width=2), name=t("clima.tendencia"),
                                 hoverinfo="skip"))
     f1.add_hline(y=0, line=dict(color="gray", width=1, dash="dot"))
