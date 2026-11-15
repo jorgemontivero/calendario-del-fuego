@@ -11,7 +11,7 @@ from mapas import CONFIG, SATELITES, datos_mapa, figura_focos, figura_mapa, foco
 from tablero import CSS, alto_graficos
 
 RESTO = 265  # everything on this view that is not a map (measured on screen)
-NOTA_PX = 50  # the two-line note under the hot spots map
+EXTRA_FOCOS = 40  # hot spots map: no panel title above it nor note below it (they sit beside it)
 
 cabecera()
 st.markdown(CSS, unsafe_allow_html=True)
@@ -57,34 +57,38 @@ elif modo == "zonas":
     paneles = [(z1, a), (z2, a)]
 
 if modo == "focos":
-    # one satellite at a time: raw detections are not harmonized (VIIRS sees ~5 times more than MODIS)
+    # one satellite at a time: raw detections are not harmonized (VIIRS sees ~5 times more than MODIS).
+    # Controls, summary and note go in a side column: Argentina is tall and narrow, so the map is limited by height
+    # and the width beside it was empty; the map gets the height of the panel title and the note.
     ua, um = meta()["ultimo_mes_completo"]
     serv = servicio_satelites()
-    with c1:
+    lado, der = st.columns([1, 3.3])
+    with lado:
         zf = st.selectbox(t("geo.zona"), codigos, index=codigos.index(base), format_func=nombre_de.get, key="geo_zf")
-    with c2:
         af = st.selectbox(t("geo.anio"), anios, index=0, key="geo_af")
-    with c3:
         mf = st.selectbox(t("geo.mes"), list(range(0, 13)), index=um, key="geo_mf",
                           format_func=lambda m: t("geo.mes.todo") if m == 0 else mes(m, True).capitalize())
-    with c4:
         sat = st.selectbox(t("geo.satelite"), list(SATELITES), index=0, format_func=SATELITES.get, key="geo_sat")
     ini = date(af, mf or 1, 1)
     fin = date(af, 12, 31) if mf == 0 else date(af, mf, calendar.monthrange(af, mf)[1])
     periodo = str(af) if mf == 0 else f"{mes(mf, True)} {af}"
     desde_s, hasta_s = serv.get(sat, (None, None))
-    with st.container(border=True):
-        if desde_s is None or fin < desde_s or ini > hasta_s:
+    sin_datos = desde_s is None or fin < desde_s or ini > hasta_s
+    with der.container(border=True):
+        if sin_datos:
             otros = [SATELITES[p] for p, (a, b) in serv.items() if not (fin < a or ini > b)]
-            st.markdown(f"**{nombre_de[zf]} · {periodo}**")
             st.info(t("geo.focos.sin", sat=SATELITES[sat], otros=", ".join(otros) if otros else "—"))
         else:
             f = focos_puntos(zf, ini, fin, sat)
-            fig, densidad = figura_focos(zf, f, ini, ALTO - NOTA_PX, ancho_px=1000)
-            st.markdown(f"**{nombre_de[zf]} · {periodo} · {SATELITES[sat]}** · " + t("geo.focos.n", n=num(len(f)))
-                        + (" · " + t("geo.focos.densidad") if densidad else ""), help=t("geo.focos.ayuda"))
+            fig, densidad = figura_focos(zf, f, ini, ALTO + EXTRA_FOCOS, ancho_px=760)
             st.plotly_chart(fig, width="stretch", theme="streamlit", config=CONFIG, key="mapa_focos")
-    st.caption(t("geo.focos.nota"))
+    with lado:
+        st.markdown(f"**{nombre_de[zf]} · {periodo}**" + ("" if sin_datos else
+                    f"<br>{SATELITES[sat]} · " + t("geo.focos.n", n=num(len(f)))), unsafe_allow_html=True,
+                    help=t("geo.focos.ayuda"))
+        if not sin_datos and densidad:
+            st.caption(t("geo.focos.densidad").capitalize() + ".")
+        st.caption(t("geo.focos.nota"))
 else:
     datos = [datos_mapa(zc, an) for zc, an in paneles]
     zr = (min(g.zl.min() for g in datos), max(g.zl.max() for g in datos))  # one color scale for both maps
