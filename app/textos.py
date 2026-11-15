@@ -286,6 +286,22 @@ T = {
     "kpi.estado": ("Cómo viene", "How it looks"),
     "kpi.vs_normal": ("vs. lo normal", "vs. normal"),
     "anual.titulo": ("Focos por año", "Hot spots per year"),
+    "anual.modo": ("Vista", "View"), "anual.modo.anio": ("Por año", "Per year"), "anual.modo.mes": ("Por mes", "Per month"),
+    "mes.titulo": ("Tendencia de cada mes", "Trend of each month"),
+    "mes.eje": ("Cambio por año", "Change per year"),
+    "mes.ayuda": ("Cuánto subió o bajó cada mes del año, por año, entre 2003 y 2025 (pendiente de Sen sobre el "
+                  "logaritmo). Azul: baja; naranja: sube; gris: sin tendencia clara (Mann-Kendall, p ≥ 0,10). El "
+                  "período es fijo y no sigue al filtro de años: con pocos años no hay tendencia que medir. Es "
+                  "descriptivo: con 12 meses probados, alguno puede salir claro por azar, y en zonas con poco fuego "
+                  "lo esperable es que casi todo salga gris.",
+                  "How much each month of the year went up or down, per year, from 2003 to 2025 (Sen slope on the "
+                  "logarithm). Blue: down; orange: up; grey: no clear trend (Mann-Kendall, p ≥ 0.10). The period is "
+                  "fixed and does not follow the year range: a few years hold no trend to measure. It is "
+                  "descriptive: with 12 months tested, one may look clear by chance, and in areas with little fire "
+                  "most months will be grey."),
+    "mes.hover": ("<b>{mes}</b>: {c} % por año (p = {p})<br>Mediana 2003–2011: {a} · 2014–2025: {b}",
+                  "<b>{mes}</b>: {c} % per year (p = {p})<br>Median 2003–2011: {a} · 2014–2025: {b}"),
+    "mes.hover.dudosa": ("Sin tendencia clara", "No clear trend"),
     "anual.ayuda": ("Barras: total del año; la línea fina es el margen del 90 % de los años convertidos. "
                     "{anio} está incompleto.", "Bars: yearly total; the thin line is the 90 % range of converted years. "
                     "{anio} is incomplete."),

@@ -6,6 +6,8 @@ import numpy as np
 import plotly.graph_objects as go
 import streamlit as st
 
+from scipy.stats import kendalltau
+
 from comun import CONFIG_GRAFICO, NARANJA, cabecera, fecha_datos, mes, num, serie, t
 import html
 
@@ -84,24 +86,63 @@ with izq.container(border=True):
                       yaxis=dict(type="category", autorange="reversed", tickfont=dict(size=10)), xaxis=dict(side="top"))
     st.plotly_chart(fig, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
 
+def tendencia_por_mes(d):
+    """For each month of the year, its trend over the complete years 2003-2025: Theil-Sen slope of log(count + 1)
+    as % per year, Mann-Kendall p (scipy's Kendall tau against the year, which handles ties - many zeros in small
+    areas), and the median of the month in 2003-2011 and in 2014-2025. Fixed period: the year range does not apply
+    (a three-year window would give meaningless trends)."""
+    filas = []
+    for m in range(1, 13):
+        g = d[d.anio.between(2003, 2025) & (d.mes == m)].sort_values("anio")
+        x, a = np.log(g.valor.to_numpy() + 1), g.anio.to_numpy()
+        pend = np.median([(x[j] - x[i]) / (a[j] - a[i]) for i in range(len(x)) for j in range(i + 1, len(x))])
+        p = kendalltau(a, g.valor).pvalue if g.valor.nunique() > 1 else 1.0
+        filas.append((m, 100 * (math.exp(pend) - 1), 1.0 if np.isnan(p) else p,
+                      g[g.anio <= 2011].valor.median(), g[g.anio >= 2014].valor.median()))
+    return filas
+
+
 with der.container(border=True):
-    anual_s = d[d.anio.between(2003, 2025)].groupby("anio").valor.sum().to_numpy()
-    n = len(anual_s)
-    S = sum(np.sign(anual_s[j] - anual_s[i]) for i in range(n - 1) for j in range(i + 1, n))
-    z = (S - np.sign(S)) / math.sqrt(n * (n - 1) * (2 * n + 5) / 18) if S else 0.0
-    tend = "temp.tendencia.sube" if z > 1.96 else "temp.tendencia.baja" if z < -1.96 else "temp.tendencia.nada"
-    corta = {"temp.tendencia.sube": "tend.corta.sube", "temp.tendencia.baja": "tend.corta.baja"}.get(tend, "tend.corta.nada")
-    st.markdown(f"**{t('anual.titulo')}** · {t(corta)}",
-                help=t(tend) + " " + t("anual.ayuda", anio=anio_max) + " " + t("armon.corta"))
-    an = d[d.anio.between(desde, hasta)].groupby("anio").agg(
-        v=("valor", "sum"), lo=("min90", "sum"), hi=("max90", "sum"), o=("origen", "first")).reset_index()
-    conv = an.o != "aqua"
-    colores = np.where(an.anio == anio_max, NARANJA, np.where(conv, "#FB923C", "#FDBA74"))
-    f3 = go.Figure(go.Bar(x=an.anio, y=an.v, marker_color=colores, hovertemplate="%{x}: %{y:,.0f}<extra></extra>",
-                          error_y=dict(type="data", symmetric=False, array=np.where(conv, an.hi - an.v, 0),
-                                       arrayminus=np.where(conv, an.v - an.lo, 0), thickness=1.2, width=0)))
-    f3.update_layout(dragmode=False, height=ALTO, margin=dict(l=0, r=0, t=5, b=0), yaxis_title=t("cal.leyenda.focos"),
-                     separators=",." if st.query_params.get("lang") != "en" else ".,")
-    st.plotly_chart(f3, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
+    a1, a2 = st.columns([1.25, 1], vertical_alignment="center")
+    st.markdown("<style>.st-key-modo_anual {margin-left: auto;}"
+                ".st-key-modo_anual button {min-height: 0; padding: 0.1rem 0.65rem; font-size: 0.85rem;}</style>",
+                unsafe_allow_html=True)
+    with a2:
+        vista = st.segmented_control(t("anual.modo"), ["anio", "mes"], default="anio", label_visibility="collapsed",
+                                     format_func=lambda v: t(f"anual.modo.{v}"), key="modo_anual", width="content") or "anio"
+    sep = ",." if st.query_params.get("lang") != "en" else ".,"
+    if vista == "mes":
+        a1.markdown(f"**{t('mes.titulo')}** · 2003–2025", help=t("mes.ayuda") + " " + t("armon.corta"))
+        tm = tendencia_por_mes(d)
+        clara = [p < 0.10 for _, _, p, _, _ in tm]
+        colores = [("#3B82F6" if c < 0 else "#EA580C") if ok else "#A8A29E" for (_, c, _, _, _), ok in zip(tm, clara)]
+        hover = [t("mes.hover", mes=mes(m, True).capitalize(), c=("+" if c > 0 else "−") + num(abs(c), 1),
+                   p=num(p, 3), a=num(a), b=num(b)) + ("" if ok else "<br>" + t("mes.hover.dudosa"))
+                 for (m, c, p, a, b), ok in zip(tm, clara)]
+        f3 = go.Figure(go.Bar(x=[mes(m).capitalize() for m, *_ in tm], y=[c for _, c, *_ in tm], marker_color=colores,
+                              hovertext=hover, hoverinfo="text"))
+        f3.add_hline(y=0, line_width=1, line_color="#8a8984")
+        f3.update_layout(dragmode=False, height=ALTO - ALTO_SELECTOR, margin=dict(l=0, r=0, t=5, b=0),
+                         yaxis_title=t("mes.eje"), yaxis_ticksuffix=" %", separators=sep)
+        st.plotly_chart(f3, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
+    else:
+        anual_s = d[d.anio.between(2003, 2025)].groupby("anio").valor.sum().to_numpy()
+        n = len(anual_s)
+        S = sum(np.sign(anual_s[j] - anual_s[i]) for i in range(n - 1) for j in range(i + 1, n))
+        z = (S - np.sign(S)) / math.sqrt(n * (n - 1) * (2 * n + 5) / 18) if S else 0.0
+        tend = "temp.tendencia.sube" if z > 1.96 else "temp.tendencia.baja" if z < -1.96 else "temp.tendencia.nada"
+        corta = {"temp.tendencia.sube": "tend.corta.sube", "temp.tendencia.baja": "tend.corta.baja"}.get(tend, "tend.corta.nada")
+        a1.markdown(f"**{t('anual.titulo')}** · {t(corta)}",
+                    help=t(tend) + " " + t("anual.ayuda", anio=anio_max) + " " + t("armon.corta"))
+        an = d[d.anio.between(desde, hasta)].groupby("anio").agg(
+            v=("valor", "sum"), lo=("min90", "sum"), hi=("max90", "sum"), o=("origen", "first")).reset_index()
+        conv = an.o != "aqua"
+        colores = np.where(an.anio == anio_max, NARANJA, np.where(conv, "#FB923C", "#FDBA74"))
+        f3 = go.Figure(go.Bar(x=an.anio, y=an.v, marker_color=colores, hovertemplate="%{x}: %{y:,.0f}<extra></extra>",
+                              error_y=dict(type="data", symmetric=False, array=np.where(conv, an.hi - an.v, 0),
+                                           arrayminus=np.where(conv, an.v - an.lo, 0), thickness=1.2, width=0)))
+        f3.update_layout(dragmode=False, height=ALTO - ALTO_SELECTOR, margin=dict(l=0, r=0, t=5, b=0), yaxis_title=t("cal.leyenda.focos"),
+                         separators=sep)
+        st.plotly_chart(f3, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
 
 barra_lateral_final(d, nombre)
