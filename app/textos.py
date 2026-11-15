@@ -19,7 +19,7 @@ T = {
     "area.todo_pais": ("Toda la Argentina", "All of Argentina"), "area.todos": ("Toda la provincia", "Whole province"),
     "area.anios": ("Años", "Years"),
     "area.anios.graficos": ("Años de los gráficos", "Years shown in the charts"),
-    "kpi.ultimo": ("Último mes completo: {mes} de {anio}", "Last full month: {mes} {anio}"),
+    "kpi.ultimo": ("Último mes: {mes} {anio}", "Latest month: {mes} {anio}"),
     "area.aviso.chica": ("Esta área es chica: hay pocos focos por mes y los números varían mucho de un año a otro. "
                          "Miralos como orientación.",
                          "This area is small: few hot spots per month, and numbers vary a lot from year to year. "

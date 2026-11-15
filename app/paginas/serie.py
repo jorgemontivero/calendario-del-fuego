@@ -11,7 +11,7 @@ import html
 
 from tablero import alto_graficos, barra_lateral_final, encabezado, filtros, frase_resumen
 
-RESTO = 330  # everything on this view that is not a chart (measured on screen)
+RESTO = 345  # everything on this view that is not a chart (measured on screen)
 
 cabecera()
 d, nombre, prov_cod, prov_nom, dep_cod = filtros()
