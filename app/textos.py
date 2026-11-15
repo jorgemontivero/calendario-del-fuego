@@ -130,7 +130,7 @@ T = {
              "NASA Space Apps Challenge, Catamarca."),
     # dashboard
     "tab.filtros": ("Filtros", "Filters"),
-    "nav.geo": ("Análisis geográfico", "Geographic analysis"),
+    "nav.geo": ("Análisis espacial", "Spatial analysis"),
     "nav.rep": ("Detectados vs. reportados", "Detected vs. reported"),
     "nav.ahora": ("Ahora vs. antes", "Now vs. before"),
     "nav.acerca": ("Acerca del proyecto", "About the project"),
@@ -224,11 +224,33 @@ T = {
     "rank.departamentos": ("top {n} departamentos de {prov}", "top {n} departments of {prov}"),
     "rank.ayuda": ("Las 10 zonas con más focos en el año (equivalente MODIS). El color compara cada una con su propio "
                    "normal (mediana de sus totales 2003–2022 en los mismos meses): rojo, más fuego que lo habitual; "
-                   "azul, menos. El mapa está en Análisis geográfico.",
+                   "azul, menos. El mapa está en Análisis espacial.",
                    "The 10 areas with the most hot spots in the year (MODIS equivalent). Color compares each with its own "
                    "normal (median of its 2003–2022 totals for the same months): red, more fire than usual; blue, "
-                   "less. The map is in Geographic analysis."),
-    "geo.titulo": ("Análisis geográfico", "Geographic analysis"),
+                   "less. The map is in Spatial analysis."),
+    "geo.titulo": ("Análisis espacial", "Spatial analysis"),
+    "geo.modo.focos": ("Focos en el mapa", "Hot spots on the map"),
+    "geo.mes": ("Mes", "Month"), "geo.mes.todo": ("Todo el año", "Whole year"),
+    "geo.satelite": ("Satélite", "Satellite"),
+    "geo.focos.n": ("{n} focos", "{n} hot spots"),
+    "geo.focos.dia": ("de día", "daytime"), "geo.focos.noche": ("de noche", "night-time"),
+    "geo.focos.fecha": ("fecha", "date"),
+    "geo.focos.densidad": ("demasiados para verlos uno por uno: mapa de densidad. Elegí una provincia o un mes",
+                           "too many to show one by one: density map. Pick a province or a month"),
+    "geo.focos.sin": ("{sat} no tiene datos en ese período. Con datos: {otros}.",
+                      "{sat} has no data for that period. With data: {otros}."),
+    "geo.focos.ayuda": ("Cada punto es una detección de FIRMS de ese satélite, depurada (sin fuentes fijas ni baja "
+                        "confianza), coloreada por fecha. Al pasar el cursor: fecha, día o noche y potencia del "
+                        "fuego (FRP, en megavatios). Son los focos tal como los ve el satélite, sin armonizar.",
+                        "Each dot is one FIRMS detection by that satellite, cleaned (no static sources, no low "
+                        "confidence), colored by date. On hover: date, day or night and fire radiative power (FRP, "
+                        "in megawatts). These are the hot spots as the satellite sees them, not harmonized."),
+    "geo.focos.nota": ("Cada satélite ve distinto: VIIRS detecta unas 5 veces más focos que MODIS. Para comparar "
+                       "períodos, usá el mismo satélite. Cada punto es el centro del píxel donde se detectó calor "
+                       "(375 m en VIIRS, 1 km en MODIS): no es el lugar exacto del fuego ni su perímetro.",
+                       "Each satellite sees differently: VIIRS detects about 5 times more hot spots than MODIS. To "
+                       "compare periods, use the same satellite. Each dot is the centre of the pixel where heat was "
+                       "detected (375 m VIIRS, 1 km MODIS): not the exact spot of the fire, nor its perimeter."),
     "geo.modo": ("Comparar", "Compare"),
     "geo.modo.anios": ("Una zona en dos años", "One area, two years"),
     "geo.modo.zonas": ("Dos zonas en un año", "Two areas, one year"),

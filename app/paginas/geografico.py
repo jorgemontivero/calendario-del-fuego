@@ -1,10 +1,13 @@
-"""Geographic analysis: two maps side by side - one area in two years, or two areas in one year - with the same color
-scale, so the comparison is fair. Fits one screen."""
+"""Spatial analysis: two maps side by side - one area in two years, or two areas in one year - with the same color
+scale, so the comparison is fair; or the hot spots themselves as points, one satellite at a time. Fits one screen."""
+
+import calendar
+from datetime import date
 
 import streamlit as st
 
-from comun import cabecera, fecha_datos, meta, num, serie, t
-from mapas import CONFIG, datos_mapa, figura_mapa
+from comun import cabecera, fecha_datos, mes, meta, num, serie, t
+from mapas import CONFIG, SATELITES, datos_mapa, figura_focos, figura_mapa, focos_puntos, servicio_satelites
 from tablero import CSS, alto_graficos
 
 RESTO = 265  # everything on this view that is not a map (measured on screen)
@@ -27,10 +30,10 @@ with st.sidebar:
 base = st.session_state.get("prov_sel", "00")
 st.session_state.setdefault("geo_modo", "anios")
 
-c0, c1, c2, c3 = st.columns([1.6, 1.3, 1, 1], vertical_alignment="bottom")
+c0, c1, c2, c3, c4 = st.columns([1.6, 1.3, 1, 1, 1.1], vertical_alignment="bottom")
 with c0:
     st.markdown(f'<div class="area-titulo">{t("geo.titulo")}</div>', unsafe_allow_html=True)
-    modo = st.segmented_control(t("geo.modo"), ["anios", "zonas"], key="geo_modo", label_visibility="collapsed",
+    modo = st.segmented_control(t("geo.modo"), ["anios", "zonas", "focos"], key="geo_modo", label_visibility="collapsed",
                                 format_func=lambda m: t(f"geo.modo.{m}")) or "anios"
 if modo == "anios":
     with c1:
@@ -40,7 +43,7 @@ if modo == "anios":
     with c3:
         a2 = st.selectbox(t("geo.anio") + " B", anios, index=0, key="geo_a2")
     paneles = [(z, a1), (z, a2)]
-else:
+elif modo == "zonas":
     with c1:
         a = st.selectbox(t("geo.anio"), anios, index=anios.index(anio_max - 1), key="geo_a")
     otra = "46" if base != "46" else "10"
@@ -52,16 +55,46 @@ else:
                           key="geo_z2")
     paneles = [(z1, a), (z2, a)]
 
-datos = [datos_mapa(zc, an) for zc, an in paneles]
-zr = (min(g.zl.min() for g in datos), max(g.zl.max() for g in datos))  # one color scale for both maps
-cols = st.columns(2)
-for i, (col, (zc, an), g) in enumerate(zip(cols, paneles, datos)):
-    with col.container(border=True):
-        # the total comes from the area's own series (the same number as the cards in the other views); the map's
-        # areas are converted one by one, so their sum differs slightly
-        ua, um = meta()["ultimo_mes_completo"]
-        nivel = "pais" if zc == "00" else "provincia"
-        tot = s[(s.nivel == nivel) & (s.area_cod == zc) & (s.anio == an) & (s.mes <= (um if an == ua else 12))].valor.sum()
-        st.markdown(f"**{nombre_de[zc]} · {an}** · " + t("geo.resumen", v=num(tot), d=num(1000 * tot / g.km2.sum(), 1)))
-        st.plotly_chart(figura_mapa(g, ALTO, ancho_px=520, zrango=zr, barra=(i == 1)), width="stretch",
-                        theme="streamlit", config=CONFIG, key=f"mapa_{i}")
+if modo == "focos":
+    # one satellite at a time: raw detections are not harmonized (VIIRS sees ~5 times more than MODIS)
+    ua, um = meta()["ultimo_mes_completo"]
+    serv = servicio_satelites()
+    with c1:
+        zf = st.selectbox(t("geo.zona"), codigos, index=codigos.index(base), format_func=nombre_de.get, key="geo_zf")
+    with c2:
+        af = st.selectbox(t("geo.anio"), anios, index=0, key="geo_af")
+    with c3:
+        mf = st.selectbox(t("geo.mes"), list(range(0, 13)), index=um, key="geo_mf",
+                          format_func=lambda m: t("geo.mes.todo") if m == 0 else mes(m, True).capitalize())
+    with c4:
+        sat = st.selectbox(t("geo.satelite"), list(SATELITES), index=0, format_func=SATELITES.get, key="geo_sat")
+    ini = date(af, mf or 1, 1)
+    fin = date(af, 12, 31) if mf == 0 else date(af, mf, calendar.monthrange(af, mf)[1])
+    periodo = str(af) if mf == 0 else f"{mes(mf, True)} {af}"
+    desde_s, hasta_s = serv.get(sat, (None, None))
+    with st.container(border=True):
+        if desde_s is None or fin < desde_s or ini > hasta_s:
+            otros = [SATELITES[p] for p, (a, b) in serv.items() if not (fin < a or ini > b)]
+            st.markdown(f"**{nombre_de[zf]} · {periodo}**")
+            st.info(t("geo.focos.sin", sat=SATELITES[sat], otros=", ".join(otros) if otros else "—"))
+        else:
+            f = focos_puntos(zf, ini, fin, sat)
+            fig, densidad = figura_focos(zf, f, ini, ALTO, ancho_px=1000)
+            st.markdown(f"**{nombre_de[zf]} · {periodo} · {SATELITES[sat]}** · " + t("geo.focos.n", n=num(len(f)))
+                        + (" · " + t("geo.focos.densidad") if densidad else ""), help=t("geo.focos.ayuda"))
+            st.plotly_chart(fig, width="stretch", theme="streamlit", config=CONFIG, key="mapa_focos")
+    st.caption(t("geo.focos.nota"))
+else:
+    datos = [datos_mapa(zc, an) for zc, an in paneles]
+    zr = (min(g.zl.min() for g in datos), max(g.zl.max() for g in datos))  # one color scale for both maps
+    cols = st.columns(2)
+    for i, (col, (zc, an), g) in enumerate(zip(cols, paneles, datos)):
+        with col.container(border=True):
+            # the total comes from the area's own series (the same number as the cards in the other views); the map's
+            # areas are converted one by one, so their sum differs slightly
+            ua, um = meta()["ultimo_mes_completo"]
+            nivel = "pais" if zc == "00" else "provincia"
+            tot = s[(s.nivel == nivel) & (s.area_cod == zc) & (s.anio == an) & (s.mes <= (um if an == ua else 12))].valor.sum()
+            st.markdown(f"**{nombre_de[zc]} · {an}** · " + t("geo.resumen", v=num(tot), d=num(1000 * tot / g.km2.sum(), 1)))
+            st.plotly_chart(figura_mapa(g, ALTO, ancho_px=520, zrango=zr, barra=(i == 1)), width="stretch",
+                            theme="streamlit", config=CONFIG, key=f"mapa_{i}")

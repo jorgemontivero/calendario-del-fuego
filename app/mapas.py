@@ -88,6 +88,79 @@ SIN_FONDO = "white-bg"
 CONFIG = {"displayModeBar": False, "scrollZoom": True}
 
 
+# ------------------------------------------------------------------------------------------ hot spots as points
+# Raw FIRMS detections (step 6b), one satellite at a time: they are NOT harmonized, so mixing satellites would bring
+# back the very problem the project corrects (VIIRS sees ~5 times more than MODIS).
+SATELITES = {"NOAA20": "NOAA-20 (VIIRS)", "NOAA21": "NOAA-21 (VIIRS)", "SNPP": "Suomi NPP (VIIRS)",
+             "Aqua": "Aqua (MODIS)", "Terra": "Terra (MODIS)"}
+MAX_PUNTOS = 30000  # above this, one dot per hot spot is unreadable and slow: a density map instead
+
+
+@st.cache_data
+def servicio_satelites() -> dict:
+    """First and last date of each satellite in the points file."""
+    import duckdb
+    filas = duckdb.sql(f"select plataforma, min(fecha), max(fecha) from '{(DATOS / 'focos.parquet').as_posix()}' "
+                       "group by 1").fetchall()
+    return {p: (a, b) for p, a, b in filas}
+
+
+@st.cache_data(max_entries=20)
+def focos_puntos(prov_cod: str, ini, fin, plataforma: str) -> pd.DataFrame:
+    """Hot spots of one satellite in an area ("00" = the country) between two dates. DuckDB reads only the row
+    groups of that province and period (the file is sorted by province and date)."""
+    import duckdb
+    donde = "" if prov_cod == "00" else f"prov_cod = '{prov_cod}' and "
+    return duckdb.sql(f"""select depto_cod, fecha, dia, lat, lon, frp from '{(DATOS / 'focos.parquet').as_posix()}'
+                          where {donde} plataforma = '{plataforma}' and fecha between '{ini}' and '{fin}'""").df()
+
+
+def encuadre(bounds, alto: int, ancho_px: int) -> dict:
+    """MapLibre center and zoom that fit a bounding box into the panel."""
+    x0, y0, x1, y1 = bounds
+    merc = lambda lat: math.log(math.tan(math.pi / 4 + math.radians(lat) / 2))  # noqa: E731
+    frac_y = max((merc(y1) - merc(y0)) / (2 * math.pi), 1e-6)
+    frac_x = max((x1 - x0) / 360, 1e-6)
+    zoom = min(math.log2(alto / 512 / frac_y), math.log2(ancho_px / 512 / frac_x)) - 0.3
+    return dict(center=dict(lat=math.degrees(math.atan(math.sinh((merc(y0) + merc(y1)) / 2))), lon=(x0 + x1) / 2),
+                zoom=zoom)
+
+
+def figura_focos(prov_cod: str, f: pd.DataFrame, ini, alto: int, ancho_px: int = 1000) -> tuple[go.Figure, bool]:
+    """Boundaries of the area (provinces for the country, departments for a province) and, on top, one dot per hot
+    spot colored by date - or a density map when there are too many. Returns the figure and whether it is a
+    density map."""
+    lim = limites()
+    geo = lim[lim.nivel == "provincia"] if prov_cod == "00" else lim[(lim.nivel == "departamento") & (lim.prov_cod == prov_cod)]
+    linea = "#6B7280" if oscuro() else "#9CA3AF"
+    fig = go.Figure(go.Choroplethmap(
+        geojson=json.loads(geo[["area_cod", "geometry"]].to_json()), featureidkey="properties.area_cod",
+        locations=geo.area_cod, z=[0] * len(geo), colorscale=[[0, "rgba(0,0,0,0)"], [1, "rgba(0,0,0,0)"]],
+        showscale=False, marker_line_width=0.8, marker_line_color=linea, customdata=geo["area"],
+        hovertemplate="%{customdata}<extra></extra>"))
+    densidad = len(f) > MAX_PUNTOS
+    if densidad:
+        fig.add_trace(go.Densitymap(lat=f.lat, lon=f.lon, radius=5, colorscale="YlOrRd", showscale=False,
+                                    hoverinfo="skip"))
+    elif len(f):
+        dias = (pd.to_datetime(f.fecha) - pd.Timestamp(ini)).dt.days.to_numpy()
+        fechas = pd.to_datetime(f.fecha)
+        franja = np.where(f.dia, t("geo.focos.dia"), t("geo.focos.noche"))
+        texto = [f"<b>{fe:%d/%m/%Y}</b> · {fr}<br>FRP: {num(p, 1)} MW" for fe, fr, p in zip(fechas, franja, f.frp)]
+        n_dias = max(int(dias.max()), 1)
+        ticks = sorted({0, n_dias // 2, n_dias})
+        fig.add_trace(go.Scattermap(
+            lat=f.lat, lon=f.lon, mode="markers", hovertext=texto, hoverinfo="text",
+            marker=dict(size=6, color=dias, cmin=0, cmax=n_dias, opacity=0.85,
+                        colorscale=[[0, "#FBBF24"], [0.5, "#EA580C"], [1, "#7F1D1D"]],
+                        colorbar=dict(title=t("geo.focos.fecha"), thickness=10, tickvals=ticks,
+                                      ticktext=[f"{pd.Timestamp(ini) + pd.Timedelta(days=d):%d/%m}" for d in ticks]))))
+    capas = [dict(sourcetype="geojson", source=MUNDO, type="fill", color=FONDO_OSCURO, below="traces")] if oscuro() else []
+    fig.update_layout(height=alto, margin=dict(l=0, r=0, t=0, b=0), showlegend=False,
+                      map=dict(style=SIN_FONDO, layers=capas, **encuadre(geo.total_bounds, alto, ancho_px)))
+    return fig, densidad
+
+
 def ranking(prov_cod: str, anio: int, n: int = 10) -> pd.DataFrame:
     """Areas with the most fire in the year (provinces, or departments of a province), with their own normal: the
     median of their 2003-2022 totals for the same months."""
