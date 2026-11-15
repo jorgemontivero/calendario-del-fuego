@@ -103,7 +103,7 @@ def tendencia_por_mes(d):
 
 
 with der.container(border=True):
-    a1, a2 = st.columns([1, 1], vertical_alignment="center")
+    a1, a2 = st.columns([1.7, 1], vertical_alignment="center")
     st.markdown("<style>.st-key-modo_anual {margin-left: auto;}"
                 ".st-key-modo_anual button {min-height: 0; padding: 0.1rem 0.65rem; font-size: 0.85rem;}</style>",
                 unsafe_allow_html=True)
