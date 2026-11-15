@@ -11,7 +11,7 @@ from mapas import CONFIG, SATELITES, datos_mapa, figura_focos, figura_mapa, foco
 from tablero import CSS, alto_graficos
 
 RESTO = 265  # everything on this view that is not a map (measured on screen)
-EXTRA_FOCOS = 40  # hot spots map: no panel title above it nor note below it (they sit beside it)
+EXTRA_FOCOS = 100  # hot spots map: no panel title above it nor note below it (they sit beside it)
 
 cabecera()
 st.markdown(CSS, unsafe_allow_html=True)

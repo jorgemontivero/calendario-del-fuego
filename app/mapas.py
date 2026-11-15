@@ -115,13 +115,13 @@ def focos_puntos(prov_cod: str, ini, fin, plataforma: str) -> pd.DataFrame:
                           where {donde} plataforma = '{plataforma}' and fecha between '{ini}' and '{fin}'""").df()
 
 
-def encuadre(bounds, alto: int, ancho_px: int) -> dict:
+def encuadre(bounds, alto: int, ancho_px: int, margen: float = 0.3) -> dict:
     """MapLibre center and zoom that fit a bounding box into the panel."""
     x0, y0, x1, y1 = bounds
     merc = lambda lat: math.log(math.tan(math.pi / 4 + math.radians(lat) / 2))  # noqa: E731
     frac_y = max((merc(y1) - merc(y0)) / (2 * math.pi), 1e-6)
     frac_x = max((x1 - x0) / 360, 1e-6)
-    zoom = min(math.log2(alto / 512 / frac_y), math.log2(ancho_px / 512 / frac_x)) - 0.3
+    zoom = min(math.log2(alto / 512 / frac_y), math.log2(ancho_px / 512 / frac_x)) - margen
     return dict(center=dict(lat=math.degrees(math.atan(math.sinh((merc(y0) + merc(y1)) / 2))), lon=(x0 + x1) / 2),
                 zoom=zoom)
 
@@ -157,7 +157,7 @@ def figura_focos(prov_cod: str, f: pd.DataFrame, ini, alto: int, ancho_px: int =
                                       ticktext=[f"{pd.Timestamp(ini) + pd.Timedelta(days=d):%d/%m}" for d in ticks]))))
     capas = [dict(sourcetype="geojson", source=MUNDO, type="fill", color=FONDO_OSCURO, below="traces")] if oscuro() else []
     fig.update_layout(height=alto, margin=dict(l=0, r=0, t=0, b=0), showlegend=False,
-                      map=dict(style=SIN_FONDO, layers=capas, **encuadre(geo.total_bounds, alto, ancho_px)))
+                      map=dict(style=SIN_FONDO, layers=capas, **encuadre(geo.total_bounds, alto, ancho_px, margen=0.1)))
     return fig, densidad
 
 
