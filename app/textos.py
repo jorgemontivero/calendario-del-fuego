@@ -287,8 +287,8 @@ T = {
     "kpi.vs_normal": ("vs. lo normal", "vs. normal"),
     "anual.titulo": ("Focos por año", "Hot spots per year"),
     "anual.modo": ("Vista", "View"), "anual.modo.anio": ("Por año", "Per year"), "anual.modo.mes": ("Por mes", "Per month"),
-    "mes.titulo": ("Tendencia de cada mes", "Trend of each month"),
-    "mes.eje": ("Cambio por año", "Change per year"),
+    "mes.titulo": ("Tendencia por mes", "Trend by month"),
+    "mes.eje": ("Cambio por año, 2003–2025", "Change per year, 2003–2025"),
     "mes.ayuda": ("Cuánto subió o bajó cada mes del año, por año, entre 2003 y 2025 (pendiente de Sen sobre el "
                   "logaritmo). Azul: baja; naranja: sube; gris: sin tendencia clara (Mann-Kendall, p ≥ 0,10). El "
                   "período es fijo y no sigue al filtro de años: con pocos años no hay tendencia que medir. Es "

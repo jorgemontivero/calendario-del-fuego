@@ -103,7 +103,7 @@ def tendencia_por_mes(d):
 
 
 with der.container(border=True):
-    a1, a2 = st.columns([1.25, 1], vertical_alignment="center")
+    a1, a2 = st.columns([1, 1], vertical_alignment="center")
     st.markdown("<style>.st-key-modo_anual {margin-left: auto;}"
                 ".st-key-modo_anual button {min-height: 0; padding: 0.1rem 0.65rem; font-size: 0.85rem;}</style>",
                 unsafe_allow_html=True)
@@ -112,7 +112,7 @@ with der.container(border=True):
                                      format_func=lambda v: t(f"anual.modo.{v}"), key="modo_anual", width="content") or "anio"
     sep = ",." if st.query_params.get("lang") != "en" else ".,"
     if vista == "mes":
-        a1.markdown(f"**{t('mes.titulo')}** · 2003–2025", help=t("mes.ayuda") + " " + t("armon.corta"))
+        a1.markdown(f"**{t('mes.titulo')}**", help=t("mes.ayuda") + " " + t("armon.corta"))
         tm = tendencia_por_mes(d)
         clara = [p < 0.10 for _, _, p, _, _ in tm]
         colores = [("#3B82F6" if c < 0 else "#EA580C") if ok else "#A8A29E" for (_, c, _, _, _), ok in zip(tm, clara)]
