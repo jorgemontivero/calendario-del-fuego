@@ -20,8 +20,9 @@ with c1:
         "4. **Ahora vs. antes**: elegí un período (los últimos 7 o 30 días, lo que va del año o fechas a medida) y "
         "compará ese mismo período en cada año desde 2003: en qué puesto queda y cuál fue el último año así de alto "
         "o de bajo.\n"
-        "5. **Análisis geográfico**: dos mapas lado a lado, con la misma escala de colores: una zona en dos años, o "
-        "dos provincias en el mismo año.\n"
+        "5. **Análisis espacial**: dos mapas lado a lado, con la misma escala de colores: una zona en dos años, o "
+        "dos provincias en el mismo año. «Focos» muestra cada detección en su lugar, de un satélite por vez y sin "
+        "armonizar: para comparar períodos, usá el mismo satélite.\n"
         "6. **Detectados vs. reportados**: los focos que ven los satélites al lado de la superficie quemada que "
         "informa la provincia, año por año, y cuánto coinciden los años fuertes.\n"
         "7. **Clima y fuego**: si los meses más secos (menos humedad o menos lluvia en los meses previos) vienen con "
@@ -43,8 +44,9 @@ with c1:
         "areas with most hot spots, colored against their own normal).\n"
         "4. **Now vs. before**: pick a period (the last 7 or 30 days, the year so far or custom dates) and compare "
         "the same period in every year since 2003: its rank and the last year that was this high or low.\n"
-        "5. **Geographic analysis**: two maps side by side on the same color scale: one area in two years, or two "
-        "provinces in the same year.\n"
+        "5. **Spatial analysis**: two maps side by side on the same color scale: one area in two years, or two "
+        "provinces in the same year. «Hot spots» shows each detection where it was seen, one satellite at a time "
+        "and not harmonized: to compare periods, use the same satellite.\n"
         "6. **Detected vs. reported**: hot spots seen by satellites next to the burned area the province reports, "
         "year by year, and how well the strong years match.\n"
         "7. **Climate and fire**: whether drier months (lower humidity or less rain in the previous months) come with "
@@ -74,7 +76,7 @@ with c2:
         "propio normal, azul si por debajo.\n"
         "- **Temporada**: la línea naranja es el año elegido; la gris punteada, la mediana de 2003–2022; la banda gris, "
         "el rango habitual (8 de cada 10 años). Lo que sale de la banda es un mes fuera de lo habitual.\n"
-        "- **Mapas** (Análisis geográfico): focos por cada 1.000 km² en cada departamento, para que los departamentos grandes no parezcan los "
+        "- **Mapas** (Análisis espacial): focos por cada 1.000 km² en cada departamento, para que los departamentos grandes no parezcan los "
         "que más arden solo por su tamaño. Con toda la Argentina elegida, muestra las provincias.",
         "- **Hot spots per year**: each year's total on the same yardstick (MODIS-equivalent hot spots). Darker bars "
         "are years converted from VIIRS; the thin line is their 90 % range. The current year is incomplete.\n"
@@ -82,7 +84,7 @@ with c2:
         "blue if below.\n"
         "- **Season**: the orange line is the chosen year; the dotted grey line, the 2003–2022 median; the grey band, "
         "the usual range (8 out of 10 years). Anything outside the band is an unusual month.\n"
-        "- **Maps** (Geographic analysis): hot spots per 1,000 km² in each department, so large departments don't look like the most burned "
+        "- **Maps** (Spatial analysis): hot spots per 1,000 km² in each department, so large departments don't look like the most burned "
         "just because of their size. With all of Argentina chosen, it shows the provinces."))
 
     st.subheader(tr("Descargas y cómo citar", "Downloads and how to cite"))

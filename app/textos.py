@@ -229,7 +229,7 @@ T = {
                    "normal (median of its 2003–2022 totals for the same months): red, more fire than usual; blue, "
                    "less. The map is in Spatial analysis."),
     "geo.titulo": ("Análisis espacial", "Spatial analysis"),
-    "geo.modo.focos": ("Focos en el mapa", "Hot spots on the map"),
+    "geo.modo.focos": ("Focos", "Hot spots"),
     "geo.mes": ("Mes", "Month"), "geo.mes.todo": ("Todo el año", "Whole year"),
     "geo.satelite": ("Satélite", "Satellite"),
     "geo.focos.n": ("{n} focos", "{n} hot spots"),
@@ -252,16 +252,18 @@ T = {
                        "compare periods, use the same satellite. Each dot is the centre of the pixel where heat was "
                        "detected (375 m VIIRS, 1 km MODIS): not the exact spot of the fire, nor its perimeter."),
     "geo.modo": ("Comparar", "Compare"),
-    "geo.modo.anios": ("Una zona en dos años", "One area, two years"),
-    "geo.modo.zonas": ("Dos zonas en un año", "Two areas, one year"),
+    "geo.modo.anios": ("Dos años", "Two years"),
+    "geo.modo.zonas": ("Dos zonas", "Two areas"),
     "geo.zona": ("Zona", "Area"), "geo.anio": ("Año", "Year"),
     "geo.resumen": ("{v} focos · {d} por 1.000 km²", "{v} hot spots · {d} per 1,000 km²"),
     "geo.ayuda": ("Focos por cada 1.000 km² con la serie armonizada: toda la Argentina por provincia, una provincia "
                   "por departamento. Los dos mapas usan la misma escala de colores, para que se puedan comparar. Para "
-                  "el año en curso se cuentan los meses completos. Se puede acercar con la rueda del mouse.",
+                  "el año en curso se cuentan los meses completos. «Focos» muestra cada detección de un satélite, sin "
+                  "armonizar. Se puede acercar con la rueda del mouse.",
                   "Hot spots per 1,000 km² from the harmonized series: all of Argentina by province, a province by "
                   "department. Both maps share the same color scale so they can be compared. For the current year, "
-                  "complete months are counted. Zoom with the mouse wheel."),
+                  "complete months are counted. «Hot spots» shows each detection by one satellite, not harmonized. "
+                  "Zoom with the mouse wheel."),
     "puesto.max": ("el más alto de {n}", "the highest of {n}"),
     "puesto.min": ("el más bajo de {n}", "the lowest of {n}"),
     "puesto.k": ("{k}.° más alto de {n}", "{k}{suf} highest of {n}"),

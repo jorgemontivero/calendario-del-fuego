@@ -94,7 +94,7 @@ with izq.container(border=True):
 
 with der.container(border=True):
     # Where fire concentrated in the chosen year: the areas with most hot spots, each colored by how far it was from
-    # its own normal (median of its 2003-2022 totals for the same months). The map moved to Geographic analysis.
+    # its own normal (median of its 2003-2022 totals for the same months). The map moved to Spatial analysis.
     r = ranking(prov_cod, anio_sel).iloc[::-1]  # largest on top
     st.markdown(f"**{t('rank.titulo', anio=anio_sel)}** · "
                 f"{t('rank.provincias', n=len(r)) if prov_cod == '00' else t('rank.departamentos', n=len(r), prov=prov_nom)}",

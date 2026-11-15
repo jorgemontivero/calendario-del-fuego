@@ -11,6 +11,7 @@ from mapas import CONFIG, SATELITES, datos_mapa, figura_focos, figura_mapa, foco
 from tablero import CSS, alto_graficos
 
 RESTO = 265  # everything on this view that is not a map (measured on screen)
+NOTA_PX = 50  # the two-line note under the hot spots map
 
 cabecera()
 st.markdown(CSS, unsafe_allow_html=True)
@@ -30,7 +31,7 @@ with st.sidebar:
 base = st.session_state.get("prov_sel", "00")
 st.session_state.setdefault("geo_modo", "anios")
 
-c0, c1, c2, c3, c4 = st.columns([1.6, 1.3, 1, 1, 1.1], vertical_alignment="bottom")
+c0, c1, c2, c3, c4 = st.columns([1.7, 1.3, 0.9, 1, 1.1], vertical_alignment="bottom")
 with c0:
     st.markdown(f'<div class="area-titulo">{t("geo.titulo")}</div>', unsafe_allow_html=True)
     modo = st.segmented_control(t("geo.modo"), ["anios", "zonas", "focos"], key="geo_modo", label_visibility="collapsed",
@@ -79,7 +80,7 @@ if modo == "focos":
             st.info(t("geo.focos.sin", sat=SATELITES[sat], otros=", ".join(otros) if otros else "—"))
         else:
             f = focos_puntos(zf, ini, fin, sat)
-            fig, densidad = figura_focos(zf, f, ini, ALTO, ancho_px=1000)
+            fig, densidad = figura_focos(zf, f, ini, ALTO - NOTA_PX, ancho_px=1000)
             st.markdown(f"**{nombre_de[zf]} · {periodo} · {SATELITES[sat]}** · " + t("geo.focos.n", n=num(len(f)))
                         + (" · " + t("geo.focos.densidad") if densidad else ""), help=t("geo.focos.ayuda"))
             st.plotly_chart(fig, width="stretch", theme="streamlit", config=CONFIG, key="mapa_focos")

@@ -1,4 +1,4 @@
-"""Choropleth of fire per 1,000 km2 (harmonized series), shared by the One-year view and the Geographic analysis.
+"""Choropleth of fire per 1,000 km2 (harmonized series), shared by the One-year view and the Spatial analysis.
 
 All of Argentina is drawn by province; a province, by department. The density uses the area in an equal-area
 projection (km2, computed in step 6), so large departments don't look like the most burned just because of their
