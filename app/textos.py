@@ -290,12 +290,12 @@ T = {
     "mes.titulo": ("Tendencia por mes", "Trend by month"),
     "mes.eje": ("Cambio por año, 2003–2025", "Change per year, 2003–2025"),
     "mes.ayuda": ("Cuánto subió o bajó cada mes del año, por año, entre 2003 y 2025 (pendiente de Sen sobre el "
-                  "logaritmo). Azul: baja; naranja: sube; gris: sin tendencia clara (Mann-Kendall, p ≥ 0,10). El "
+                  "logaritmo). Azul: baja; naranja: sube; gris: sin tendencia clara (Mann-Kendall, p ≥ 0,10, o menos de 0,5 % por año). El "
                   "período es fijo y no sigue al filtro de años: con pocos años no hay tendencia que medir. Es "
                   "descriptivo: con 12 meses probados, alguno puede salir claro por azar, y en zonas con poco fuego "
                   "lo esperable es que casi todo salga gris.",
                   "How much each month of the year went up or down, per year, from 2003 to 2025 (Sen slope on the "
-                  "logarithm). Blue: down; orange: up; grey: no clear trend (Mann-Kendall, p ≥ 0.10). The period is "
+                  "logarithm). Blue: down; orange: up; grey: no clear trend (Mann-Kendall, p ≥ 0.10, or less than 0.5 % per year). The period is "
                   "fixed and does not follow the year range: a few years hold no trend to measure. It is "
                   "descriptive: with 12 months tested, one may look clear by chance, and in areas with little fire "
                   "most months will be grey."),
