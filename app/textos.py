@@ -287,21 +287,18 @@ T = {
     "kpi.vs_normal": ("vs. lo normal", "vs. normal"),
     "anual.titulo": ("Focos por año", "Hot spots per year"),
     "anual.modo": ("Vista", "View"), "anual.modo.anio": ("Por año", "Per year"), "anual.modo.mes": ("Por mes", "Per month"),
-    "mes.titulo": ("Tendencia por mes", "Trend by month"),
-    "mes.eje": ("Cambio por año, 2003–2025", "Change per year, 2003–2025"),
-    "mes.ayuda": ("Cuánto subió o bajó cada mes del año, por año, entre 2003 y 2025 (pendiente de Sen sobre el "
-                  "logaritmo). Azul: baja; naranja: sube; gris: sin tendencia clara (Mann-Kendall, p ≥ 0,10, o menos de 0,5 % por año). El "
-                  "período es fijo y no sigue al filtro de años: con pocos años no hay tendencia que medir. Es "
-                  "descriptivo: con 12 meses probados, alguno puede salir claro por azar, y en zonas con poco fuego "
-                  "lo esperable es que casi todo salga gris.",
-                  "How much each month of the year went up or down, per year, from 2003 to 2025 (Sen slope on the "
-                  "logarithm). Blue: down; orange: up; grey: no clear trend (Mann-Kendall, p ≥ 0.10, or less than 0.5 % per year). The period is "
-                  "fixed and does not follow the year range: a few years hold no trend to measure. It is "
-                  "descriptive: with 12 months tested, one may look clear by chance, and in areas with little fire "
-                  "most months will be grey."),
-    "mes.hover": ("<b>{mes}</b>: {c} % por año (p = {p})<br>Mediana 2003–2011: {a} · 2014–2025: {b}",
-                  "<b>{mes}</b>: {c} % per year (p = {p})<br>Median 2003–2011: {a} · 2014–2025: {b}"),
-    "mes.hover.dudosa": ("Sin tendencia clara", "No clear trend"),
+    "mes.titulo": ("Focos por mes", "Hot spots per month"),
+    "mes.eje": ("focos, promedio del mes", "hot spots, monthly average"),
+    "mes.nota": ("Promedio {d}–{h}", "Average {d}–{h}"),
+    "mes.sin": ("Sin meses completos en el rango", "No complete month in the range"),
+    "mes.ayuda": ("Promedio de focos de cada mes del año, en los años del filtro. Solo meses completos: el mes en "
+                  "curso no cuenta. La barra más oscura es el mes con más fuego. El promedio lo levantan los años "
+                  "extremos (por ejemplo, 2020): la mediana, al pasar el cursor, muestra un año típico.",
+                  "Average hot spots of each month of the year, over the years in the range. Complete months only: "
+                  "the month in progress does not count. The darkest bar is the month with the most fire. Extreme "
+                  "years (2020, for instance) pull the average up: the median, on hover, shows a typical year."),
+    "mes.hover": ("<b>{mes}</b><br>Promedio: {v} focos<br>Mediana: {md} ({n} años)<br>Máximo: {mx} ({a})",
+                  "<b>{mes}</b><br>Average: {v} hot spots<br>Median: {md} ({n} years)<br>Highest: {mx} ({a})"),
     "anual.ayuda": ("Barras: total del año; la línea fina es el margen del 90 % de los años convertidos. "
                     "{anio} está incompleto.", "Bars: yearly total; the thin line is the 90 % range of converted years. "
                     "{anio} is incomplete."),

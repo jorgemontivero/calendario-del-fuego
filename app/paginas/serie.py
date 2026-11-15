@@ -3,10 +3,9 @@
 import math
 
 import numpy as np
+import pandas as pd
 import plotly.graph_objects as go
 import streamlit as st
-
-from scipy.stats import kendalltau
 
 from comun import CONFIG_GRAFICO, NARANJA, cabecera, fecha_datos, mes, num, serie, t
 import html
@@ -86,22 +85,6 @@ with izq.container(border=True):
                       yaxis=dict(type="category", autorange="reversed", tickfont=dict(size=10)), xaxis=dict(side="top"))
     st.plotly_chart(fig, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
 
-def tendencia_por_mes(d):
-    """For each month of the year, its trend over the complete years 2003-2025: Theil-Sen slope of log(count + 1)
-    as % per year, Mann-Kendall p (scipy's Kendall tau against the year, which handles ties - many zeros in small
-    areas), and the median of the month in 2003-2011 and in 2014-2025. Fixed period: the year range does not apply
-    (a three-year window would give meaningless trends)."""
-    filas = []
-    for m in range(1, 13):
-        g = d[d.anio.between(2003, 2025) & (d.mes == m)].sort_values("anio")
-        x, a = np.log(g.valor.to_numpy() + 1), g.anio.to_numpy()
-        pend = np.median([(x[j] - x[i]) / (a[j] - a[i]) for i in range(len(x)) for j in range(i + 1, len(x))])
-        p = kendalltau(a, g.valor).pvalue if g.valor.nunique() > 1 else 1.0
-        filas.append((m, 100 * (math.exp(pend) - 1), 1.0 if np.isnan(p) else p,
-                      g[g.anio <= 2011].valor.median(), g[g.anio >= 2014].valor.median()))
-    return filas
-
-
 with der.container(border=True):
     a1, a2 = st.columns([1, 1], vertical_alignment="center")
     st.markdown("<style>.st-key-modo_anual {margin-left: auto;}"
@@ -112,20 +95,29 @@ with der.container(border=True):
                                      format_func=lambda v: t(f"anual.modo.{v}"), key="modo_anual", width="content") or "anio"
     sep = ",." if st.query_params.get("lang") != "en" else ".,"
     if vista == "mes":
+        # the yearly chart's twin: average hot spots of each month of the year, over the years in the range
+        # (complete months only: the month in progress would pull its average down)
+        dm = d[d.anio.between(desde, hasta) & d.mes_completo]
+        g = dm.groupby("mes").valor
+        pm = pd.DataFrame({"media": g.mean(), "mediana": g.median(), "n": g.size(),
+                           "maximo": g.max(), "anio_max": dm.loc[g.idxmax(), "anio"].to_numpy()}).reindex(range(1, 13))
         a1.markdown(f"**{t('mes.titulo')}**", help=t("mes.ayuda") + " " + t("armon.corta"))
-        tm = tendencia_por_mes(d)
-        # clear = significant AND not flat: in areas with almost no fire, ties at zero can give p < 0.10 with a
-        # Sen slope of 0 (Tierra del Fuego, September)
-        clara = [p < 0.10 and abs(c) >= 0.5 for _, c, p, _, _ in tm]
-        colores = [("#3B82F6" if c < 0 else "#EA580C") if ok else "#A8A29E" for (_, c, _, _, _), ok in zip(tm, clara)]
-        hover = [t("mes.hover", mes=mes(m, True).capitalize(), c=("+" if c >= 0.05 else "−" if c <= -0.05 else "") + num(abs(c), 1),
-                   p=num(p, 3), a=num(a), b=num(b)) + ("" if ok else "<br>" + t("mes.hover.dudosa"))
-                 for (m, c, p, a, b), ok in zip(tm, clara)]
-        f3 = go.Figure(go.Bar(x=[mes(m).capitalize() for m, *_ in tm], y=[c for _, c, *_ in tm], marker_color=colores,
+        pico = pm.media.idxmax() if pm.media.notna().any() else None
+        colores = [NARANJA if m == pico else "#FB923C" for m in pm.index]
+        def _hover(m, r):
+            if not r.n == r.n or r.n == 0:  # no complete month in the range (Nov-Dec of the current year)
+                return f"<b>{mes(m, True).capitalize()}</b><br>{t('mes.sin')}"
+            if desde == hasta:  # one year: its own count, nothing to average
+                return f"<b>{mes(m, True).capitalize()} {desde}</b><br>{num(r.media)} {t('cal.hover.valor')}"
+            return t("mes.hover", mes=mes(m, True).capitalize(), v=num(r.media), md=num(r.mediana), n=num(r.n),
+                     mx=num(r.maximo), a=int(r.anio_max))
+        hover = [_hover(m, r) for m, r in pm.iterrows()]
+        f3 = go.Figure(go.Bar(x=[mes(m).capitalize() for m in pm.index], y=pm.media, marker_color=colores,
                               hovertext=hover, hoverinfo="text"))
-        f3.add_hline(y=0, line_width=1, line_color="#8a8984")
+        f3.add_annotation(text=t("mes.nota", d=desde, h=hasta) if desde < hasta else str(desde), xref="paper", yref="paper", x=1, y=1,
+                          xanchor="right", yanchor="top", showarrow=False, font=dict(size=12), opacity=0.8)
         f3.update_layout(dragmode=False, height=ALTO - ALTO_SELECTOR, margin=dict(l=0, r=0, t=5, b=0),
-                         yaxis_title=t("mes.eje"), yaxis_ticksuffix=" %", separators=sep)
+                         yaxis_title=t("mes.eje"), separators=sep)
         st.plotly_chart(f3, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
     else:
         anual_s = d[d.anio.between(2003, 2025)].groupby("anio").valor.sum().to_numpy()
