@@ -54,7 +54,12 @@ with c0:
                 + (f'<div class="area-sub">{t("rep.depto", dep=nombre)}</div>' if dep_cod else ""),
                 unsafe_allow_html=True)
 with c1:
-    st.markdown(f'<div class="tarjetas">{tarjetas}</div>', unsafe_allow_html=True)
+    # "Correlación (ρ)" is short and "Pico de focos vs. pico de reportes" long: on wide screens the second card lends
+    # width to the third (phones keep two cards per row, see tablero.CSS)
+    st.markdown('<style>@media (min-width: 641px) {.st-key-tarj_rep .tarjeta:nth-child(2) {flex-grow: 0.7;}'
+                '.st-key-tarj_rep .tarjeta:nth-child(3) {flex-grow: 1.3;}}</style>', unsafe_allow_html=True)
+    with st.container(key="tarj_rep"):
+        st.markdown(f'<div class="tarjetas">{tarjetas}</div>', unsafe_allow_html=True)
 
 # ---------------------------------------------------------------------------------------------- charts
 def marcas(v):
