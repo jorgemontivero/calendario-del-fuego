@@ -77,7 +77,10 @@ desde = str(int(iguales.index.max())) if len(iguales) else (t("ahora.record") if
 dias_fuego = int((ven[anio_ref] >= 0.5).sum())
 dias_normal = float(np.median([(ven[a] >= 0.5).sum() for a in ref.index])) if len(ref) else np.nan
 
-etiqueta = (f"{ini:%d/%m}–{fin:%d/%m/%Y}" if idioma() == "es" else f"{ini:%b %d}–{fin:%b %d, %Y}")
+# the period's own dates (this year only); the start carries its year when the period crosses New Year
+f_ini = (f"{ini:%d/%m}" if ini.year == fin.year else f"{ini:%d/%m/%Y}") if idioma() == "es" else \
+    (f"{ini:%b %d}" if ini.year == fin.year else f"{ini:%b %d, %Y}")
+etiqueta = (f"Focos del {f_ini} al {fin:%d/%m/%Y}" if idioma() == "es" else f"Hot spots {f_ini}–{fin:%b %d, %Y}")
 da, sa = _pct_txt(actual, normal)
 tarjetas = "".join([
     _tarjeta(etiqueta, num(actual), da, sa, t("ahora.focos.ayuda")),
