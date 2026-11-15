@@ -23,7 +23,13 @@ st.markdown(f'<div class="resumen" title="{_frase}">{_frase}</div>', unsafe_allo
 
 c1, c2 = st.columns([3, 2], vertical_alignment="center")
 with c1:
-    desde, hasta = st.slider(t("area.anios"), 2003, anio_max, (2003, anio_max), label_visibility="collapsed")
+    # The range only zooms the two charts below; the cards above always describe the latest months. The label sits
+    # beside the slider (not above it) so the view keeps its height.
+    e1, e2 = st.columns([1, 3.2], vertical_alignment="center")
+    e1.markdown(f'<div class="area-sub" style="opacity:0.85">{html.escape(t("area.anios.graficos"))}</div>',
+                unsafe_allow_html=True)
+    with e2:
+        desde, hasta = st.slider(t("area.anios.graficos"), 2003, anio_max, (2003, anio_max), label_visibility="collapsed")
 with c2:
     modo = st.segmented_control(t("cal.modo"), ["conteo", "anomalia"], default="conteo", label_visibility="collapsed",
                                 format_func=lambda m: t(f"cal.modo.{m}"), key="modo_cal") or "conteo"

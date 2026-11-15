@@ -236,6 +236,9 @@ def encabezado(d: pd.DataFrame, nombre: str, anio: int | None = None):
     c0, c1 = st.columns([1, 4.2] if anio is None else [1, 3.2], vertical_alignment="center")
     with c0:
         aviso = f'<div class="area-sub">⚠️ {html.escape(t("area.aviso.corto"))}</div>' if d.mediana_anual.iloc[0] < 50 else ""
+        if anio is None:  # Series view: say which month the cards describe (the year range below does not move them)
+            ua, um = meta()["ultimo_mes_completo"]
+            aviso = f'<div class="area-sub">{html.escape(t("kpi.ultimo", mes=mes(um, True), anio=ua))}</div>' + aviso
         st.markdown(f'<div class="area-titulo">{html.escape(nombre)}</div>{aviso}', unsafe_allow_html=True,
                     help=t("area.aviso.chica") if aviso else None)
     with c1:
