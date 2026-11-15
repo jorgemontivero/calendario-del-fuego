@@ -16,6 +16,7 @@ RESTO = 345  # everything on this view that is not a chart (measured on screen)
 cabecera()
 d, nombre, prov_cod, prov_nom, dep_cod = filtros()
 ALTO = alto_graficos(RESTO)
+ALTO_SELECTOR = 23  # the calendar title row also holds the count / vs-normal switch: that much taller (measured)
 anio_max = int(serie().anio.max())
 encabezado(d, nombre)
 _frase = html.escape(frase_resumen(d))
@@ -79,7 +80,7 @@ with izq.container(border=True):
                                     ticktext=["≤⅛", "¼", "½", "1", "2", "4", "≥8"], thickness=10))
     fig = go.Figure(go.Heatmap(z=Z, x=[mes(m).capitalize() for m in range(1, 13)], y=[str(a) for a in anios],
                                text=H, hoverinfo="text", xgap=1.5, ygap=1.5, **escala))
-    fig.update_layout(dragmode=False, height=ALTO, margin=dict(l=0, r=0, t=5, b=0),
+    fig.update_layout(dragmode=False, height=ALTO - ALTO_SELECTOR, margin=dict(l=0, r=0, t=5, b=0),
                       yaxis=dict(type="category", autorange="reversed", tickfont=dict(size=10)), xaxis=dict(side="top"))
     st.plotly_chart(fig, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
 
