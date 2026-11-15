@@ -114,7 +114,7 @@ eje_x = t(f"clima.eje.{var}")
 ticks_y = dict(tickvals=[np.log(v) for v in (0.25, 0.5, 1, 2, 4, 8)], ticktext=["¼", "½", "1", "2", "4", "8"])
 izq, der = st.columns([3, 2])
 with izq.container(border=True):
-    st.markdown(f"**{t('clima.titulo.disp')}** · ρ = {num(rho, 2) if not np.isnan(rho) else '—'}",
+    st.markdown(f"**{t('clima.titulo.disp', v=t(f'clima.nom.{var}'))}** · ρ = {num(rho, 2) if not np.isnan(rho) else '—'}",
                 help=t("clima.ayuda.disp"))
     ultimo_anio = int(x.anio.max()) if len(x) else ua
     reciente = x.anio == ultimo_anio
@@ -144,7 +144,7 @@ with izq.container(border=True):
     st.plotly_chart(f1, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
 
 with der.container(border=True):
-    st.markdown(f"**{t('clima.titulo.box')}**", help=t("clima.ayuda.box"))
+    st.markdown(f"**{t(f'clima.titulo.box.{var}')}**", help=t("clima.ayuda.box"))
     orden = [seco, "medio", humedo]
     nombres = {seco: et_seco, "medio": t("clima.ter.medio"), humedo: et_hum}
     colores = {seco: NARANJA, "medio": GRIS_T, humedo: AZUL_T}

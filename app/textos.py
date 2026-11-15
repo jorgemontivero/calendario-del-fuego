@@ -400,7 +400,9 @@ T = {
                       "clima no importara, rondaría el 50 %.",
                       "Of the months in the “{ter}” third, the share with more hot spots than normal for that month. If "
                       "climate did not matter it would be around 50 %."),
-    "clima.titulo.disp": ("Clima contra fuego, cada mes de temporada", "Climate against fire, each season month"),
+    "clima.titulo.disp": ("{v} vs. fuego, cada mes de temporada", "{v} vs. fire, each season month"),
+    "clima.nom.humedad": ("Humedad", "Humidity"), "clima.nom.lluvia3": ("Lluvia de 3 meses", "3-month rain"),
+    "clima.nom.lluvia6": ("Lluvia de 6 meses", "6-month rain"), "clima.nom.temp": ("Temperatura máxima", "Max temperature"),
     "clima.ayuda.disp": ("Cada punto es un mes de temporada. Horizontal: cuánto se apartó el clima de lo normal para ese "
                          "mes del año. Vertical: cuántas veces lo normal fueron los focos (1 = normal, 2 = el doble). "
                          "Los puntos grandes son el último año; la línea negra, la tendencia (mediana móvil). Se usa la "
@@ -411,7 +413,10 @@ T = {
                          "are the last year; the black line, the trend (running median). The difference from normal is "
                          "used because otherwise both series follow the seasons and the relation would only say that "
                          "winter exists."),
-    "clima.titulo.box": ("Fuego según el clima del mes", "Fire by the month's climate"),
+    "clima.titulo.box.humedad": ("Fuego según la humedad del mes", "Fire by the month's humidity"),
+    "clima.titulo.box.lluvia3": ("Fuego según la lluvia de 3 meses", "Fire by 3-month rain"),
+    "clima.titulo.box.lluvia6": ("Fuego según la lluvia de 6 meses", "Fire by 6-month rain"),
+    "clima.titulo.box.temp": ("Fuego según la temperatura máxima", "Fire by max temperature"),
     "clima.ayuda.box": ("Los meses de temporada partidos en tres grupos iguales según el clima. La caja va del 25 % al "
                         "75 % de los meses de cada grupo y la raya del medio es la mediana. Arriba, qué parte de esos "
                         "meses tuvo fuego sobre lo normal.",
