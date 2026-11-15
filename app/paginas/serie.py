@@ -114,9 +114,11 @@ with der.container(border=True):
     if vista == "mes":
         a1.markdown(f"**{t('mes.titulo')}**", help=t("mes.ayuda") + " " + t("armon.corta"))
         tm = tendencia_por_mes(d)
-        clara = [p < 0.10 for _, _, p, _, _ in tm]
+        # clear = significant AND not flat: in areas with almost no fire, ties at zero can give p < 0.10 with a
+        # Sen slope of 0 (Tierra del Fuego, September)
+        clara = [p < 0.10 and abs(c) >= 0.5 for _, c, p, _, _ in tm]
         colores = [("#3B82F6" if c < 0 else "#EA580C") if ok else "#A8A29E" for (_, c, _, _, _), ok in zip(tm, clara)]
-        hover = [t("mes.hover", mes=mes(m, True).capitalize(), c=("+" if c > 0 else "−") + num(abs(c), 1),
+        hover = [t("mes.hover", mes=mes(m, True).capitalize(), c=("+" if c >= 0.05 else "−" if c <= -0.05 else "") + num(abs(c), 1),
                    p=num(p, 3), a=num(a), b=num(b)) + ("" if ok else "<br>" + t("mes.hover.dudosa"))
                  for (m, c, p, a, b), ok in zip(tm, clara)]
         f3 = go.Figure(go.Bar(x=[mes(m).capitalize() for m, *_ in tm], y=[c for _, c, *_ in tm], marker_color=colores,
