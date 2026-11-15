@@ -180,7 +180,7 @@ T = {
     "rep.anios.ayuda": ("Años con superficie informada por la provincia (2003–2025). Hay provincias y años sin dato.",
                         "Years with burned area reported by the province (2003–2025). Some provinces and years have no "
                         "data."),
-    "rep.rho": ("Coincidencia de rankings (ρ)", "Ranking agreement (ρ)"),
+    "rep.rho": ("Correlación (ρ)", "Correlation (ρ)"),
     "rep.rho.ayuda": ("Correlación de Spearman entre los focos armonizados y las hectáreas informadas, año por año: 1 "
                       "si ordenan los años igual, 0 si no tienen nada que ver. Compara órdenes, no valores. Para toda "
                       "la Argentina da bajo: el total oficial lo mueven unos pocos años de pastizal enormes en La Pampa "
@@ -191,10 +191,10 @@ T = {
                       "Argentina it is low: the national official total is driven by a few huge grassland years in La "
                       "Pampa and Buenos Aires, and the provinces that report change from year to year. By province "
                       "the agreement is higher (median 0.48, see Methods)."),
-    "rep.picos": ("Año pico: focos · hectáreas", "Peak year: hot spots · hectares"),
+    "rep.picos": ("Pico de focos vs. pico de reportes", "Hot spot peak vs. report peak"),
     "rep.picos.ayuda": ("El año con más focos detectados y el año con más superficie informada.",
                         "The year with most detected hot spots and the year with most reported area."),
-    "rep.top3": ("Años más fuertes en común", "Strongest years in common"),
+    "rep.top3": ("Peores 3 años en común", "Worst 3 years in common"),
     "rep.top3.valor": ("{k} de 3", "{k} of 3"),
     "rep.top3.ayuda": ("De los 3 años con más focos, cuántos están también entre los 3 con más superficie informada.",
                        "Of the 3 years with most hot spots, how many are also among the 3 with most reported area."),
