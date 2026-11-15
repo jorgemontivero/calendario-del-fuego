@@ -34,8 +34,11 @@ with c1:
 izq, der = st.columns([3, 2])
 with izq.container(border=True):
     # count / compared-with-normal only changes the calendar, so it lives in the calendar's own title row
-    t1, t2 = st.columns([1, 1], vertical_alignment="center")
-    st.markdown("<style>.st-key-modo_cal {margin-left: auto;}</style>", unsafe_allow_html=True)
+    t1, t2 = st.columns([1, 1.7], vertical_alignment="center")
+    # compact buttons, so this title row is no taller than the bar chart's and both panels stay aligned
+    st.markdown("<style>.st-key-modo_cal {margin-left: auto;}"
+                ".st-key-modo_cal button {min-height: 0; padding: 0.1rem 0.65rem; font-size: 0.85rem;}</style>",
+                unsafe_allow_html=True)
     with t2:
         modo = st.segmented_control(t("cal.modo"), ["conteo", "anomalia"], default="conteo", label_visibility="collapsed",
                                     format_func=lambda m: t(f"cal.modo.{m}"), key="modo_cal", width="content") or "conteo"
