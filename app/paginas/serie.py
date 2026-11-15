@@ -103,7 +103,7 @@ def tendencia_por_mes(d):
 
 
 with der.container(border=True):
-    a1, a2 = st.columns([1.7, 1], vertical_alignment="center")
+    a1, a2 = st.columns([1, 1], vertical_alignment="center")
     st.markdown("<style>.st-key-modo_anual {margin-left: auto;}"
                 ".st-key-modo_anual button {min-height: 0; padding: 0.1rem 0.65rem; font-size: 0.85rem;}</style>",
                 unsafe_allow_html=True)
@@ -132,7 +132,7 @@ with der.container(border=True):
         z = (S - np.sign(S)) / math.sqrt(n * (n - 1) * (2 * n + 5) / 18) if S else 0.0
         tend = "temp.tendencia.sube" if z > 1.96 else "temp.tendencia.baja" if z < -1.96 else "temp.tendencia.nada"
         corta = {"temp.tendencia.sube": "tend.corta.sube", "temp.tendencia.baja": "tend.corta.baja"}.get(tend, "tend.corta.nada")
-        a1.markdown(f"**{t('anual.titulo')}** · {t(corta)}",
+        a1.markdown(f"**{t('anual.titulo')}**",
                     help=t(tend) + " " + t("anual.ayuda", anio=anio_max) + " " + t("armon.corta"))
         an = d[d.anio.between(desde, hasta)].groupby("anio").agg(
             v=("valor", "sum"), lo=("min90", "sum"), hi=("max90", "sum"), o=("origen", "first")).reset_index()
@@ -141,6 +141,9 @@ with der.container(border=True):
         f3 = go.Figure(go.Bar(x=an.anio, y=an.v, marker_color=colores, hovertemplate="%{x}: %{y:,.0f}<extra></extra>",
                               error_y=dict(type="data", symmetric=False, array=np.where(conv, an.hi - an.v, 0),
                                            arrayminus=np.where(conv, an.v - an.lo, 0), thickness=1.2, width=0)))
+        # the trend goes inside the chart: next to the switch, the title row has room for a short title only
+        f3.add_annotation(text=t(corta).capitalize() + " · 2003–2025", xref="paper", yref="paper", x=1, y=1,
+                          xanchor="right", yanchor="top", showarrow=False, font=dict(size=12), opacity=0.8)
         f3.update_layout(dragmode=False, height=ALTO - ALTO_SELECTOR, margin=dict(l=0, r=0, t=5, b=0), yaxis_title=t("cal.leyenda.focos"),
                          separators=sep)
         st.plotly_chart(f3, width="stretch", theme="streamlit", config=CONFIG_GRAFICO)
