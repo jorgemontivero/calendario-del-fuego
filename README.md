@@ -80,4 +80,6 @@ This is not an emergency service: in Argentina, call 100 if you see a fire.
 
 ## License
 
-Code: MIT. Data: each source keeps its own terms (see *Data*).
+Code: MIT. Derived data (harmonized series, conversion factors and counts in `data/derivados/` and
+`datos_abiertos/`): [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/). Input data keep the terms of their
+sources (see *Data*).

@@ -1,0 +1,31 @@
+{
+  "title": "Calendario del Fuego: harmonized MODIS and VIIRS active fire series for Argentina, 2003–2026",
+  "upload_type": "software",
+  "description": "<p>Code and data of a harmonized monthly series of fire activity for Argentina, its 24 provinces and 523 departments, from 2003 to 2026, built from NASA FIRMS active fire detections. Pooling MODIS and VIIRS detections adds a step every time a satellite joins and reverses the national fire trend; this repository converts VIIRS (Suomi NPP, NOAA-20) to Aqua MODIS-equivalent 1 km cell-days by province, season and day or night, with empirical Bayes shrinkage towards the region and 90% prediction intervals, and validates the series out of sample and against official burned-area statistics.</p><p>Contents: the processing and validation pipeline (pipeline/), step reports (reportes/), the derived series and conversion factors (data/derivados/, datos_abiertos/) and the web application (app/).</p><p>Licenses: code under MIT; derived data (harmonized series, conversion factors and counts) under CC BY 4.0. Input data keep the terms of their sources (NASA FIRMS, NASA POWER, IGN, Ministerio de Ambiente de la Nación, MapBiomas Argentina). This project uses NASA data but is not endorsed by NASA.</p>",
+  "creators": [
+    {
+      "name": "Montivero, Jorge Luis"
+    }
+  ],
+  "license": "MIT",
+  "keywords": [
+    "active fire",
+    "hot spots",
+    "MODIS",
+    "VIIRS",
+    "sensor harmonization",
+    "empirical Bayes",
+    "fire activity",
+    "Argentina",
+    "NASA FIRMS"
+  ],
+  "language": "eng",
+  "related_identifiers": [
+    {
+      "identifier": "https://calendariodelfuego.streamlit.app",
+      "relation": "isSupplementedBy",
+      "resource_type": "other"
+    }
+  ],
+  "notes": "Started at the NASA Space Apps Challenge 2026 (Catamarca local event), challenge 'Harmonization of MODIS and VIIRS Hot Spots'."
+}
